@@ -500,46 +500,24 @@ class MyApp extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 30.0, 0, 30.0),
                           child: Container(
+                            // padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30.0),
                               color: btnBgColor,
                             ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: btnBgColor,
-                                    minimumSize: Size(40.0, 40.0),
-                                    // padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                                  ),
-                                  onPressed: () {},
-                                  child: Text(
-                                    "Exit",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      color: btnTextColor,
+                                    minimumSize: Size(40, 40),
+                                    padding: EdgeInsets.fromLTRB(
+                                      25.0,
+                                      12.0,
+                                      25.0,
+                                      12.0,
                                     ),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: btnBgColor,
-                                    minimumSize: Size(40, 40),
-                                    // padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                                  ),
-                                  onPressed: () {},
-                                  child: Icon(
-                                    Icons.rotate_90_degrees_ccw_outlined,
-                                    size: 30,
-                                    color: btnTextColor,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: btnBgColor,
-                                    minimumSize: Size(40, 40),
-                                    // padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                                   ),
                                   onPressed: () {},
                                   child: Icon(
@@ -552,13 +530,56 @@ class MyApp extends StatelessWidget {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: btnBgColor,
                                     minimumSize: Size(40, 40),
-                                    // padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
+                                    padding: EdgeInsets.fromLTRB(
+                                      25.0,
+                                      12.0,
+                                      25.0,
+                                      12.0,
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                  child: Icon(
+                                    Icons.keyboard,
+                                    size: 30,
+                                    color: btnTextColor,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: btnBgColor,
+                                    minimumSize: Size(40, 40),
+                                    padding: EdgeInsets.fromLTRB(
+                                      25.0,
+                                      12.0,
+                                      25.0,
+                                      12.0,
+                                    ),
                                   ),
                                   onPressed: () {},
                                   child: Text(
-                                    "YouTube",
+                                    "123",
                                     style: TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 22.0,
+                                      color: btnTextColor,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: btnBgColor,
+                                    minimumSize: Size(40.0, 40.0),
+                                    padding: EdgeInsets.fromLTRB(
+                                      25.0,
+                                      12.0,
+                                      25.0,
+                                      12.0,
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                  child: Text(
+                                    "Exit",
+                                    style: TextStyle(
+                                      fontSize: 22.0,
                                       color: btnTextColor,
                                     ),
                                   ),
@@ -572,7 +593,12 @@ class MyApp extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color.fromARGB(255, 18, 18, 18),
                               minimumSize: Size(40, 40),
-                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
+                              padding: EdgeInsets.fromLTRB(
+                                25.0,
+                                12.0,
+                                25.0,
+                                12.0,
+                              ),
                             ),
                             onPressed: () {},
                             child: Icon(
