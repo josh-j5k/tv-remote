@@ -411,95 +411,128 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: btnBgColor,
-                                minimumSize: Size(40.0, 40.0),
-                                padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                              ),
-                              onPressed: () {},
-                              child: Icon(
-                                Icons.keyboard_arrow_up,
-                                size: 30,
-                                color: btnTextColor,
+                      child: Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(66, 150, 131, 131),
+                          // borderRadius: BorderRadius.circular(50.0),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Column(
+                          children: [
+                            Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: btnBgColor,
+                                  minimumSize: Size(40.0, 40.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(
+                                    100,
+                                    22,
+                                    100,
+                                    22,
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: Icon(
+                                  Icons.keyboard_arrow_up,
+                                  size: 30,
+                                  color: btnTextColor,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20.0, 0, 20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: btnBgColor,
-                                    minimumSize: Size(40.0, 40.0),
-                                    padding: EdgeInsets.fromLTRB(
-                                      25,
-                                      12,
-                                      25,
-                                      12,
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0.0, 0, 0.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: btnBgColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(),
+                                      ),
+                                      minimumSize: Size(40.0, 40.0),
+                                      padding: EdgeInsets.fromLTRB(
+                                        35,
+                                        30,
+                                        27,
+                                        30,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                    child: Icon(
+                                      Icons.keyboard_arrow_left,
+                                      size: 30,
+                                      color: btnTextColor,
                                     ),
                                   ),
-                                  onPressed: () {},
-                                  child: Icon(
-                                    Icons.keyboard_arrow_left,
-                                    size: 30,
-                                    color: btnTextColor,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: btnBgColor,
-                                    minimumSize: Size(40.0, 40.0),
-                                    padding: EdgeInsets.all(24.0),
-                                  ),
-                                  onPressed: () {},
-                                  child: Text(
-                                    "OK",
-                                    style: TextStyle(fontSize: 20.0),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: btnBgColor,
-                                    minimumSize: Size(40.0, 40.0),
-                                    padding: EdgeInsets.fromLTRB(
-                                      25,
-                                      12,
-                                      25,
-                                      12,
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: btnBgColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(),
+                                      ),
+                                      minimumSize: Size(40.0, 40.0),
+                                      padding: EdgeInsets.all(30.5),
+                                    ),
+                                    onPressed: () {},
+                                    child: Text(
+                                      "OK",
+                                      style: TextStyle(fontSize: 20.0),
                                     ),
                                   ),
-                                  onPressed: () {},
-                                  child: Icon(
-                                    Icons.keyboard_arrow_right,
-                                    size: 30,
-                                    color: btnTextColor,
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: btnBgColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(),
+                                      ),
+                                      minimumSize: Size(40.0, 40.0),
+                                      padding: EdgeInsets.fromLTRB(
+                                        35,
+                                        30,
+                                        27,
+                                        30,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                    child: Icon(
+                                      Icons.keyboard_arrow_right,
+                                      size: 30,
+                                      color: btnTextColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: btnBgColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(),
+                                  ),
+                                  minimumSize: Size(40.0, 40.0),
+                                  padding: EdgeInsets.fromLTRB(
+                                    100,
+                                    22,
+                                    100,
+                                    22,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: btnBgColor,
-                                minimumSize: Size(40.0, 40.0),
-                                padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                              ),
-                              onPressed: () {},
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 30,
-                                color: btnTextColor,
+                                onPressed: () {},
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  size: 30,
+                                  color: btnTextColor,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     Padding(

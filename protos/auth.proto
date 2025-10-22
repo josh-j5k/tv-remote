@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package remote;
+
+message AuthRequest {
+  bytes encrypted_session_key = 1;
+  bytes client_nonce = 2;
+  string client_id = 3;
+  int64 ts = 4;
+}
+
+message AuthResponse {
+  bytes aes_ciphertext = 1;
+  bytes aes_tag = 2;
+  int64 ts = 3;
+}
+

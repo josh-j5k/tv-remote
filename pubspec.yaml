@@ -35,6 +35,11 @@ dependencies:
   cupertino_icons: ^1.0.8
   upnp2: ^3.0.12
   shared_preferences: ^2.5.3
+  pointycastle: ^3.9.1 # crypto primitives (RSA, AES, OAEP)
+  cryptography: ^2.7.0 # modern AES-GCM operations
+  protobuf: ^3.1.0 # encode/decode protobuf messages
+  web_socket_channel: ^3.0.1
+  fixnum: ^1.1.1
 
 dev_dependencies:
   flutter_test:

@@ -16,34 +16,46 @@ class _WelcomeModalState extends State<WelcomeModal> {
   void initState() {
     super.initState();
     // _loadPreferences();
-    // discoverDIALDevices();
+    discoverDIALDevices();
   }
 
-  List<Map<String, String?>> data = [
-    {"friendlyName": "Star-X UHD Android TV", "urlBase": "hello"},
-    {"friendlyName": "Sony Android TV", "urlBase": "hello"},
-    {"friendlyName": "Google TV - HiSmart", "urlBase": "hello"},
-  ];
+  void setTVData(item) {
+    final newValue = Map<String, dynamic>.from(appDataNotifier.value)
+      ..['isConnected'] = true
+      ..['friendlyName'] = item['friendlyName']
+      ..['urlBase'] = item['urlBase']
+      ..['location'] = item['location'];
+    appDataNotifier.value = newValue;
+    Navigator.of(context).pop();
+  }
+
+  List<Map<String, String?>> data = [];
   Future<void> discoverDIALDevices() async {
     final disc = DeviceDiscoverer();
     await disc.start(ipv6: false);
     disc.quickDiscoverClients().listen((client) async {
       try {
         final dev = await client.getDevice();
-        // print('Found device: ${dev!.friendlyName}: ${dev.udn}');
-        // print('Found device: ${dev.deviceType}: ${dev.urlBase}');
-        data.add({"friendlyName": dev!.friendlyName, "urlBase": dev.urlBase});
+        int lastIndex = dev!.urlBase!.lastIndexOf(":");
+        String location = dev!.urlBase!.substring(0, lastIndex);
+        setState(() {
+          data.add({
+            "friendlyName": dev!.friendlyName,
+            "urlBase": dev.urlBase,
+            'location': location,
+          });
+        });
       } catch (e, stack) {
-        print('ERROR: $e - ${client.location}');
-        print(stack);
+        // print('ERROR: $e - ${client.location}');
+        // print(stack);
       }
-      super.initState();
+      // super.initState();
     });
   }
 
   Future<void> _loadPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    super.initState();
+    // super.initState();
   }
 
   @override
@@ -129,56 +141,58 @@ class _WelcomeModalState extends State<WelcomeModal> {
                         child: SizedBox(
                           child: Column(
                             children: data.map((item) {
-                              return TextButton(
-                                onPressed: () => {
-                                  appDataNotifier.value['isConnected'] = true,
-                                  appDataNotifier.value['friendlyName'] =
-                                      item['friendlyName'],
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Column(
+                              return Column(
+                                children: [
+                                  TextButton(
+                                    onPressed: () => setTVData(item),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          item['friendlyName']!,
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Text(
-                                          "New",
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            color: const Color.fromARGB(
-                                              166,
-                                              255,
-                                              255,
-                                              255,
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item['friendlyName']!,
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                            fontSize: 15.0,
+                                            Text(
+                                              "New",
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                color: const Color.fromARGB(
+                                                  166,
+                                                  255,
+                                                  255,
+                                                  255,
+                                                ),
+                                                fontSize: 15.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Icon(
+                                          Icons.keyboard_arrow_right,
+                                          size: 25.0,
+                                          color: const Color.fromARGB(
+                                            152,
+                                            255,
+                                            255,
+                                            255,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Icon(
-                                      Icons.keyboard_arrow_right,
-                                      size: 25.0,
-                                      color: const Color.fromARGB(
-                                        152,
-                                        255,
-                                        255,
-                                        255,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  Divider(),
+                                ],
                               );
                             }).toList(),
                           ),
