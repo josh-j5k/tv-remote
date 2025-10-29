@@ -15,3 +15,48 @@ message AuthResponse {
   int64 ts = 3;
 }
 
+message RemoteMessage {
+  oneof message_type {
+    PairingRequest pairing_request = 2;
+    PairingResponse pairing_response = 3;
+    PairingSecret pairing_secret = 4;
+    RemoteCommand remote_command = 5;
+    RemoteSetActive remote_set_active = 8;
+    RemotePingRequest remote_ping_request = 9;
+    RemotePingResponse remote_ping_response = 10;
+    RemoteError remote_error = 11;
+  }
+}
+
+// Pairing messages
+message PairingRequest {
+  string client_id = 1;
+  string client_name = 2;
+}
+
+message PairingResponse {
+  int32 status = 1;
+  string server_public_key = 2;
+}
+
+message PairingSecret {
+  bytes encrypted_secret = 1;
+}
+
+// Remote command messages
+message RemoteCommand {
+  int32 key_code = 1;
+  int32 direction = 2;
+}
+
+message RemoteSetActive {
+  bool active = 1;
+}
+
+message RemotePingRequest {}
+
+message RemotePingResponse {}
+
+message RemoteError {
+  int32 error_code = 1;
+}

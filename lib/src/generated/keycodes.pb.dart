@@ -44,7 +44,7 @@ class KeyEvent extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'KeyEvent',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
       createEmptyInstance: create)
-    ..aE<AndroidKeyCode>(1, _omitFieldNames ? '' : 'code',
+    ..e<AndroidKeyCode>(1, _omitFieldNames ? '' : 'code', $pb.PbFieldType.OE,
         enumValues: AndroidKeyCode.values)
     ..aOS(2, _omitFieldNames ? '' : 'description')
     ..hasRequiredFields = false;
@@ -71,11 +71,11 @@ class KeyEvent extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   AndroidKeyCode get code => $_getN(0);
   @$pb.TagNumber(1)
-  set code(AndroidKeyCode value) => $_setField(1, value);
+  set code(AndroidKeyCode value) => setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCode() => $_clearField(1);
+  void clearCode() => clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get description => $_getSZ(1);
@@ -84,7 +84,7 @@ class KeyEvent extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasDescription() => $_has(1);
   @$pb.TagNumber(2)
-  void clearDescription() => $_clearField(2);
+  void clearDescription() => clearField(2);
 }
 
 const $core.bool _omitFieldNames =

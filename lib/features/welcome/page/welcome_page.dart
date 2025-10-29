@@ -1,9 +1,28 @@
+// import 'dart:io';
+// import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:remote_app/data/constants/constants.dart';
+// import 'package:remote_app/data/test_pairing.dart';
+import 'package:remote_app/data/tv_remote.dart';
 import 'package:remote_app/features/home/logic/notifier.dart';
+import 'package:multicast_dns/multicast_dns.dart';
 // import 'package:remote_app/core/utils/discover_device.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upnp2/upnp.dart' hide Icon; // <<< SWITCHED to upnp2
 import 'dart:async';
+// import 'package:remote_app/src/generated/auth.pb.dart';
+
+const key = """-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxt/m/LpEwj53HU+anHoB
+29bgFtcB7et13cVyiMX1MGvkJRs3QA3F6Xx/rqiqOlrrGY9FaWpmCX5QEbNagQbk
+RntVCbAke+5Ul7EnfuJRFQRF+ByqeaagLb7isgAhF8TOmZe6/a0jynXG44neZHyX
+sUH+Uf02NnUD9e+qZ7o3sCX41UtEK837zxEb/38ERDI+BrqlMtVLtpcc2Rubh0RF
+B2r+8Cblclk8cl72nvUe9bg2gPi9P1SNuRSkF1Va6R9kABlpxhOU0jo09aiKFhtI
+G2pEYuCJAl4y5FdchY8garOpAmugOtyzra9PnIWNYEQTpSEcbLj8W+ewjLNmWDc1
+RQIDAQAB
+-----END PUBLIC KEY----- """;
+const port = 6466;
 
 class WelcomeModal extends StatefulWidget {
   const WelcomeModal({super.key});
@@ -16,17 +35,112 @@ class _WelcomeModalState extends State<WelcomeModal> {
   void initState() {
     super.initState();
     // _loadPreferences();
+    // discoverAndroidTVs();
     discoverDIALDevices();
   }
 
-  void setTVData(item) {
+  Future<void> discoverAndroidTVs() async {
+    final client = MDnsClient();
+    await client.start();
+
+    try {
+      await for (final PtrResourceRecord ptr
+          in client
+              .lookup<PtrResourceRecord>(
+                ResourceRecordQuery.serverPointer(
+                  '_androidtvremote2._tcp.local',
+                ),
+              )
+              .timeout(Duration(seconds: 10))) {
+        print('\n═══════════════════════════════════');
+        print('📺 Found PTR: ${ptr.domainName}');
+
+        // Resolve SRV
+        await for (final SrvResourceRecord srv
+            in client
+                .lookup<SrvResourceRecord>(
+                  ResourceRecordQuery.service(ptr.domainName),
+                )
+                .timeout(Duration(seconds: 5))) {
+          // Get TXT records (might contain important info)
+          await for (final TxtResourceRecord txt
+              in client
+                  .lookup<TxtResourceRecord>(
+                    ResourceRecordQuery.text(ptr.domainName),
+                  )
+                  .timeout(Duration(seconds: 5))) {
+            print('📝 TXT Records:');
+            // for (var entry in txt.texts) {
+            //   print('   $entry');
+            // }
+          }
+
+          // Get IPv4
+          await for (final IPAddressResourceRecord ip
+              in client
+                  .lookup<IPAddressResourceRecord>(
+                    ResourceRecordQuery.addressIPv4(srv.target),
+                  )
+                  .timeout(Duration(seconds: 5))) {
+            // await testPortConnection(ip.address.address, srv.port);
+            // await connectViaTCP(ip.address.address, srv.port);
+
+            print('🌐 IPv4: ${ip.address.address}');
+          }
+
+          // Try IPv6 too
+          try {
+            await for (final IPAddressResourceRecord ip
+                in client
+                    .lookup<IPAddressResourceRecord>(
+                      ResourceRecordQuery.addressIPv6(srv.target),
+                    )
+                    .timeout(Duration(seconds: 2))) {
+              print('🌐 IPv6: ${ip.address.address}');
+            }
+          } catch (e) {
+            print('⚠️  No IPv6');
+          }
+          print('═══════════════════════════════════\n');
+        }
+      }
+    } catch (e) {
+      print('❌ Error: $e');
+    } finally {
+      client.stop();
+    }
+  }
+
+  // ignore: unused_local_variable
+  Future<void> setTVData(item) async {
     final newValue = Map<String, dynamic>.from(appDataNotifier.value)
       ..['isConnected'] = true
       ..['friendlyName'] = item['friendlyName']
       ..['urlBase'] = item['urlBase']
       ..['location'] = item['location'];
     appDataNotifier.value = newValue;
-    Navigator.of(context).pop();
+
+    final String link = item['location'];
+    final String wss = link.replaceAll("http", "wss") + ":$port";
+    final remote = TvRemoteClient(host: '192.168.1.185', clientName: client);
+    final alreadyPaired = await remote.initialize();
+    if (!alreadyPaired) {
+      // Start pairing process
+      await remote.startPairing();
+
+      // // Wait for PIN to appear on TV
+      // print('Enter the PIN shown on TV:');
+      // final pin = stdin.readLineSync()!;
+
+      // await remote.enterPairingCode(pin);
+
+      // Wait for pairing to complete
+      await Future.delayed(Duration(seconds: 2));
+    }
+
+    // Start pairing on port 6467
+
+    // Navigator.of(context).pop();
   }
 
   List<Map<String, String?>> data = [];
@@ -38,6 +152,9 @@ class _WelcomeModalState extends State<WelcomeModal> {
         final dev = await client.getDevice();
         int lastIndex = dev!.urlBase!.lastIndexOf(":");
         String location = dev!.urlBase!.substring(0, lastIndex);
+        // print(dev!.urlBase);
+        // print(dev!.);
+        print(location);
         setState(() {
           data.add({
             "friendlyName": dev!.friendlyName,

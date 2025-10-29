@@ -40,6 +40,9 @@ dependencies:
   protobuf: ^3.1.0 # encode/decode protobuf messages
   web_socket_channel: ^3.0.1
   fixnum: ^1.1.1
+  asn1lib: ^1.5.2
+  multicast_dns: ^0.3.3
+  basic_utils: ^5.7.0
 
 dev_dependencies:
   flutter_test:
