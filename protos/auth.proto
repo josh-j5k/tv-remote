@@ -1,38 +1,32 @@
 syntax = "proto3";
 
-package remote;
+package pairing;
 
-message AuthRequest {
-  bytes encrypted_session_key = 1;
-  bytes client_nonce = 2;
-  string client_id = 3;
-  int64 ts = 4;
-}
+message OuterMessage {
+  uint32 protocol_version = 1;
+  uint32 status = 2;
 
-message AuthResponse {
-  bytes aes_ciphertext = 1;
-  bytes aes_tag = 2;
-  int64 ts = 3;
-}
-
-message RemoteMessage {
-  oneof message_type {
-    PairingRequest pairing_request = 2;
-    PairingResponse pairing_response = 3;
-    PairingSecret pairing_secret = 4;
-    RemoteCommand remote_command = 5;
-    RemoteSetActive remote_set_active = 8;
-    RemotePingRequest remote_ping_request = 9;
-    RemotePingResponse remote_ping_response = 10;
-    RemoteError remote_error = 11;
+  oneof message {
+    PairingRequest pairing_request = 10;
+    PairingResponse pairing_response = 11;
+    PairingSecret pairing_secret = 12;
+    PairingRequestAck pairing_request_ack = 13;
+    Options pairing_option = 14;
+    OptionsAck pairing_option_ack = 15;
+    Configuration pairing_configuration = 16;
+    ConfigurationAck pairing_configuration_ack = 17;
   }
 }
 
-// Pairing messages
+// PHASE 1
 message PairingRequest {
-  string client_id = 1;
-  string client_name = 2;
+  string client_name  = 1;
+  string service_name = 2;
+  string client_id    = 3;
+  string service_uuid = 4;
 }
+
+message PairingRequestAck {}
 
 message PairingResponse {
   int32 status = 1;
@@ -42,21 +36,38 @@ message PairingResponse {
 message PairingSecret {
   bytes encrypted_secret = 1;
 }
+message PairingSecretAck {}
 
-// Remote command messages
-message RemoteCommand {
-  int32 key_code = 1;
-  int32 direction = 2;
+message Encoding {
+  enum EncodingType {
+    ENCODING_TYPE_UNKNOWN = 0;
+    ENCODING_TYPE_ALPHANUMERIC = 1;
+    ENCODING_TYPE_NUMERIC = 2;
+    ENCODING_TYPE_HEXADECIMAL = 3;
+    ENCODING_TYPE_QRCODE = 4;
+  }
+
+  EncodingType type = 1;
+  uint32 symbol_length = 2;
 }
 
-message RemoteSetActive {
-  bool active = 1;
+message Options {
+  enum RoleType {
+    ROLE_TYPE_UNKNOWN = 0;
+    ROLE_TYPE_INPUT = 1;
+    ROLE_TYPE_OUTPUT = 2;
+  }
+
+  repeated Encoding input_encodings = 1;
+  repeated Encoding output_encodings = 2;
+  RoleType preferred_role = 3;
 }
 
-message RemotePingRequest {}
+message OptionsAck {}
 
-message RemotePingResponse {}
-
-message RemoteError {
-  int32 error_code = 1;
+message Configuration {
+  Encoding encoding = 1;
+  Options.RoleType client_role = 2;
 }
+
+message ConfigurationAck {}

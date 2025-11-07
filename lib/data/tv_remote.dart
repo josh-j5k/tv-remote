@@ -7,16 +7,18 @@ import 'package:asn1lib/asn1lib.dart';
 import 'package:pointycastle/export.dart';
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
-import 'package:pointycastle/api.dart';
-import 'package:cryptography/cryptography.dart' as crypto;
+// import 'package:pointycastle/api.dart';
+import 'package:remote_app/data/encrypt_public_key.dart';
 import 'package:remote_app/data/constants/constants.dart';
 import 'package:remote_app/src/generated/auth.pb.dart';
 import 'package:remote_app/src/generated/keycodes.pb.dart';
+import 'package:protobuf/protobuf.dart';
 import 'package:remote_app/src/rsa_key_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:basic_utils/basic_utils.dart';
-import 'package:web_socket_channel/io.dart' show IOWebSocketChannel;
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:uuid/uuid.dart';
+// import 'package:web_socket_channel/io.dart' show IOWebSocketChannel;
+// import 'package:web_socket_channel/web_socket_channel.dart';
 
 // Utility: generate secure random bytes
 Uint8List randomBytes(int length) {
@@ -28,21 +30,20 @@ Uint8List randomBytes(int length) {
 
 class TvRemoteClient {
   final String host;
-  final String clientName;
 
   String? _certPath;
   String? _keyPath;
   RSAPublicKey? _clientPublicKey;
   RSAPrivateKey? _clientPrivateKey;
   RSAPublicKey? _serverPublicKey;
-
+  dynamic _envelope;
   SecureSocket? _pairingSocket;
   SecureSocket? _commandSocket;
 
   bool _isPaired = false;
   bool _isConnected = false;
 
-  TvRemoteClient({required this.host, this.clientName = client});
+  TvRemoteClient({required this.host});
 
   /// Initialize: Check for stored certificate or generate new one
   Future<bool> initialize() async {
@@ -83,128 +84,6 @@ class TvRemoteClient {
     return false;
   }
 
-  // Future<void> connectAndAuthenticate() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   String? secret;
-  //   final appData = prefs.getString('app_data');
-  //   if (appData != null) {
-  //     secret = jsonDecode(appData)['secret'];
-  //   }
-
-  //   // print(wsUrl);
-  //   // _channel = WebSocketChannel.connect(Uri.parse(wsUrl));
-  //   final url = 'ws://192.168.1.185:6467';
-
-  //   _channel = await SecureSocket.connect(
-  //     host,
-  //     6467, // PAIRING PORT
-  //     context: context,
-  //     timeout: Duration(seconds: 10),
-  //     onBadCertificate: (cert) {
-  //       print('📜 Received server certificate\n');
-  //       _serverPublicKey = _extractServerPublicKey(cert);
-  //       return true;
-  //     },
-  //   );
-  //   print("WebSocket connected");
-
-  //   // Set up listener FIRST before sending anything
-  //   _channel.stream.listen(
-  //     (data) {
-  //       print("Received data: ${(data as Uint8List).length} bytes");
-
-  //       try {
-  //         final remoteMessage = RemoteMessage.fromBuffer(data);
-
-  //         if (remoteMessage.hasPairingResponse()) {
-  //           final pairingResp = remoteMessage.pairingResponse;
-  //           print("Pairing Response Status: ${pairingResp.status}");
-
-  //           if (pairingResp.status == 201) {
-  //             print("✅ Waiting for PIN on TV screen");
-  //             // PIN should now be displayed on TV
-  //             // Now prompt user to enter the PIN
-  //           } else if (pairingResp.status == 200) {
-  //             print("✅ Pairing successful!");
-  //           } else {
-  //             print("❌ Pairing failed with status: ${pairingResp.status}");
-  //           }
-  //         }
-
-  //         if (remoteMessage.hasRemoteError()) {
-  //           print("❌ Error: ${remoteMessage.remoteError.errorCode}");
-  //         }
-  //       } catch (e) {
-  //         print("Error parsing response: $e");
-  //       }
-  //     },
-  //     onError: (error) {
-  //       print("Stream error: $error");
-  //     },
-  //     onDone: () {
-  //       print("Stream closed");
-  //     },
-  //   );
-
-  //   // Wait a moment for listener to be ready
-  //   await Future.delayed(Duration(milliseconds: 100));
-
-  //   // NOW send the pairing request
-  //   final pairingReq = PairingRequest()
-  //     ..clientId = clientId
-  //     ..clientName = client;
-
-  //   final remoteMessage = RemoteMessage()..pairingRequest = pairingReq;
-
-  //   _channel.sink.add(remoteMessage.writeToBuffer());
-  //   print("Sent PairingRequest");
-  //   // 1. Generate AES session key & IV
-  //   _aesKey = randomBytes(32); // 256-bit
-  //   _aesIv = randomBytes(12); // AES-GCM IV
-  //   _secretKey = crypto.SecretKey(_aesKey);
-
-  //   // 2. Encrypt AES key using RSA-OAEP
-  //   final rsaCipher = RSAEngine()
-  //     ..init(
-  //       true,
-  //       PublicKeyParameter<RSAPublicKey>(_parsePublicKey(serverPublicKeyPem)),
-  //     );
-
-  //   final sessionBlob = Uint8List.fromList([..._aesKey, ..._aesIv]);
-  //   final encryptedSessionKey = rsaCipher.process(sessionBlob);
-
-  //   // 3. Build protobuf AuthRequest
-  //   final req = AuthRequest()
-  //     ..encryptedSessionKey = encryptedSessionKey
-  //     ..clientNonce = randomBytes(12)
-  //     ..clientId = "tv_remote"
-  //     ..ts = Int64(DateTime.now().millisecondsSinceEpoch);
-
-  //   // 4. Send protobuf bytes over WebSocket
-  //   final data = req.writeToBuffer();
-
-  //   _channel.sink.add(data);
-  //   await _channel.sink.done;
-  //   // 5. Wait for AuthResponse
-  //   final responseBytes = await _channel.stream.first as Uint8List;
-  //   final resp = AuthResponse.fromBuffer(responseBytes);
-
-  //   // 6. Decrypt AES-GCM payload
-  //   final cipher = crypto.AesGcm.with256bits();
-  //   final decrypted = await cipher.decrypt(
-  //     crypto.SecretBox(
-  //       resp.aesCiphertext,
-  //       nonce: _aesIv,
-  //       mac: crypto.Mac(resp.aesTag),
-  //     ),
-  //     secretKey: _secretKey,
-  //   );
-
-  //   print("Decrypted AuthResponse: ${utf8.decode(decrypted)}");
-
-  //   print("✅ Authentication complete. Ready to send commands.");
-  // }
-
   Future<void> startPairing() async {
     if (_isPaired) {
       print('⚠️  Already paired. Use connect() to authenticate.\n');
@@ -219,7 +98,7 @@ class TvRemoteClient {
 
     final context = SecurityContext()
       ..useCertificateChain(_certPath!)
-      ..usePrivateKey(_keyPath!, password: '');
+      ..usePrivateKey(_keyPath!);
 
     try {
       _pairingSocket = await SecureSocket.connect(
@@ -235,19 +114,50 @@ class TvRemoteClient {
       );
 
       print('✅ Connected to pairing port\n');
-      _pairingSocket!.listen((data) {
-        print("Received data: ${(data).length} bytes");
-      });
-      _pairingSocket!.first;
+      _pairingSocket!.listen(
+        (data) => _handlePairingMessage(data),
+        onError: (e) => print('❌ Pairing error: $e'),
+        onDone: () => print('🔌 Pairing connection closed'),
+      );
+      // final handshake = OuterMessage()
+      //   ..protocolVersion = 2
+      //   ..status = 0;
+      // _pairingSocket!.add(handshake.writeToBuffer());
+      // await _pairingSocket!.flush();
       // _setupPairingListener();
       await Future.delayed(Duration(milliseconds: 500));
 
+      await _sendPairingRequest();
       // Send pairing request using OuterMessage protocol
-      // await _sendPairingRequest();
     } catch (e) {
       print('❌ Pairing connection failed: $e\n');
       rethrow;
     }
+  }
+
+  Future<void> _sendPairingRequest() async {
+    print('📤 Sending PairingRequest...\n');
+    final uuid = Uuid().v4();
+    final String serviceUuid = uuid.replaceAll('-', '');
+    final pairingRequest = PairingRequest()
+      ..clientId = "$clientId:${uuid.replaceAll('-', '')}"
+      ..clientName = clientName
+      ..serviceName = serviceName
+      ..serviceUuid = serviceUuid;
+
+    final outerMessage = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingRequest = pairingRequest;
+
+    final payload = outerMessage.writeToBuffer();
+
+    final lenPrefix = encodeVarint(payload.length);
+    _pairingSocket!.add([...lenPrefix, ...payload]);
+
+    await _pairingSocket!.flush();
+
+    print('✅ Sent PairingRequest\n');
   }
 
   // Future<void> sendKeyEvent(AndroidKeyCode keyCode, String description) async {
@@ -268,37 +178,99 @@ class TvRemoteClient {
   //   // Send encrypted payload
   //   _channel.sink.add(box.concatenation());
   // }
-
-  void _setupPairingListener() {
-    _pairingSocket!.listen(
-      (data) => _handlePairingMessage(data),
-      onError: (e) => print('❌ Pairing error: $e'),
-      onDone: () => print('🔌 Pairing connection closed'),
+  List<int> _buffer = [];
+  void _handlePairingMessage(Uint8List data) {
+    print(
+      '📥 Received ${data.length} bytes: ${data.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
     );
+
+    // Add to buffer
+    _buffer.addAll(data);
+    _processBuffer();
   }
 
-  void _handlePairingMessage(Uint8List data) {
-    try {
-      print('📩 Received ${data.length} bytes\n');
+  void _processBuffer() {
+    while (_buffer.isNotEmpty) {
+      try {
+        // Read varint length prefix
+        int messageLength = 0;
+        int shift = 0;
+        int varintBytes = 0;
 
-      // Parse as OuterMessage (pairing protocol)
-      final outerMessage = RemoteMessage.fromBuffer(data);
+        // Parse the varint
+        for (int i = 0; i < _buffer.length && i < 5; i++) {
+          int byte = _buffer[i];
+          messageLength |= (byte & 0x7F) << shift;
+          varintBytes++;
 
-      if (outerMessage.hasPairingResponse()) {
-        print('✅ Pairing request acknowledged\n');
-        // _sendPairingOption();
+          if ((byte & 0x80) == 0) {
+            // Varint complete (bit 7 is not set)
+            break;
+          }
+          shift += 7;
+        }
+
+        // Check if we have enough bytes for the complete message
+        int totalBytesNeeded = varintBytes + messageLength;
+        if (_buffer.length < totalBytesNeeded) {
+          print(
+            '⏳ Waiting for more data. Have ${_buffer.length}, need $totalBytesNeeded bytes',
+          );
+          return; // Wait for more data
+        }
+
+        // Extract the message
+        final messageBytes = Uint8List.fromList(
+          _buffer.sublist(varintBytes, varintBytes + messageLength),
+        );
+
+        print(
+          '✂️ Extracted message: length=$messageLength, varintBytes=$varintBytes',
+        );
+
+        // Remove processed bytes from buffer
+        _buffer = _buffer.sublist(totalBytesNeeded);
+
+        // Parse protobuf
+        final msg = OuterMessage.fromBuffer(messageBytes);
+        print('✅ protocol=${msg.protocolVersion}, status=${msg.status}');
+        print('   message type = ${msg.whichMessage()}');
+
+        // Handle the message
+        _handleOuterMessage(msg);
+      } catch (e, stackTrace) {
+        print('⚠️ Error parsing message: $e');
+        print(
+          '   Buffer hex: ${_buffer.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+        );
+        print(stackTrace);
+
+        // Clear buffer on error to recover
+        _buffer.clear();
+        return;
       }
-      //  else if (outerMessage.hasPairingOption()) {
-      //   print('✅ Pairing option acknowledged\n');
-      //   _sendPairingConfiguration();
-      // } else if (outerMessage.hasPairingConfigurationAck()) {
-      //   print('✅ ✅ ✅ CHECK TV SCREEN FOR PIN! ✅ ✅ ✅\n');
-      // } else if (outerMessage.hasPairingSecretAck()) {
-      //   print('✅ ✅ ✅ PAIRING SUCCESSFUL! ✅ ✅ ✅\n');
-      //   _onPairingComplete();
-      // }
-    } catch (e) {
-      print('⚠️  Error parsing pairing message: $e');
+    }
+  }
+
+  void _handleOuterMessage(OuterMessage msg) {
+    switch (msg.whichMessage()) {
+      case OuterMessage_Message.pairingResponse:
+        print('🔐 Received PairingResponse');
+        if (msg.hasPairingResponse()) {
+          _sendPairingConfiguration();
+        }
+        break;
+
+      // case OuterMessage_Message.secretResponse:
+      //   print('🔑 Received SecretResponse: status=${msg.secretResponse.status}');
+      //   break;
+
+      // case OuterMessage_Message.error:
+      //   print('❌ Received Error: ${msg.error}');
+      //   break;
+
+      default:
+        print('⚠️ Unknown message type: ${msg.whichMessage()}');
     }
   }
 
@@ -351,75 +323,76 @@ class TvRemoteClient {
     return Uint8List.fromList(digest.bytes);
   }
 
-  // Future<void> enterPairingCode(String pin) async {
-  //   if (_pairingSocket == null) {
-  //     throw Exception('Not in pairing mode');
-  //   }
+  Future<void> enterPairingCode(String pin) async {
+    if (_pairingSocket == null) {
+      throw Exception('Not in pairing mode');
+    }
 
-  //   print('🔐 Computing secret for PIN: $pin\n');
+    print('🔐 Computing secret for PIN: $pin\n');
 
-  //   // Compute SHA-256 hash as per protocol
-  //   final secret = _computePairingSecret(pin);
+    // Compute SHA-256 hash as per protocol
+    final secret = _computePairingSecret(pin);
 
-  //   final secretMsg = Secret()
-  //     ..secret = secret;
+    final secretMsg = PairingSecret()..encryptedSecret = secret;
 
-  //   final outerMessage = OuterMessage()
-  //     ..protocolVersion = 2
-  //     ..status = 200
-  //     ..pairingSecret = secretMsg;
+    final outerMessage = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingSecret = secretMsg;
 
-  //   final bytes = outerMessage.writeToBuffer();
-  //   _pairingSocket!.add(bytes);
-  //   await _pairingSocket!.flush();
+    final bytes = outerMessage.writeToBuffer();
+    _pairingSocket!.add(bytes);
+    await _pairingSocket!.flush();
 
-  //   print('✅ Sent pairing secret\n');
-  // }
-  //  Future<void> _sendPairingConfiguration() async {
-  //   print('📤 Sending PairingConfiguration...\n');
+    print('✅ Sent pairing secret\n');
+  }
 
-  //   final encoding = Encoding()
-  //     ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
-  //     ..symbolLength = 6;
+  Future<void> _sendPairingConfiguration() async {
+    print('📤 Sending PairingConfiguration...\n');
 
-  //   final config = Configuration()
-  //     ..encoding = encoding
-  //     ..clientRole = Options_RoleType.ROLE_TYPE_INPUT;
+    final encoding = Encoding()
+      ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+      ..symbolLength = 6;
 
-  //   final outerMessage = OuterMessage()
-  //     ..protocolVersion = 2
-  //     ..status = 200
-  //     ..pairingConfiguration = config;
+    final config = Configuration()
+      ..encoding = encoding
+      ..clientRole = Options_RoleType.ROLE_TYPE_INPUT;
 
-  //   final bytes = outerMessage.writeToBuffer();
-  //   _pairingSocket!.add(bytes);
-  //   await _pairingSocket!.flush();
+    final outerMessage = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingConfiguration = config;
 
-  //   print('✅ Sent PairingConfiguration\n');
-  // }
-  // Future<void> _sendPairingOption() async {
-  //   print('📤 Sending PairingOption...\n');
+    final bytes = outerMessage.writeToBuffer();
+    _pairingSocket!.add(bytes);
+    await _pairingSocket!.flush();
 
-  //   final encoding = Encoding()
-  //     ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
-  //     ..symbolLength = 6;
+    print('✅ Sent PairingConfiguration\n');
+  }
 
-  //   final options = Options()
-  //     ..inputEncodings.add(encoding)
-  //     ..outputEncodings.add(encoding)
-  //     ..preferredRole = Options_RoleType.ROLE_TYPE_INPUT;
+  Future<void> _sendPairingOption() async {
+    print('📤 Sending PairingOption...\n');
 
-  //   final outerMessage = OuterMessage()
-  //     ..protocolVersion = 2
-  //     ..status = 200
-  //     ..pairingOption = options;
+    final encoding = Encoding()
+      ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+      ..symbolLength = 6;
 
-  //   final bytes = outerMessage.writeToBuffer();
-  //   _pairingSocket!.add(bytes);
-  //   await _pairingSocket!.flush();
+    final options = Options()
+      ..inputEncodings.add(encoding)
+      ..outputEncodings.add(encoding)
+      ..preferredRole = Options_RoleType.ROLE_TYPE_INPUT;
 
-  //   print('✅ Sent PairingOption\n');
-  // }
+    final outerMessage = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingOption = options;
+
+    final bytes = outerMessage.writeToBuffer();
+    _pairingSocket!.add(bytes);
+    await _pairingSocket!.flush();
+
+    print('✅ Sent PairingOption\n');
+  }
 
   Future<void> connect() async {
     if (!_isPaired) {
@@ -475,8 +448,8 @@ class TvRemoteClient {
 
   void _handleCommandMessage(Uint8List data) {
     try {
-      // Parse as RemoteMessage (command protocol)
-      final message = RemoteMessage.fromBuffer(data);
+      // Parse as OuterMessage (command protocol)
+      final message = OuterMessage.fromBuffer(data);
 
       // if (message.hasRemoteDeviceInfo()) {
       //   final info = message.remoteDeviceInfo;
@@ -527,12 +500,23 @@ class TvRemoteClient {
   }
 
   Future<void> _extractKeysFromCert(String certPem, String keyPem) async {
-    // Parse the stored certificate to extract RSA keys
-    // You mentioned you have RSA key parsers already
-    // Use them here to populate _clientPublicKey and _clientPrivateKey
-
     print('🔑 Extracting keys from stored certificate...\n');
-    // TODO: Use your RSA parser here
+
+    try {
+      // Extract private key from PEM
+      _clientPrivateKey = CryptoUtils.rsaPrivateKeyFromPem(keyPem);
+      print('✅ Extracted private key\n');
+
+      // Extract public key from certificate
+      final x509Cert = X509Utils.x509CertificateFromPem(certPem);
+      final pubKeyData = x509Cert.tbsCertificate!.subjectPublicKeyInfo.bytes;
+
+      _clientPublicKey = _parsePublicKey(pubKeyData!);
+      print('✅ Extracted public key from certificate\n');
+    } catch (e) {
+      print('❌ Error extracting keys: $e\n');
+      rethrow;
+    }
   }
 
   String _generateX509Certificate() {
@@ -724,20 +708,14 @@ class TvRemoteClient {
 
   RSAPublicKey _extractServerPublicKey(X509Certificate cert) {
     try {
-      // Convert binary DER to PEM
-      final derBytes = cert.der;
-      final base64Cert = base64.encode(derBytes);
-      final pem =
-          '-----BEGIN CERTIFICATE-----\n'
-          '${_chunk64(base64Cert)}'
-          '-----END CERTIFICATE-----\n';
+      // _envelope = createPairingSecretEnvelope(serverPublicKeyBytes: cert.der);
 
-      // Parse into structured object
-      final parsed = X509Utils.x509CertificateFromPem(pem);
+      final parsed = X509Utils.x509CertificateFromPem(cert.pem);
 
-      // Access publicKeyData field (exists in X509CertificateData)
-      final pubKeyData = parsed.tbsCertificate!.subjectPublicKeyInfo; // type:
-      return _parsePublicKey(pubKeyData.bytes!);
+      final pubKeyData = parsed.tbsCertificate!.subjectPublicKeyInfo; // type
+      final key = _parsePublicKey(pubKeyData.bytes!);
+
+      return key;
     } catch (e, st) {
       print('Error extracting server public key: $e\n$st');
       rethrow;
@@ -787,4 +765,87 @@ Uint8List _hexToBytes(String hex) {
       (i) => int.parse(hex.substring(i * 2, i * 2 + 2), radix: 16),
     ),
   );
+}
+
+Uint8List extractEcPointFromPemCert(Uint8List der) {
+  // DER of full certificate
+
+  // Parse top-level certificate sequence
+  final topParser = ASN1Parser(der);
+  final topSeq = topParser.nextObject() as ASN1Sequence;
+  // topSeq: [ tbsCertificate, signatureAlgorithm, signatureValue ]
+  if (topSeq.elements.isEmpty) {
+    throw StateError('Invalid certificate ASN.1 structure');
+  }
+
+  // tbsCertificate is the first element
+  final tbs = topSeq.elements[0];
+  if (tbs is! ASN1Sequence) {
+    throw StateError('Unexpected tbsCertificate structure');
+  }
+  final tbsSeq = tbs;
+
+  // Search inside tbsSequence for a child that is a SubjectPublicKeyInfo:
+  // SubjectPublicKeyInfo is SEQUENCE { algorithm, subjectPublicKey BIT STRING }
+  ASN1Sequence? spkiSeq;
+  for (final el in tbsSeq.elements) {
+    if (el is ASN1Sequence &&
+        el.elements.length >= 2 &&
+        el.elements[1] is ASN1BitString) {
+      spkiSeq = el;
+      break;
+    }
+  }
+
+  // fallback: common position index for subjectPublicKeyInfo (usually near the end)
+  if (spkiSeq == null) {
+    // many certs place subjectPublicKeyInfo at index 6; try that defensively
+    final idx = 6;
+    if (tbsSeq.elements.length > idx && tbsSeq.elements[idx] is ASN1Sequence) {
+      final maybe = tbsSeq.elements[idx] as ASN1Sequence;
+      if (maybe.elements.length >= 2 && maybe.elements![1] is ASN1BitString) {
+        spkiSeq = maybe;
+      }
+    }
+  }
+
+  if (spkiSeq == null) {
+    throw StateError('Could not locate SubjectPublicKeyInfo in certificate');
+  }
+
+  final bitString = spkiSeq.elements![1] as ASN1BitString;
+  final pubBytes = bitString.valueBytes();
+
+  // Normalize: some encoders include a leading 0x00 padding in the BIT STRING. Remove it.
+  final normalized = (pubBytes.isNotEmpty && pubBytes[0] == 0x00)
+      ? pubBytes.sublist(1)
+      : pubBytes;
+
+  // At this point normalized should be the EC point in uncompressed form: 0x04 || X || Y
+  if (normalized.length != 65 || normalized[0] != 0x04) {
+    // If compressed form or other length, try to handle compressed -> uncompressed is non-trivial here.
+    throw StateError(
+      'Unexpected EC public key format: length=${normalized.length}',
+    );
+  }
+
+  return Uint8List.fromList(normalized);
+}
+
+Uint8List encodeVarint(int value) {
+  final bytes = <int>[];
+  var v = value;
+  do {
+    var byte = v & 0x7F; // Get the lowest 7 bits
+    v = v >>> 7; // Unsigned shift right by 7
+
+    // If there are more bits left, set the Continuation Bit (MSB)
+    if (v != 0) {
+      byte |= 0x80;
+    }
+
+    bytes.add(byte);
+  } while (v != 0);
+
+  return Uint8List.fromList(bytes);
 }

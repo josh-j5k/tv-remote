@@ -2,7 +2,23 @@
 
 package remote;
 
-enum AndroidKeyCode {
+message RemoteMessage {
+  oneof message_type {
+    RemoteCommand remote_command = 5;
+    RemoteSetActive remote_set_active = 8;
+    RemotePingRequest remote_ping_request = 9;
+    RemotePingResponse remote_ping_response = 10;
+    RemoteError remote_error = 11;
+    RemoteSetVolumeLevel remote_set_volume_level = 12;
+    RemoteAdjustVolumeLevel remote_adjust_volume_level = 13;
+    RemoteImeKeyInject remote_ime_key_inject = 14;
+    RemoteImeBatchEdit remote_ime_batch_edit = 15;
+    RemoteDeviceInfo remote_device_info = 17;
+    RemoteAppLinkLaunchRequest remote_app_link_launch_request = 18;
+  }
+}
+
+enum RemoteKeyCode {
   KEYCODE_UNKNOWN = 0;
 
   // navigation
@@ -79,7 +95,70 @@ enum AndroidKeyCode {
   KEYCODE_PROG_BLUE = 186;
 }
 
-message KeyEvent {
-  AndroidKeyCode code = 1;
-  string description = 2;
+message RemoteCommand {
+  int32 key_code = 1;
+  int32 direction = 2;
+}
+
+enum RemoteDirection {
+  REMOTE_DIRECTION_UNKNOWN = 0;
+  START_LONG_PRESS = 1;
+  END_LONG_PRESS = 2;
+  SHORT_PRESS = 3;
+}
+
+message RemoteSetActive {
+  bool active = 1;
+}
+
+message RemotePingRequest {}
+
+message RemotePingResponse {}
+
+message RemoteError {
+  int32 error_code = 1;
+}
+
+enum RemoteErrorCode {
+  REMOTE_ERROR_CODE_UNKNOWN = 0;
+  ERROR_INVALID_SECRET = 401;
+  ERROR_PAIRING_TIMEOUT = 408;
+  ERROR_GENERIC = 500;
+}
+
+message RemoteSetVolumeLevel {
+  int32 volume_level = 1;
+  int32 volume_max = 2;
+  int32 volume_min = 3;
+  bool volume_muted = 4;
+}
+
+message RemoteAdjustVolumeLevel {
+  int32 delta = 1;
+}
+
+message RemoteImeKeyInject {
+  string text_field = 1;
+  int32 app_package_name = 2;
+}
+
+message RemoteImeBatchEdit {
+  int32 delete_before_length = 1;
+  int32 delete_after_length = 2;
+  string new_cursor_position = 3;
+  string new_text = 4;
+  bool new_composition_text = 5;
+}
+
+message RemoteDeviceInfo {
+  string model = 1;
+  string vendor = 2;
+  int32 unknown1 = 3;
+  string unknown2 = 4;
+  string app_package = 5;
+  string app_version = 6;
+}
+
+message RemoteAppLinkLaunchRequest {
+  string app_link = 1;
 }

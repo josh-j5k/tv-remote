@@ -12,406 +12,264 @@
 
 import 'dart:core' as $core;
 
-import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
+
+import 'auth.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-class AuthRequest extends $pb.GeneratedMessage {
-  factory AuthRequest({
-    $core.List<$core.int>? encryptedSessionKey,
-    $core.List<$core.int>? clientNonce,
-    $core.String? clientId,
-    $fixnum.Int64? ts,
-  }) {
-    final result = create();
-    if (encryptedSessionKey != null)
-      result.encryptedSessionKey = encryptedSessionKey;
-    if (clientNonce != null) result.clientNonce = clientNonce;
-    if (clientId != null) result.clientId = clientId;
-    if (ts != null) result.ts = ts;
-    return result;
-  }
+export 'auth.pbenum.dart';
 
-  AuthRequest._();
-
-  factory AuthRequest.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory AuthRequest.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AuthRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
-      createEmptyInstance: create)
-    ..a<$core.List<$core.int>>(
-        1, _omitFieldNames ? '' : 'encryptedSessionKey', $pb.PbFieldType.OY)
-    ..a<$core.List<$core.int>>(
-        2, _omitFieldNames ? '' : 'clientNonce', $pb.PbFieldType.OY)
-    ..aOS(3, _omitFieldNames ? '' : 'clientId')
-    ..aInt64(4, _omitFieldNames ? '' : 'ts')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AuthRequest clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AuthRequest copyWith(void Function(AuthRequest) updates) =>
-      super.copyWith((message) => updates(message as AuthRequest))
-          as AuthRequest;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static AuthRequest create() => AuthRequest._();
-  @$core.override
-  AuthRequest createEmptyInstance() => create();
-  static $pb.PbList<AuthRequest> createRepeated() => $pb.PbList<AuthRequest>();
-  @$core.pragma('dart2js:noInline')
-  static AuthRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AuthRequest>(create);
-  static AuthRequest? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.List<$core.int> get encryptedSessionKey => $_getN(0);
-  @$pb.TagNumber(1)
-  set encryptedSessionKey($core.List<$core.int> value) => $_setBytes(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasEncryptedSessionKey() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearEncryptedSessionKey() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.List<$core.int> get clientNonce => $_getN(1);
-  @$pb.TagNumber(2)
-  set clientNonce($core.List<$core.int> value) => $_setBytes(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasClientNonce() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearClientNonce() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get clientId => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set clientId($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasClientId() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearClientId() => clearField(3);
-
-  @$pb.TagNumber(4)
-  $fixnum.Int64 get ts => $_getI64(3);
-  @$pb.TagNumber(4)
-  set ts($fixnum.Int64 value) => $_setInt64(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasTs() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearTs() => clearField(4);
-}
-
-class AuthResponse extends $pb.GeneratedMessage {
-  factory AuthResponse({
-    $core.List<$core.int>? aesCiphertext,
-    $core.List<$core.int>? aesTag,
-    $fixnum.Int64? ts,
-  }) {
-    final result = create();
-    if (aesCiphertext != null) result.aesCiphertext = aesCiphertext;
-    if (aesTag != null) result.aesTag = aesTag;
-    if (ts != null) result.ts = ts;
-    return result;
-  }
-
-  AuthResponse._();
-
-  factory AuthResponse.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory AuthResponse.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'AuthResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
-      createEmptyInstance: create)
-    ..a<$core.List<$core.int>>(
-        1, _omitFieldNames ? '' : 'aesCiphertext', $pb.PbFieldType.OY)
-    ..a<$core.List<$core.int>>(
-        2, _omitFieldNames ? '' : 'aesTag', $pb.PbFieldType.OY)
-    ..aInt64(3, _omitFieldNames ? '' : 'ts')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AuthResponse clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AuthResponse copyWith(void Function(AuthResponse) updates) =>
-      super.copyWith((message) => updates(message as AuthResponse))
-          as AuthResponse;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static AuthResponse create() => AuthResponse._();
-  @$core.override
-  AuthResponse createEmptyInstance() => create();
-  static $pb.PbList<AuthResponse> createRepeated() =>
-      $pb.PbList<AuthResponse>();
-  @$core.pragma('dart2js:noInline')
-  static AuthResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AuthResponse>(create);
-  static AuthResponse? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.List<$core.int> get aesCiphertext => $_getN(0);
-  @$pb.TagNumber(1)
-  set aesCiphertext($core.List<$core.int> value) => $_setBytes(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasAesCiphertext() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAesCiphertext() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.List<$core.int> get aesTag => $_getN(1);
-  @$pb.TagNumber(2)
-  set aesTag($core.List<$core.int> value) => $_setBytes(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasAesTag() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAesTag() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $fixnum.Int64 get ts => $_getI64(2);
-  @$pb.TagNumber(3)
-  set ts($fixnum.Int64 value) => $_setInt64(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasTs() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearTs() => clearField(3);
-}
-
-enum RemoteMessage_MessageType {
+enum OuterMessage_Message {
   pairingRequest,
   pairingResponse,
   pairingSecret,
-  remoteCommand,
-  remoteSetActive,
-  remotePingRequest,
-  remotePingResponse,
-  remoteError,
+  pairingRequestAck,
+  pairingOption,
+  pairingOptionAck,
+  pairingConfiguration,
+  pairingConfigurationAck,
   notSet
 }
 
-class RemoteMessage extends $pb.GeneratedMessage {
-  factory RemoteMessage({
+class OuterMessage extends $pb.GeneratedMessage {
+  factory OuterMessage({
+    $core.int? protocolVersion,
+    $core.int? status,
     PairingRequest? pairingRequest,
     PairingResponse? pairingResponse,
     PairingSecret? pairingSecret,
-    RemoteCommand? remoteCommand,
-    RemoteSetActive? remoteSetActive,
-    RemotePingRequest? remotePingRequest,
-    RemotePingResponse? remotePingResponse,
-    RemoteError? remoteError,
+    PairingRequestAck? pairingRequestAck,
+    Options? pairingOption,
+    OptionsAck? pairingOptionAck,
+    Configuration? pairingConfiguration,
+    ConfigurationAck? pairingConfigurationAck,
   }) {
     final result = create();
+    if (protocolVersion != null) result.protocolVersion = protocolVersion;
+    if (status != null) result.status = status;
     if (pairingRequest != null) result.pairingRequest = pairingRequest;
     if (pairingResponse != null) result.pairingResponse = pairingResponse;
     if (pairingSecret != null) result.pairingSecret = pairingSecret;
-    if (remoteCommand != null) result.remoteCommand = remoteCommand;
-    if (remoteSetActive != null) result.remoteSetActive = remoteSetActive;
-    if (remotePingRequest != null) result.remotePingRequest = remotePingRequest;
-    if (remotePingResponse != null)
-      result.remotePingResponse = remotePingResponse;
-    if (remoteError != null) result.remoteError = remoteError;
+    if (pairingRequestAck != null) result.pairingRequestAck = pairingRequestAck;
+    if (pairingOption != null) result.pairingOption = pairingOption;
+    if (pairingOptionAck != null) result.pairingOptionAck = pairingOptionAck;
+    if (pairingConfiguration != null)
+      result.pairingConfiguration = pairingConfiguration;
+    if (pairingConfigurationAck != null)
+      result.pairingConfigurationAck = pairingConfigurationAck;
     return result;
   }
 
-  RemoteMessage._();
+  OuterMessage._();
 
-  factory RemoteMessage.fromBuffer($core.List<$core.int> data,
+  factory OuterMessage.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoteMessage.fromJson($core.String json,
+  factory OuterMessage.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, RemoteMessage_MessageType>
-      _RemoteMessage_MessageTypeByTag = {
-    2: RemoteMessage_MessageType.pairingRequest,
-    3: RemoteMessage_MessageType.pairingResponse,
-    4: RemoteMessage_MessageType.pairingSecret,
-    5: RemoteMessage_MessageType.remoteCommand,
-    8: RemoteMessage_MessageType.remoteSetActive,
-    9: RemoteMessage_MessageType.remotePingRequest,
-    10: RemoteMessage_MessageType.remotePingResponse,
-    11: RemoteMessage_MessageType.remoteError,
-    0: RemoteMessage_MessageType.notSet
+  static const $core.Map<$core.int, OuterMessage_Message>
+      _OuterMessage_MessageByTag = {
+    10: OuterMessage_Message.pairingRequest,
+    11: OuterMessage_Message.pairingResponse,
+    12: OuterMessage_Message.pairingSecret,
+    13: OuterMessage_Message.pairingRequestAck,
+    14: OuterMessage_Message.pairingOption,
+    15: OuterMessage_Message.pairingOptionAck,
+    16: OuterMessage_Message.pairingConfiguration,
+    17: OuterMessage_Message.pairingConfigurationAck,
+    0: OuterMessage_Message.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteMessage',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      _omitMessageNames ? '' : 'OuterMessage',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 8, 9, 10, 11])
-    ..aOM<PairingRequest>(2, _omitFieldNames ? '' : 'pairingRequest',
+    ..oo(0, [10, 11, 12, 13, 14, 15, 16, 17])
+    ..aI(1, _omitFieldNames ? '' : 'protocolVersion',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aI(2, _omitFieldNames ? '' : 'status', fieldType: $pb.PbFieldType.OU3)
+    ..aOM<PairingRequest>(10, _omitFieldNames ? '' : 'pairingRequest',
         subBuilder: PairingRequest.create)
-    ..aOM<PairingResponse>(3, _omitFieldNames ? '' : 'pairingResponse',
+    ..aOM<PairingResponse>(11, _omitFieldNames ? '' : 'pairingResponse',
         subBuilder: PairingResponse.create)
-    ..aOM<PairingSecret>(4, _omitFieldNames ? '' : 'pairingSecret',
+    ..aOM<PairingSecret>(12, _omitFieldNames ? '' : 'pairingSecret',
         subBuilder: PairingSecret.create)
-    ..aOM<RemoteCommand>(5, _omitFieldNames ? '' : 'remoteCommand',
-        subBuilder: RemoteCommand.create)
-    ..aOM<RemoteSetActive>(8, _omitFieldNames ? '' : 'remoteSetActive',
-        subBuilder: RemoteSetActive.create)
-    ..aOM<RemotePingRequest>(9, _omitFieldNames ? '' : 'remotePingRequest',
-        subBuilder: RemotePingRequest.create)
-    ..aOM<RemotePingResponse>(10, _omitFieldNames ? '' : 'remotePingResponse',
-        subBuilder: RemotePingResponse.create)
-    ..aOM<RemoteError>(11, _omitFieldNames ? '' : 'remoteError',
-        subBuilder: RemoteError.create)
+    ..aOM<PairingRequestAck>(13, _omitFieldNames ? '' : 'pairingRequestAck',
+        subBuilder: PairingRequestAck.create)
+    ..aOM<Options>(14, _omitFieldNames ? '' : 'pairingOption',
+        subBuilder: Options.create)
+    ..aOM<OptionsAck>(15, _omitFieldNames ? '' : 'pairingOptionAck',
+        subBuilder: OptionsAck.create)
+    ..aOM<Configuration>(16, _omitFieldNames ? '' : 'pairingConfiguration',
+        subBuilder: Configuration.create)
+    ..aOM<ConfigurationAck>(
+        17, _omitFieldNames ? '' : 'pairingConfigurationAck',
+        subBuilder: ConfigurationAck.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteMessage clone() => deepCopy();
+  OuterMessage clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteMessage copyWith(void Function(RemoteMessage) updates) =>
-      super.copyWith((message) => updates(message as RemoteMessage))
-          as RemoteMessage;
+  OuterMessage copyWith(void Function(OuterMessage) updates) =>
+      super.copyWith((message) => updates(message as OuterMessage))
+          as OuterMessage;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoteMessage create() => RemoteMessage._();
+  static OuterMessage create() => OuterMessage._();
   @$core.override
-  RemoteMessage createEmptyInstance() => create();
-  static $pb.PbList<RemoteMessage> createRepeated() =>
-      $pb.PbList<RemoteMessage>();
+  OuterMessage createEmptyInstance() => create();
+  static $pb.PbList<OuterMessage> createRepeated() =>
+      $pb.PbList<OuterMessage>();
   @$core.pragma('dart2js:noInline')
-  static RemoteMessage getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteMessage>(create);
-  static RemoteMessage? _defaultInstance;
-
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(8)
-  @$pb.TagNumber(9)
-  @$pb.TagNumber(10)
-  @$pb.TagNumber(11)
-  RemoteMessage_MessageType whichMessageType() =>
-      _RemoteMessage_MessageTypeByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(8)
-  @$pb.TagNumber(9)
-  @$pb.TagNumber(10)
-  @$pb.TagNumber(11)
-  void clearMessageType() => clearField($_whichOneof(0));
-
-  @$pb.TagNumber(2)
-  PairingRequest get pairingRequest => $_getN(0);
-  @$pb.TagNumber(2)
-  set pairingRequest(PairingRequest value) => setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasPairingRequest() => $_has(0);
-  @$pb.TagNumber(2)
-  void clearPairingRequest() => clearField(2);
-  @$pb.TagNumber(2)
-  PairingRequest ensurePairingRequest() => $_ensure(0);
-
-  @$pb.TagNumber(3)
-  PairingResponse get pairingResponse => $_getN(1);
-  @$pb.TagNumber(3)
-  set pairingResponse(PairingResponse value) => setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasPairingResponse() => $_has(1);
-  @$pb.TagNumber(3)
-  void clearPairingResponse() => clearField(3);
-  @$pb.TagNumber(3)
-  PairingResponse ensurePairingResponse() => $_ensure(1);
-
-  @$pb.TagNumber(4)
-  PairingSecret get pairingSecret => $_getN(2);
-  @$pb.TagNumber(4)
-  set pairingSecret(PairingSecret value) => setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasPairingSecret() => $_has(2);
-  @$pb.TagNumber(4)
-  void clearPairingSecret() => clearField(4);
-  @$pb.TagNumber(4)
-  PairingSecret ensurePairingSecret() => $_ensure(2);
-
-  @$pb.TagNumber(5)
-  RemoteCommand get remoteCommand => $_getN(3);
-  @$pb.TagNumber(5)
-  set remoteCommand(RemoteCommand value) => setField(5, value);
-  @$pb.TagNumber(5)
-  $core.bool hasRemoteCommand() => $_has(3);
-  @$pb.TagNumber(5)
-  void clearRemoteCommand() => clearField(5);
-  @$pb.TagNumber(5)
-  RemoteCommand ensureRemoteCommand() => $_ensure(3);
-
-  @$pb.TagNumber(8)
-  RemoteSetActive get remoteSetActive => $_getN(4);
-  @$pb.TagNumber(8)
-  set remoteSetActive(RemoteSetActive value) => setField(8, value);
-  @$pb.TagNumber(8)
-  $core.bool hasRemoteSetActive() => $_has(4);
-  @$pb.TagNumber(8)
-  void clearRemoteSetActive() => clearField(8);
-  @$pb.TagNumber(8)
-  RemoteSetActive ensureRemoteSetActive() => $_ensure(4);
-
-  @$pb.TagNumber(9)
-  RemotePingRequest get remotePingRequest => $_getN(5);
-  @$pb.TagNumber(9)
-  set remotePingRequest(RemotePingRequest value) => setField(9, value);
-  @$pb.TagNumber(9)
-  $core.bool hasRemotePingRequest() => $_has(5);
-  @$pb.TagNumber(9)
-  void clearRemotePingRequest() => clearField(9);
-  @$pb.TagNumber(9)
-  RemotePingRequest ensureRemotePingRequest() => $_ensure(5);
+  static OuterMessage getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OuterMessage>(create);
+  static OuterMessage? _defaultInstance;
 
   @$pb.TagNumber(10)
-  RemotePingResponse get remotePingResponse => $_getN(6);
+  @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
+  @$pb.TagNumber(13)
+  @$pb.TagNumber(14)
+  @$pb.TagNumber(15)
+  @$pb.TagNumber(16)
+  @$pb.TagNumber(17)
+  OuterMessage_Message whichMessage() =>
+      _OuterMessage_MessageByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(10)
-  set remotePingResponse(RemotePingResponse value) => setField(10, value);
+  @$pb.TagNumber(11)
+  @$pb.TagNumber(12)
+  @$pb.TagNumber(13)
+  @$pb.TagNumber(14)
+  @$pb.TagNumber(15)
+  @$pb.TagNumber(16)
+  @$pb.TagNumber(17)
+  void clearMessage() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.int get protocolVersion => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set protocolVersion($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasProtocolVersion() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearProtocolVersion() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get status => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set status($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStatus() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStatus() => $_clearField(2);
+
   @$pb.TagNumber(10)
-  $core.bool hasRemotePingResponse() => $_has(6);
+  PairingRequest get pairingRequest => $_getN(2);
   @$pb.TagNumber(10)
-  void clearRemotePingResponse() => clearField(10);
+  set pairingRequest(PairingRequest value) => $_setField(10, value);
   @$pb.TagNumber(10)
-  RemotePingResponse ensureRemotePingResponse() => $_ensure(6);
+  $core.bool hasPairingRequest() => $_has(2);
+  @$pb.TagNumber(10)
+  void clearPairingRequest() => $_clearField(10);
+  @$pb.TagNumber(10)
+  PairingRequest ensurePairingRequest() => $_ensure(2);
 
   @$pb.TagNumber(11)
-  RemoteError get remoteError => $_getN(7);
+  PairingResponse get pairingResponse => $_getN(3);
   @$pb.TagNumber(11)
-  set remoteError(RemoteError value) => setField(11, value);
+  set pairingResponse(PairingResponse value) => $_setField(11, value);
   @$pb.TagNumber(11)
-  $core.bool hasRemoteError() => $_has(7);
+  $core.bool hasPairingResponse() => $_has(3);
   @$pb.TagNumber(11)
-  void clearRemoteError() => clearField(11);
+  void clearPairingResponse() => $_clearField(11);
   @$pb.TagNumber(11)
-  RemoteError ensureRemoteError() => $_ensure(7);
+  PairingResponse ensurePairingResponse() => $_ensure(3);
+
+  @$pb.TagNumber(12)
+  PairingSecret get pairingSecret => $_getN(4);
+  @$pb.TagNumber(12)
+  set pairingSecret(PairingSecret value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasPairingSecret() => $_has(4);
+  @$pb.TagNumber(12)
+  void clearPairingSecret() => $_clearField(12);
+  @$pb.TagNumber(12)
+  PairingSecret ensurePairingSecret() => $_ensure(4);
+
+  @$pb.TagNumber(13)
+  PairingRequestAck get pairingRequestAck => $_getN(5);
+  @$pb.TagNumber(13)
+  set pairingRequestAck(PairingRequestAck value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasPairingRequestAck() => $_has(5);
+  @$pb.TagNumber(13)
+  void clearPairingRequestAck() => $_clearField(13);
+  @$pb.TagNumber(13)
+  PairingRequestAck ensurePairingRequestAck() => $_ensure(5);
+
+  @$pb.TagNumber(14)
+  Options get pairingOption => $_getN(6);
+  @$pb.TagNumber(14)
+  set pairingOption(Options value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasPairingOption() => $_has(6);
+  @$pb.TagNumber(14)
+  void clearPairingOption() => $_clearField(14);
+  @$pb.TagNumber(14)
+  Options ensurePairingOption() => $_ensure(6);
+
+  @$pb.TagNumber(15)
+  OptionsAck get pairingOptionAck => $_getN(7);
+  @$pb.TagNumber(15)
+  set pairingOptionAck(OptionsAck value) => $_setField(15, value);
+  @$pb.TagNumber(15)
+  $core.bool hasPairingOptionAck() => $_has(7);
+  @$pb.TagNumber(15)
+  void clearPairingOptionAck() => $_clearField(15);
+  @$pb.TagNumber(15)
+  OptionsAck ensurePairingOptionAck() => $_ensure(7);
+
+  @$pb.TagNumber(16)
+  Configuration get pairingConfiguration => $_getN(8);
+  @$pb.TagNumber(16)
+  set pairingConfiguration(Configuration value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasPairingConfiguration() => $_has(8);
+  @$pb.TagNumber(16)
+  void clearPairingConfiguration() => $_clearField(16);
+  @$pb.TagNumber(16)
+  Configuration ensurePairingConfiguration() => $_ensure(8);
+
+  @$pb.TagNumber(17)
+  ConfigurationAck get pairingConfigurationAck => $_getN(9);
+  @$pb.TagNumber(17)
+  set pairingConfigurationAck(ConfigurationAck value) => $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasPairingConfigurationAck() => $_has(9);
+  @$pb.TagNumber(17)
+  void clearPairingConfigurationAck() => $_clearField(17);
+  @$pb.TagNumber(17)
+  ConfigurationAck ensurePairingConfigurationAck() => $_ensure(9);
 }
 
-/// Pairing messages
+/// PHASE 1
 class PairingRequest extends $pb.GeneratedMessage {
   factory PairingRequest({
-    $core.String? clientId,
     $core.String? clientName,
+    $core.String? serviceName,
+    $core.String? clientId,
+    $core.String? serviceUuid,
   }) {
     final result = create();
-    if (clientId != null) result.clientId = clientId;
     if (clientName != null) result.clientName = clientName;
+    if (serviceName != null) result.serviceName = serviceName;
+    if (clientId != null) result.clientId = clientId;
+    if (serviceUuid != null) result.serviceUuid = serviceUuid;
     return result;
   }
 
@@ -426,10 +284,12 @@ class PairingRequest extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'PairingRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'clientId')
-    ..aOS(2, _omitFieldNames ? '' : 'clientName')
+    ..aOS(1, _omitFieldNames ? '' : 'clientName')
+    ..aOS(2, _omitFieldNames ? '' : 'serviceName')
+    ..aOS(3, _omitFieldNames ? '' : 'clientId')
+    ..aOS(4, _omitFieldNames ? '' : 'serviceUuid')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -454,22 +314,80 @@ class PairingRequest extends $pb.GeneratedMessage {
   static PairingRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get clientId => $_getSZ(0);
+  $core.String get clientName => $_getSZ(0);
   @$pb.TagNumber(1)
-  set clientId($core.String value) => $_setString(0, value);
+  set clientName($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasClientId() => $_has(0);
+  $core.bool hasClientName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearClientId() => clearField(1);
+  void clearClientName() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get clientName => $_getSZ(1);
+  $core.String get serviceName => $_getSZ(1);
   @$pb.TagNumber(2)
-  set clientName($core.String value) => $_setString(1, value);
+  set serviceName($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasClientName() => $_has(1);
+  $core.bool hasServiceName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearClientName() => clearField(2);
+  void clearServiceName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get clientId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set clientId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasClientId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearClientId() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get serviceUuid => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set serviceUuid($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasServiceUuid() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearServiceUuid() => $_clearField(4);
+}
+
+class PairingRequestAck extends $pb.GeneratedMessage {
+  factory PairingRequestAck() => create();
+
+  PairingRequestAck._();
+
+  factory PairingRequestAck.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PairingRequestAck.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PairingRequestAck',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PairingRequestAck clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PairingRequestAck copyWith(void Function(PairingRequestAck) updates) =>
+      super.copyWith((message) => updates(message as PairingRequestAck))
+          as PairingRequestAck;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PairingRequestAck create() => PairingRequestAck._();
+  @$core.override
+  PairingRequestAck createEmptyInstance() => create();
+  static $pb.PbList<PairingRequestAck> createRepeated() =>
+      $pb.PbList<PairingRequestAck>();
+  @$core.pragma('dart2js:noInline')
+  static PairingRequestAck getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PairingRequestAck>(create);
+  static PairingRequestAck? _defaultInstance;
 }
 
 class PairingResponse extends $pb.GeneratedMessage {
@@ -494,9 +412,9 @@ class PairingResponse extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'PairingResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, _omitFieldNames ? '' : 'status', $pb.PbFieldType.O3)
+    ..aI(1, _omitFieldNames ? '' : 'status')
     ..aOS(2, _omitFieldNames ? '' : 'serverPublicKey')
     ..hasRequiredFields = false;
 
@@ -528,7 +446,7 @@ class PairingResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasStatus() => $_has(0);
   @$pb.TagNumber(1)
-  void clearStatus() => clearField(1);
+  void clearStatus() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.String get serverPublicKey => $_getSZ(1);
@@ -537,7 +455,7 @@ class PairingResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.bool hasServerPublicKey() => $_has(1);
   @$pb.TagNumber(2)
-  void clearServerPublicKey() => clearField(2);
+  void clearServerPublicKey() => $_clearField(2);
 }
 
 class PairingSecret extends $pb.GeneratedMessage {
@@ -560,7 +478,7 @@ class PairingSecret extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'PairingSecret',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
     ..a<$core.List<$core.int>>(
         1, _omitFieldNames ? '' : 'encryptedSecret', $pb.PbFieldType.OY)
@@ -594,267 +512,334 @@ class PairingSecret extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.bool hasEncryptedSecret() => $_has(0);
   @$pb.TagNumber(1)
-  void clearEncryptedSecret() => clearField(1);
+  void clearEncryptedSecret() => $_clearField(1);
 }
 
-/// Remote command messages
-class RemoteCommand extends $pb.GeneratedMessage {
-  factory RemoteCommand({
-    $core.int? keyCode,
-    $core.int? direction,
+class PairingSecretAck extends $pb.GeneratedMessage {
+  factory PairingSecretAck() => create();
+
+  PairingSecretAck._();
+
+  factory PairingSecretAck.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PairingSecretAck.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PairingSecretAck',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PairingSecretAck clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PairingSecretAck copyWith(void Function(PairingSecretAck) updates) =>
+      super.copyWith((message) => updates(message as PairingSecretAck))
+          as PairingSecretAck;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PairingSecretAck create() => PairingSecretAck._();
+  @$core.override
+  PairingSecretAck createEmptyInstance() => create();
+  static $pb.PbList<PairingSecretAck> createRepeated() =>
+      $pb.PbList<PairingSecretAck>();
+  @$core.pragma('dart2js:noInline')
+  static PairingSecretAck getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PairingSecretAck>(create);
+  static PairingSecretAck? _defaultInstance;
+}
+
+class Encoding extends $pb.GeneratedMessage {
+  factory Encoding({
+    Encoding_EncodingType? type,
+    $core.int? symbolLength,
   }) {
     final result = create();
-    if (keyCode != null) result.keyCode = keyCode;
-    if (direction != null) result.direction = direction;
+    if (type != null) result.type = type;
+    if (symbolLength != null) result.symbolLength = symbolLength;
     return result;
   }
 
-  RemoteCommand._();
+  Encoding._();
 
-  factory RemoteCommand.fromBuffer($core.List<$core.int> data,
+  factory Encoding.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoteCommand.fromJson($core.String json,
+  factory Encoding.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteCommand',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      _omitMessageNames ? '' : 'Encoding',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, _omitFieldNames ? '' : 'keyCode', $pb.PbFieldType.O3)
-    ..a<$core.int>(2, _omitFieldNames ? '' : 'direction', $pb.PbFieldType.O3)
+    ..aE<Encoding_EncodingType>(1, _omitFieldNames ? '' : 'type',
+        enumValues: Encoding_EncodingType.values)
+    ..aI(2, _omitFieldNames ? '' : 'symbolLength',
+        fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteCommand clone() => deepCopy();
+  Encoding clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteCommand copyWith(void Function(RemoteCommand) updates) =>
-      super.copyWith((message) => updates(message as RemoteCommand))
-          as RemoteCommand;
+  Encoding copyWith(void Function(Encoding) updates) =>
+      super.copyWith((message) => updates(message as Encoding)) as Encoding;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoteCommand create() => RemoteCommand._();
+  static Encoding create() => Encoding._();
   @$core.override
-  RemoteCommand createEmptyInstance() => create();
-  static $pb.PbList<RemoteCommand> createRepeated() =>
-      $pb.PbList<RemoteCommand>();
+  Encoding createEmptyInstance() => create();
+  static $pb.PbList<Encoding> createRepeated() => $pb.PbList<Encoding>();
   @$core.pragma('dart2js:noInline')
-  static RemoteCommand getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteCommand>(create);
-  static RemoteCommand? _defaultInstance;
+  static Encoding getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Encoding>(create);
+  static Encoding? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get keyCode => $_getIZ(0);
+  Encoding_EncodingType get type => $_getN(0);
   @$pb.TagNumber(1)
-  set keyCode($core.int value) => $_setSignedInt32(0, value);
+  set type(Encoding_EncodingType value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasKeyCode() => $_has(0);
+  $core.bool hasType() => $_has(0);
   @$pb.TagNumber(1)
-  void clearKeyCode() => clearField(1);
+  void clearType() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get direction => $_getIZ(1);
+  $core.int get symbolLength => $_getIZ(1);
   @$pb.TagNumber(2)
-  set direction($core.int value) => $_setSignedInt32(1, value);
+  set symbolLength($core.int value) => $_setUnsignedInt32(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasDirection() => $_has(1);
+  $core.bool hasSymbolLength() => $_has(1);
   @$pb.TagNumber(2)
-  void clearDirection() => clearField(2);
+  void clearSymbolLength() => $_clearField(2);
 }
 
-class RemoteSetActive extends $pb.GeneratedMessage {
-  factory RemoteSetActive({
-    $core.bool? active,
+class Options extends $pb.GeneratedMessage {
+  factory Options({
+    $core.Iterable<Encoding>? inputEncodings,
+    $core.Iterable<Encoding>? outputEncodings,
+    Options_RoleType? preferredRole,
   }) {
     final result = create();
-    if (active != null) result.active = active;
+    if (inputEncodings != null) result.inputEncodings.addAll(inputEncodings);
+    if (outputEncodings != null) result.outputEncodings.addAll(outputEncodings);
+    if (preferredRole != null) result.preferredRole = preferredRole;
     return result;
   }
 
-  RemoteSetActive._();
+  Options._();
 
-  factory RemoteSetActive.fromBuffer($core.List<$core.int> data,
+  factory Options.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoteSetActive.fromJson($core.String json,
+  factory Options.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteSetActive',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      _omitMessageNames ? '' : 'Options',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
-    ..aOB(1, _omitFieldNames ? '' : 'active')
+    ..pPM<Encoding>(1, _omitFieldNames ? '' : 'inputEncodings',
+        subBuilder: Encoding.create)
+    ..pPM<Encoding>(2, _omitFieldNames ? '' : 'outputEncodings',
+        subBuilder: Encoding.create)
+    ..aE<Options_RoleType>(3, _omitFieldNames ? '' : 'preferredRole',
+        enumValues: Options_RoleType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteSetActive clone() => deepCopy();
+  Options clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteSetActive copyWith(void Function(RemoteSetActive) updates) =>
-      super.copyWith((message) => updates(message as RemoteSetActive))
-          as RemoteSetActive;
+  Options copyWith(void Function(Options) updates) =>
+      super.copyWith((message) => updates(message as Options)) as Options;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoteSetActive create() => RemoteSetActive._();
+  static Options create() => Options._();
   @$core.override
-  RemoteSetActive createEmptyInstance() => create();
-  static $pb.PbList<RemoteSetActive> createRepeated() =>
-      $pb.PbList<RemoteSetActive>();
+  Options createEmptyInstance() => create();
+  static $pb.PbList<Options> createRepeated() => $pb.PbList<Options>();
   @$core.pragma('dart2js:noInline')
-  static RemoteSetActive getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteSetActive>(create);
-  static RemoteSetActive? _defaultInstance;
+  static Options getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Options>(create);
+  static Options? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.bool get active => $_getBF(0);
-  @$pb.TagNumber(1)
-  set active($core.bool value) => $_setBool(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasActive() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearActive() => clearField(1);
+  $pb.PbList<Encoding> get inputEncodings => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<Encoding> get outputEncodings => $_getList(1);
+
+  @$pb.TagNumber(3)
+  Options_RoleType get preferredRole => $_getN(2);
+  @$pb.TagNumber(3)
+  set preferredRole(Options_RoleType value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPreferredRole() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPreferredRole() => $_clearField(3);
 }
 
-class RemotePingRequest extends $pb.GeneratedMessage {
-  factory RemotePingRequest() => create();
+class OptionsAck extends $pb.GeneratedMessage {
+  factory OptionsAck() => create();
 
-  RemotePingRequest._();
+  OptionsAck._();
 
-  factory RemotePingRequest.fromBuffer($core.List<$core.int> data,
+  factory OptionsAck.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemotePingRequest.fromJson($core.String json,
+  factory OptionsAck.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemotePingRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      _omitMessageNames ? '' : 'OptionsAck',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemotePingRequest clone() => deepCopy();
+  OptionsAck clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemotePingRequest copyWith(void Function(RemotePingRequest) updates) =>
-      super.copyWith((message) => updates(message as RemotePingRequest))
-          as RemotePingRequest;
+  OptionsAck copyWith(void Function(OptionsAck) updates) =>
+      super.copyWith((message) => updates(message as OptionsAck)) as OptionsAck;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemotePingRequest create() => RemotePingRequest._();
+  static OptionsAck create() => OptionsAck._();
   @$core.override
-  RemotePingRequest createEmptyInstance() => create();
-  static $pb.PbList<RemotePingRequest> createRepeated() =>
-      $pb.PbList<RemotePingRequest>();
+  OptionsAck createEmptyInstance() => create();
+  static $pb.PbList<OptionsAck> createRepeated() => $pb.PbList<OptionsAck>();
   @$core.pragma('dart2js:noInline')
-  static RemotePingRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemotePingRequest>(create);
-  static RemotePingRequest? _defaultInstance;
+  static OptionsAck getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OptionsAck>(create);
+  static OptionsAck? _defaultInstance;
 }
 
-class RemotePingResponse extends $pb.GeneratedMessage {
-  factory RemotePingResponse() => create();
-
-  RemotePingResponse._();
-
-  factory RemotePingResponse.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RemotePingResponse.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemotePingResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
-      createEmptyInstance: create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemotePingResponse clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemotePingResponse copyWith(void Function(RemotePingResponse) updates) =>
-      super.copyWith((message) => updates(message as RemotePingResponse))
-          as RemotePingResponse;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static RemotePingResponse create() => RemotePingResponse._();
-  @$core.override
-  RemotePingResponse createEmptyInstance() => create();
-  static $pb.PbList<RemotePingResponse> createRepeated() =>
-      $pb.PbList<RemotePingResponse>();
-  @$core.pragma('dart2js:noInline')
-  static RemotePingResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemotePingResponse>(create);
-  static RemotePingResponse? _defaultInstance;
-}
-
-class RemoteError extends $pb.GeneratedMessage {
-  factory RemoteError({
-    $core.int? errorCode,
+class Configuration extends $pb.GeneratedMessage {
+  factory Configuration({
+    Encoding? encoding,
+    Options_RoleType? clientRole,
   }) {
     final result = create();
-    if (errorCode != null) result.errorCode = errorCode;
+    if (encoding != null) result.encoding = encoding;
+    if (clientRole != null) result.clientRole = clientRole;
     return result;
   }
 
-  RemoteError._();
+  Configuration._();
 
-  factory RemoteError.fromBuffer($core.List<$core.int> data,
+  factory Configuration.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoteError.fromJson($core.String json,
+  factory Configuration.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteError',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      _omitMessageNames ? '' : 'Configuration',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, _omitFieldNames ? '' : 'errorCode', $pb.PbFieldType.O3)
+    ..aOM<Encoding>(1, _omitFieldNames ? '' : 'encoding',
+        subBuilder: Encoding.create)
+    ..aE<Options_RoleType>(2, _omitFieldNames ? '' : 'clientRole',
+        enumValues: Options_RoleType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteError clone() => deepCopy();
+  Configuration clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteError copyWith(void Function(RemoteError) updates) =>
-      super.copyWith((message) => updates(message as RemoteError))
-          as RemoteError;
+  Configuration copyWith(void Function(Configuration) updates) =>
+      super.copyWith((message) => updates(message as Configuration))
+          as Configuration;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoteError create() => RemoteError._();
+  static Configuration create() => Configuration._();
   @$core.override
-  RemoteError createEmptyInstance() => create();
-  static $pb.PbList<RemoteError> createRepeated() => $pb.PbList<RemoteError>();
+  Configuration createEmptyInstance() => create();
+  static $pb.PbList<Configuration> createRepeated() =>
+      $pb.PbList<Configuration>();
   @$core.pragma('dart2js:noInline')
-  static RemoteError getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteError>(create);
-  static RemoteError? _defaultInstance;
+  static Configuration getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Configuration>(create);
+  static Configuration? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get errorCode => $_getIZ(0);
+  Encoding get encoding => $_getN(0);
   @$pb.TagNumber(1)
-  set errorCode($core.int value) => $_setSignedInt32(0, value);
+  set encoding(Encoding value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasErrorCode() => $_has(0);
+  $core.bool hasEncoding() => $_has(0);
   @$pb.TagNumber(1)
-  void clearErrorCode() => clearField(1);
+  void clearEncoding() => $_clearField(1);
+  @$pb.TagNumber(1)
+  Encoding ensureEncoding() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  Options_RoleType get clientRole => $_getN(1);
+  @$pb.TagNumber(2)
+  set clientRole(Options_RoleType value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasClientRole() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearClientRole() => $_clearField(2);
+}
+
+class ConfigurationAck extends $pb.GeneratedMessage {
+  factory ConfigurationAck() => create();
+
+  ConfigurationAck._();
+
+  factory ConfigurationAck.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ConfigurationAck.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ConfigurationAck',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConfigurationAck clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConfigurationAck copyWith(void Function(ConfigurationAck) updates) =>
+      super.copyWith((message) => updates(message as ConfigurationAck))
+          as ConfigurationAck;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ConfigurationAck create() => ConfigurationAck._();
+  @$core.override
+  ConfigurationAck createEmptyInstance() => create();
+  static $pb.PbList<ConfigurationAck> createRepeated() =>
+      $pb.PbList<ConfigurationAck>();
+  @$core.pragma('dart2js:noInline')
+  static ConfigurationAck getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ConfigurationAck>(create);
+  static ConfigurationAck? _defaultInstance;
 }
 
 const $core.bool _omitFieldNames =

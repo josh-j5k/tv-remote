@@ -1,2 +1,3 @@
-const String clientId = 'com.flutter.atvremote';
-const String client = 'Tv Remote';
+const String clientId = 'com.google.android.tvremote';
+const String clientName = 'Android TV Remote';
+const String serviceName = 'androidtvremote';

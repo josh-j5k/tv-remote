@@ -5,9 +5,10 @@ ValueNotifier<Map<String, dynamic>> appDataNotifier =
       "friendlyName": null,
       'isConnected': false,
       'secret': null,
-      'urlBase': null,
-      'location': null,
-      'wsPort': null,
+      'host': null,
+      'scheme': null,
+      'wsPairingPort': null,
+      'wsCommandPort': null,
       'port': null,
     });
 // ValueNotifier<bool> isConnectedNotifier = ValueNotifier<bool>(false);

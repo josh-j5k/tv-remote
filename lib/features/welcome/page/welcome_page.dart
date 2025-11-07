@@ -1,5 +1,4 @@
 // import 'dart:io';
-// import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:remote_app/data/constants/constants.dart';
@@ -11,17 +10,8 @@ import 'package:multicast_dns/multicast_dns.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upnp2/upnp.dart' hide Icon; // <<< SWITCHED to upnp2
 import 'dart:async';
-// import 'package:remote_app/src/generated/auth.pb.dart';
 
-const key = """-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxt/m/LpEwj53HU+anHoB
-29bgFtcB7et13cVyiMX1MGvkJRs3QA3F6Xx/rqiqOlrrGY9FaWpmCX5QEbNagQbk
-RntVCbAke+5Ul7EnfuJRFQRF+ByqeaagLb7isgAhF8TOmZe6/a0jynXG44neZHyX
-sUH+Uf02NnUD9e+qZ7o3sCX41UtEK837zxEb/38ERDI+BrqlMtVLtpcc2Rubh0RF
-B2r+8Cblclk8cl72nvUe9bg2gPi9P1SNuRSkF1Va6R9kABlpxhOU0jo09aiKFhtI
-G2pEYuCJAl4y5FdchY8garOpAmugOtyzra9PnIWNYEQTpSEcbLj8W+ewjLNmWDc1
-RQIDAQAB
------END PUBLIC KEY----- """;
+// import 'dart:core' as $core;
 const port = 6466;
 
 class WelcomeModal extends StatefulWidget {
@@ -116,13 +106,14 @@ class _WelcomeModalState extends State<WelcomeModal> {
     final newValue = Map<String, dynamic>.from(appDataNotifier.value)
       ..['isConnected'] = true
       ..['friendlyName'] = item['friendlyName']
-      ..['urlBase'] = item['urlBase']
-      ..['location'] = item['location'];
+      ..['port'] = item['port']
+      ..['host'] = item['host']
+      ..['scheme'] = item['scheme'];
     appDataNotifier.value = newValue;
 
-    final String link = item['location'];
+    final String link = item['host'];
     final String wss = link.replaceAll("http", "wss") + ":$port";
-    final remote = TvRemoteClient(host: '192.168.1.185', clientName: client);
+    final remote = TvRemoteClient(host: '192.168.1.185');
     final alreadyPaired = await remote.initialize();
     if (!alreadyPaired) {
       // Start pairing process
@@ -143,31 +134,45 @@ class _WelcomeModalState extends State<WelcomeModal> {
     // Navigator.of(context).pop();
   }
 
-  List<Map<String, String?>> data = [];
+  List<Map<String, dynamic>> data = [];
   Future<void> discoverDIALDevices() async {
     final disc = DeviceDiscoverer();
     await disc.start(ipv6: false);
-    disc.quickDiscoverClients().listen((client) async {
-      try {
-        final dev = await client.getDevice();
-        int lastIndex = dev!.urlBase!.lastIndexOf(":");
-        String location = dev!.urlBase!.substring(0, lastIndex);
-        // print(dev!.urlBase);
-        // print(dev!.);
-        print(location);
-        setState(() {
-          data.add({
-            "friendlyName": dev!.friendlyName,
-            "urlBase": dev.urlBase,
-            'location': location,
-          });
-        });
-      } catch (e, stack) {
-        // print('ERROR: $e - ${client.location}');
-        // print(stack);
-      }
-      // super.initState();
-    });
+    disc.quickDiscoverClients().listen(
+      (client) async {
+        // Check if this might be a DIAL device before fetching
+        // final usn = client.usn?.toLowerCase() ?? '';
+        // final server = client.server?.toLowerCase() ?? '';
+        // bool isLikelyAndroidTV =
+        //     usn.contains('android') ||
+        //     usn.contains('nfandroid') ||
+        //     server.contains('chromecast');
+        bool isValidLocation =
+            client.location != null && client.location!.contains(".xml");
+
+        if (isValidLocation) {
+          final dev = await client.getDevice();
+          if (dev != null &&
+              dev.deviceType == 'urn:dial-multiscreen-org:device:dial:1') {
+            final uri = Uri.parse(dev.url!);
+            setState(() {
+              data.add({
+                "friendlyName": dev.friendlyName,
+                "scheme": uri.scheme,
+                "port": uri.port,
+                'host': uri.host,
+              });
+            });
+          }
+        }
+        // super.initState();
+      },
+      onError: (error) {
+        // Catch stream-level errors
+        print("Stream error: $error");
+        // Stream continues
+      },
+    );
   }
 
   Future<void> _loadPreferences() async {
