@@ -14,6 +14,50 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use keyExchangeDescriptor instead')
+const KeyExchange$json = {
+  '1': 'KeyExchange',
+  '2': [
+    {'1': 'KEY_EXCHANGE_UNKNOWN', '2': 0},
+    {'1': 'ECDH_P256', '2': 1},
+    {'1': 'X25519', '2': 2},
+  ],
+};
+
+/// Descriptor for `KeyExchange`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List keyExchangeDescriptor = $convert.base64Decode(
+    'CgtLZXlFeGNoYW5nZRIYChRLRVlfRVhDSEFOR0VfVU5LTk9XThAAEg0KCUVDREhfUDI1NhABEg'
+    'oKBlgyNTUxORAC');
+
+@$core.Deprecated('Use secretExchangeDescriptor instead')
+const SecretExchange$json = {
+  '1': 'SecretExchange',
+  '2': [
+    {'1': 'SECRET_EXCHANGE_UNKNOWN', '2': 0},
+    {'1': 'HMAC_SHA256', '2': 1},
+  ],
+};
+
+/// Descriptor for `SecretExchange`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List secretExchangeDescriptor = $convert.base64Decode(
+    'Cg5TZWNyZXRFeGNoYW5nZRIbChdTRUNSRVRfRVhDSEFOR0VfVU5LTk9XThAAEg8KC0hNQUNfU0'
+    'hBMjU2EAE=');
+
+@$core.Deprecated('Use roleTypeDescriptor instead')
+const RoleType$json = {
+  '1': 'RoleType',
+  '2': [
+    {'1': 'ROLE_TYPE_UNKNOWN', '2': 0},
+    {'1': 'ROLE_TYPE_INPUT', '2': 1},
+    {'1': 'ROLE_TYPE_OUTPUT', '2': 2},
+  ],
+};
+
+/// Descriptor for `RoleType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List roleTypeDescriptor = $convert.base64Decode(
+    'CghSb2xlVHlwZRIVChFST0xFX1RZUEVfVU5LTk9XThAAEhMKD1JPTEVfVFlQRV9JTlBVVBABEh'
+    'QKEFJPTEVfVFlQRV9PVVRQVVQQAg==');
+
 @$core.Deprecated('Use outerMessageDescriptor instead')
 const OuterMessage$json = {
   '1': 'OuterMessage',
@@ -39,15 +83,6 @@ const OuterMessage$json = {
       '10': 'pairingResponse'
     },
     {
-      '1': 'pairing_secret',
-      '3': 12,
-      '4': 1,
-      '5': 11,
-      '6': '.pairing.PairingSecret',
-      '9': 0,
-      '10': 'pairingSecret'
-    },
-    {
       '1': 'pairing_request_ack',
       '3': 13,
       '4': 1,
@@ -58,39 +93,66 @@ const OuterMessage$json = {
     },
     {
       '1': 'pairing_option',
-      '3': 14,
+      '3': 20,
       '4': 1,
       '5': 11,
-      '6': '.pairing.Options',
+      '6': '.pairing.PairingOptions',
       '9': 0,
       '10': 'pairingOption'
     },
     {
       '1': 'pairing_option_ack',
-      '3': 15,
+      '3': 21,
       '4': 1,
       '5': 11,
-      '6': '.pairing.OptionsAck',
+      '6': '.pairing.PairingOptionsAck',
       '9': 0,
       '10': 'pairingOptionAck'
     },
     {
       '1': 'pairing_configuration',
-      '3': 16,
+      '3': 30,
       '4': 1,
       '5': 11,
-      '6': '.pairing.Configuration',
+      '6': '.pairing.PairingConfiguration',
       '9': 0,
       '10': 'pairingConfiguration'
     },
     {
       '1': 'pairing_configuration_ack',
-      '3': 17,
+      '3': 31,
       '4': 1,
       '5': 11,
-      '6': '.pairing.ConfigurationAck',
+      '6': '.pairing.PairingConfigurationAck',
       '9': 0,
       '10': 'pairingConfigurationAck'
+    },
+    {
+      '1': 'pairing_secret',
+      '3': 130,
+      '4': 1,
+      '5': 11,
+      '6': '.pairing.PairingSecret',
+      '9': 0,
+      '10': 'pairingSecret'
+    },
+    {
+      '1': 'secret_response',
+      '3': 131,
+      '4': 1,
+      '5': 11,
+      '6': '.pairing.SecretResponse',
+      '9': 0,
+      '10': 'secretResponse'
+    },
+    {
+      '1': 'error',
+      '3': 200,
+      '4': 1,
+      '5': 11,
+      '6': '.pairing.ErrorMessage',
+      '9': 0,
+      '10': 'error'
     },
   ],
   '8': [
@@ -103,23 +165,25 @@ final $typed_data.Uint8List outerMessageDescriptor = $convert.base64Decode(
     'CgxPdXRlck1lc3NhZ2USKQoQcHJvdG9jb2xfdmVyc2lvbhgBIAEoDVIPcHJvdG9jb2xWZXJzaW'
     '9uEhYKBnN0YXR1cxgCIAEoDVIGc3RhdHVzEkIKD3BhaXJpbmdfcmVxdWVzdBgKIAEoCzIXLnBh'
     'aXJpbmcuUGFpcmluZ1JlcXVlc3RIAFIOcGFpcmluZ1JlcXVlc3QSRQoQcGFpcmluZ19yZXNwb2'
-    '5zZRgLIAEoCzIYLnBhaXJpbmcuUGFpcmluZ1Jlc3BvbnNlSABSD3BhaXJpbmdSZXNwb25zZRI/'
-    'Cg5wYWlyaW5nX3NlY3JldBgMIAEoCzIWLnBhaXJpbmcuUGFpcmluZ1NlY3JldEgAUg1wYWlyaW'
-    '5nU2VjcmV0EkwKE3BhaXJpbmdfcmVxdWVzdF9hY2sYDSABKAsyGi5wYWlyaW5nLlBhaXJpbmdS'
-    'ZXF1ZXN0QWNrSABSEXBhaXJpbmdSZXF1ZXN0QWNrEjkKDnBhaXJpbmdfb3B0aW9uGA4gASgLMh'
-    'AucGFpcmluZy5PcHRpb25zSABSDXBhaXJpbmdPcHRpb24SQwoScGFpcmluZ19vcHRpb25fYWNr'
-    'GA8gASgLMhMucGFpcmluZy5PcHRpb25zQWNrSABSEHBhaXJpbmdPcHRpb25BY2sSTQoVcGFpcm'
-    'luZ19jb25maWd1cmF0aW9uGBAgASgLMhYucGFpcmluZy5Db25maWd1cmF0aW9uSABSFHBhaXJp'
-    'bmdDb25maWd1cmF0aW9uElcKGXBhaXJpbmdfY29uZmlndXJhdGlvbl9hY2sYESABKAsyGS5wYW'
-    'lyaW5nLkNvbmZpZ3VyYXRpb25BY2tIAFIXcGFpcmluZ0NvbmZpZ3VyYXRpb25BY2tCCQoHbWVz'
-    'c2FnZQ==');
+    '5zZRgLIAEoCzIYLnBhaXJpbmcuUGFpcmluZ1Jlc3BvbnNlSABSD3BhaXJpbmdSZXNwb25zZRJM'
+    'ChNwYWlyaW5nX3JlcXVlc3RfYWNrGA0gASgLMhoucGFpcmluZy5QYWlyaW5nUmVxdWVzdEFja0'
+    'gAUhFwYWlyaW5nUmVxdWVzdEFjaxJACg5wYWlyaW5nX29wdGlvbhgUIAEoCzIXLnBhaXJpbmcu'
+    'UGFpcmluZ09wdGlvbnNIAFINcGFpcmluZ09wdGlvbhJKChJwYWlyaW5nX29wdGlvbl9hY2sYFS'
+    'ABKAsyGi5wYWlyaW5nLlBhaXJpbmdPcHRpb25zQWNrSABSEHBhaXJpbmdPcHRpb25BY2sSVAoV'
+    'cGFpcmluZ19jb25maWd1cmF0aW9uGB4gASgLMh0ucGFpcmluZy5QYWlyaW5nQ29uZmlndXJhdG'
+    'lvbkgAUhRwYWlyaW5nQ29uZmlndXJhdGlvbhJeChlwYWlyaW5nX2NvbmZpZ3VyYXRpb25fYWNr'
+    'GB8gASgLMiAucGFpcmluZy5QYWlyaW5nQ29uZmlndXJhdGlvbkFja0gAUhdwYWlyaW5nQ29uZm'
+    'lndXJhdGlvbkFjaxJACg5wYWlyaW5nX3NlY3JldBiCASABKAsyFi5wYWlyaW5nLlBhaXJpbmdT'
+    'ZWNyZXRIAFINcGFpcmluZ1NlY3JldBJDCg9zZWNyZXRfcmVzcG9uc2UYgwEgASgLMhcucGFpcm'
+    'luZy5TZWNyZXRSZXNwb25zZUgAUg5zZWNyZXRSZXNwb25zZRIuCgVlcnJvchjIASABKAsyFS5w'
+    'YWlyaW5nLkVycm9yTWVzc2FnZUgAUgVlcnJvckIJCgdtZXNzYWdl');
 
 @$core.Deprecated('Use pairingRequestDescriptor instead')
 const PairingRequest$json = {
   '1': 'PairingRequest',
   '2': [
-    {'1': 'client_name', '3': 1, '4': 1, '5': 9, '10': 'clientName'},
-    {'1': 'service_name', '3': 2, '4': 1, '5': 9, '10': 'serviceName'},
+    {'1': 'service_name', '3': 1, '4': 1, '5': 9, '10': 'serviceName'},
+    {'1': 'client_name', '3': 2, '4': 1, '5': 9, '10': 'clientName'},
     {'1': 'client_id', '3': 3, '4': 1, '5': 9, '10': 'clientId'},
     {'1': 'service_uuid', '3': 4, '4': 1, '5': 9, '10': 'serviceUuid'},
   ],
@@ -127,8 +191,8 @@ const PairingRequest$json = {
 
 /// Descriptor for `PairingRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pairingRequestDescriptor = $convert.base64Decode(
-    'Cg5QYWlyaW5nUmVxdWVzdBIfCgtjbGllbnRfbmFtZRgBIAEoCVIKY2xpZW50TmFtZRIhCgxzZX'
-    'J2aWNlX25hbWUYAiABKAlSC3NlcnZpY2VOYW1lEhsKCWNsaWVudF9pZBgDIAEoCVIIY2xpZW50'
+    'Cg5QYWlyaW5nUmVxdWVzdBIhCgxzZXJ2aWNlX25hbWUYASABKAlSC3NlcnZpY2VOYW1lEh8KC2'
+    'NsaWVudF9uYW1lGAIgASgJUgpjbGllbnROYW1lEhsKCWNsaWVudF9pZBgDIAEoCVIIY2xpZW50'
     'SWQSIQoMc2VydmljZV91dWlkGAQgASgJUgtzZXJ2aWNlVXVpZA==');
 
 @$core.Deprecated('Use pairingRequestAckDescriptor instead')
@@ -145,36 +209,127 @@ const PairingResponse$json = {
   '1': 'PairingResponse',
   '2': [
     {'1': 'status', '3': 1, '4': 1, '5': 5, '10': 'status'},
-    {'1': 'server_public_key', '3': 2, '4': 1, '5': 9, '10': 'serverPublicKey'},
+    {
+      '1': 'server_certificate',
+      '3': 2,
+      '4': 1,
+      '5': 12,
+      '10': 'serverCertificate'
+    },
   ],
 };
 
 /// Descriptor for `PairingResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pairingResponseDescriptor = $convert.base64Decode(
-    'Cg9QYWlyaW5nUmVzcG9uc2USFgoGc3RhdHVzGAEgASgFUgZzdGF0dXMSKgoRc2VydmVyX3B1Ym'
-    'xpY19rZXkYAiABKAlSD3NlcnZlclB1YmxpY0tleQ==');
+    'Cg9QYWlyaW5nUmVzcG9uc2USFgoGc3RhdHVzGAEgASgFUgZzdGF0dXMSLQoSc2VydmVyX2Nlcn'
+    'RpZmljYXRlGAIgASgMUhFzZXJ2ZXJDZXJ0aWZpY2F0ZQ==');
 
 @$core.Deprecated('Use pairingSecretDescriptor instead')
 const PairingSecret$json = {
   '1': 'PairingSecret',
   '2': [
-    {'1': 'encrypted_secret', '3': 1, '4': 1, '5': 12, '10': 'encryptedSecret'},
+    {'1': 'secret', '3': 1, '4': 1, '5': 12, '10': 'secret'},
   ],
 };
 
 /// Descriptor for `PairingSecret`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pairingSecretDescriptor = $convert.base64Decode(
-    'Cg1QYWlyaW5nU2VjcmV0EikKEGVuY3J5cHRlZF9zZWNyZXQYASABKAxSD2VuY3J5cHRlZFNlY3'
-    'JldA==');
+final $typed_data.Uint8List pairingSecretDescriptor = $convert
+    .base64Decode('Cg1QYWlyaW5nU2VjcmV0EhYKBnNlY3JldBgBIAEoDFIGc2VjcmV0');
 
-@$core.Deprecated('Use pairingSecretAckDescriptor instead')
-const PairingSecretAck$json = {
-  '1': 'PairingSecretAck',
+@$core.Deprecated('Use secretResponseDescriptor instead')
+const SecretResponse$json = {
+  '1': 'SecretResponse',
+  '2': [
+    {'1': 'status', '3': 1, '4': 1, '5': 13, '10': 'status'},
+  ],
 };
 
-/// Descriptor for `PairingSecretAck`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pairingSecretAckDescriptor =
-    $convert.base64Decode('ChBQYWlyaW5nU2VjcmV0QWNr');
+/// Descriptor for `SecretResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List secretResponseDescriptor = $convert
+    .base64Decode('Cg5TZWNyZXRSZXNwb25zZRIWCgZzdGF0dXMYASABKA1SBnN0YXR1cw==');
+
+@$core.Deprecated('Use errorMessageDescriptor instead')
+const ErrorMessage$json = {
+  '1': 'ErrorMessage',
+  '2': [
+    {'1': 'error_code', '3': 1, '4': 1, '5': 13, '10': 'errorCode'},
+    {'1': 'error_message', '3': 2, '4': 1, '5': 9, '10': 'errorMessage'},
+  ],
+};
+
+/// Descriptor for `ErrorMessage`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List errorMessageDescriptor = $convert.base64Decode(
+    'CgxFcnJvck1lc3NhZ2USHQoKZXJyb3JfY29kZRgBIAEoDVIJZXJyb3JDb2RlEiMKDWVycm9yX2'
+    '1lc3NhZ2UYAiABKAlSDGVycm9yTWVzc2FnZQ==');
+
+@$core.Deprecated('Use pairingConfigurationDescriptor instead')
+const PairingConfiguration$json = {
+  '1': 'PairingConfiguration',
+  '2': [
+    {
+      '1': 'preferred_key_exchanges',
+      '3': 1,
+      '4': 3,
+      '5': 14,
+      '6': '.pairing.KeyExchange',
+      '10': 'preferredKeyExchanges'
+    },
+    {
+      '1': 'preferred_secret_exchanges',
+      '3': 2,
+      '4': 3,
+      '5': 14,
+      '6': '.pairing.SecretExchange',
+      '10': 'preferredSecretExchanges'
+    },
+    {
+      '1': 'client_role',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.pairing.RoleType',
+      '10': 'clientRole'
+    },
+  ],
+};
+
+/// Descriptor for `PairingConfiguration`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingConfigurationDescriptor = $convert.base64Decode(
+    'ChRQYWlyaW5nQ29uZmlndXJhdGlvbhJMChdwcmVmZXJyZWRfa2V5X2V4Y2hhbmdlcxgBIAMoDj'
+    'IULnBhaXJpbmcuS2V5RXhjaGFuZ2VSFXByZWZlcnJlZEtleUV4Y2hhbmdlcxJVChpwcmVmZXJy'
+    'ZWRfc2VjcmV0X2V4Y2hhbmdlcxgCIAMoDjIXLnBhaXJpbmcuU2VjcmV0RXhjaGFuZ2VSGHByZW'
+    'ZlcnJlZFNlY3JldEV4Y2hhbmdlcxIyCgtjbGllbnRfcm9sZRgDIAEoDjIRLnBhaXJpbmcuUm9s'
+    'ZVR5cGVSCmNsaWVudFJvbGU=');
+
+@$core.Deprecated('Use pairingConfigurationAckDescriptor instead')
+const PairingConfigurationAck$json = {
+  '1': 'PairingConfigurationAck',
+  '2': [
+    {
+      '1': 'selected_key_exchange',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.pairing.KeyExchange',
+      '10': 'selectedKeyExchange'
+    },
+    {
+      '1': 'selected_secret_exchange',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.pairing.SecretExchange',
+      '10': 'selectedSecretExchange'
+    },
+  ],
+};
+
+/// Descriptor for `PairingConfigurationAck`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingConfigurationAckDescriptor = $convert.base64Decode(
+    'ChdQYWlyaW5nQ29uZmlndXJhdGlvbkFjaxJIChVzZWxlY3RlZF9rZXlfZXhjaGFuZ2UYASABKA'
+    '4yFC5wYWlyaW5nLktleUV4Y2hhbmdlUhNzZWxlY3RlZEtleUV4Y2hhbmdlElEKGHNlbGVjdGVk'
+    'X3NlY3JldF9leGNoYW5nZRgCIAEoDjIXLnBhaXJpbmcuU2VjcmV0RXhjaGFuZ2VSFnNlbGVjdG'
+    'VkU2VjcmV0RXhjaGFuZ2U=');
 
 @$core.Deprecated('Use encodingDescriptor instead')
 const Encoding$json = {
@@ -213,9 +368,9 @@ final $typed_data.Uint8List encodingDescriptor = $convert.base64Decode(
     '5VTUVSSUMQARIZChVFTkNPRElOR19UWVBFX05VTUVSSUMQAhIdChlFTkNPRElOR19UWVBFX0hF'
     'WEFERUNJTUFMEAMSGAoURU5DT0RJTkdfVFlQRV9RUkNPREUQBA==');
 
-@$core.Deprecated('Use optionsDescriptor instead')
-const Options$json = {
-  '1': 'Options',
+@$core.Deprecated('Use pairingOptionsDescriptor instead')
+const PairingOptions$json = {
+  '1': 'PairingOptions',
   '2': [
     {
       '1': 'input_encodings',
@@ -238,74 +393,54 @@ const Options$json = {
       '3': 3,
       '4': 1,
       '5': 14,
-      '6': '.pairing.Options.RoleType',
+      '6': '.pairing.RoleType',
       '10': 'preferredRole'
     },
   ],
-  '4': [Options_RoleType$json],
 };
 
-@$core.Deprecated('Use optionsDescriptor instead')
-const Options_RoleType$json = {
-  '1': 'RoleType',
-  '2': [
-    {'1': 'ROLE_TYPE_UNKNOWN', '2': 0},
-    {'1': 'ROLE_TYPE_INPUT', '2': 1},
-    {'1': 'ROLE_TYPE_OUTPUT', '2': 2},
-  ],
-};
+/// Descriptor for `PairingOptions`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingOptionsDescriptor = $convert.base64Decode(
+    'Cg5QYWlyaW5nT3B0aW9ucxI6Cg9pbnB1dF9lbmNvZGluZ3MYASADKAsyES5wYWlyaW5nLkVuY2'
+    '9kaW5nUg5pbnB1dEVuY29kaW5ncxI8ChBvdXRwdXRfZW5jb2RpbmdzGAIgAygLMhEucGFpcmlu'
+    'Zy5FbmNvZGluZ1IPb3V0cHV0RW5jb2RpbmdzEjgKDnByZWZlcnJlZF9yb2xlGAMgASgOMhEucG'
+    'FpcmluZy5Sb2xlVHlwZVINcHJlZmVycmVkUm9sZQ==');
 
-/// Descriptor for `Options`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List optionsDescriptor = $convert.base64Decode(
-    'CgdPcHRpb25zEjoKD2lucHV0X2VuY29kaW5ncxgBIAMoCzIRLnBhaXJpbmcuRW5jb2RpbmdSDm'
-    'lucHV0RW5jb2RpbmdzEjwKEG91dHB1dF9lbmNvZGluZ3MYAiADKAsyES5wYWlyaW5nLkVuY29k'
-    'aW5nUg9vdXRwdXRFbmNvZGluZ3MSQAoOcHJlZmVycmVkX3JvbGUYAyABKA4yGS5wYWlyaW5nLk'
-    '9wdGlvbnMuUm9sZVR5cGVSDXByZWZlcnJlZFJvbGUiTAoIUm9sZVR5cGUSFQoRUk9MRV9UWVBF'
-    'X1VOS05PV04QABITCg9ST0xFX1RZUEVfSU5QVVQQARIUChBST0xFX1RZUEVfT1VUUFVUEAI=');
-
-@$core.Deprecated('Use optionsAckDescriptor instead')
-const OptionsAck$json = {
-  '1': 'OptionsAck',
-};
-
-/// Descriptor for `OptionsAck`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List optionsAckDescriptor =
-    $convert.base64Decode('CgpPcHRpb25zQWNr');
-
-@$core.Deprecated('Use configurationDescriptor instead')
-const Configuration$json = {
-  '1': 'Configuration',
+@$core.Deprecated('Use pairingOptionsAckDescriptor instead')
+const PairingOptionsAck$json = {
+  '1': 'PairingOptionsAck',
   '2': [
     {
-      '1': 'encoding',
+      '1': 'selected_input_encoding',
       '3': 1,
       '4': 1,
       '5': 11,
       '6': '.pairing.Encoding',
-      '10': 'encoding'
+      '10': 'selectedInputEncoding'
     },
     {
-      '1': 'client_role',
+      '1': 'selected_output_encoding',
       '3': 2,
       '4': 1,
+      '5': 11,
+      '6': '.pairing.Encoding',
+      '10': 'selectedOutputEncoding'
+    },
+    {
+      '1': 'selected_role',
+      '3': 3,
+      '4': 1,
       '5': 14,
-      '6': '.pairing.Options.RoleType',
-      '10': 'clientRole'
+      '6': '.pairing.RoleType',
+      '10': 'selectedRole'
     },
   ],
 };
 
-/// Descriptor for `Configuration`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List configurationDescriptor = $convert.base64Decode(
-    'Cg1Db25maWd1cmF0aW9uEi0KCGVuY29kaW5nGAEgASgLMhEucGFpcmluZy5FbmNvZGluZ1IIZW'
-    '5jb2RpbmcSOgoLY2xpZW50X3JvbGUYAiABKA4yGS5wYWlyaW5nLk9wdGlvbnMuUm9sZVR5cGVS'
-    'CmNsaWVudFJvbGU=');
-
-@$core.Deprecated('Use configurationAckDescriptor instead')
-const ConfigurationAck$json = {
-  '1': 'ConfigurationAck',
-};
-
-/// Descriptor for `ConfigurationAck`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List configurationAckDescriptor =
-    $convert.base64Decode('ChBDb25maWd1cmF0aW9uQWNr');
+/// Descriptor for `PairingOptionsAck`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingOptionsAckDescriptor = $convert.base64Decode(
+    'ChFQYWlyaW5nT3B0aW9uc0FjaxJJChdzZWxlY3RlZF9pbnB1dF9lbmNvZGluZxgBIAEoCzIRLn'
+    'BhaXJpbmcuRW5jb2RpbmdSFXNlbGVjdGVkSW5wdXRFbmNvZGluZxJLChhzZWxlY3RlZF9vdXRw'
+    'dXRfZW5jb2RpbmcYAiABKAsyES5wYWlyaW5nLkVuY29kaW5nUhZzZWxlY3RlZE91dHB1dEVuY2'
+    '9kaW5nEjYKDXNlbGVjdGVkX3JvbGUYAyABKA4yES5wYWlyaW5nLlJvbGVUeXBlUgxzZWxlY3Rl'
+    'ZFJvbGU=');

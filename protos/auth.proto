@@ -3,26 +3,27 @@ syntax = "proto3";
 package pairing;
 
 message OuterMessage {
-  uint32 protocol_version = 1;
-  uint32 status = 2;
-
+  uint32 protocol_version = 1;  // Tag 8
+  uint32 status = 2;             // Tag 16
+  
   oneof message {
-    PairingRequest pairing_request = 10;
-    PairingResponse pairing_response = 11;
-    PairingSecret pairing_secret = 12;
-    PairingRequestAck pairing_request_ack = 13;
-    Options pairing_option = 14;
-    OptionsAck pairing_option_ack = 15;
-    Configuration pairing_configuration = 16;
-    ConfigurationAck pairing_configuration_ack = 17;
+    PairingRequest pairing_request = 10;           // Tag 82 = (10<<3)|2
+    PairingResponse pairing_response = 11;         // Tag 90 = (11<<3)|2
+    PairingRequestAck pairing_request_ack = 13;    // Tag 106 = (13<<3)|2
+    PairingOptions pairing_option = 20;            // Tag 162,1 = field 20
+    PairingOptionsAck pairing_option_ack = 21;     // Tag 170,1 = field 21
+    PairingConfiguration pairing_configuration = 30; // Tag 242,1 = field 30
+    PairingConfigurationAck pairing_configuration_ack = 31; // Tag 250,1 = field 31
+    PairingSecret pairing_secret = 130;            // Tag 194,2 = field 130  
+    SecretResponse secret_response = 131;
+    ErrorMessage error = 200;
   }
 }
 
-// PHASE 1
 message PairingRequest {
-  string client_name  = 1;
-  string service_name = 2;
-  string client_id    = 3;
+  string service_name = 1;   // Tag 10
+  string client_name = 2;    // Tag 18
+  string client_id = 3;
   string service_uuid = 4;
 }
 
@@ -30,13 +31,43 @@ message PairingRequestAck {}
 
 message PairingResponse {
   int32 status = 1;
-  string server_public_key = 2;
+  bytes server_certificate = 2;
 }
 
 message PairingSecret {
-  bytes encrypted_secret = 1;
+  bytes secret = 1;  // Tag 10
 }
-message PairingSecretAck {}
+
+message SecretResponse {
+  uint32 status = 1;
+}
+
+message ErrorMessage {
+  uint32 error_code = 1;
+  string error_message = 2;
+}
+
+enum KeyExchange {
+  KEY_EXCHANGE_UNKNOWN = 0;
+  ECDH_P256 = 1;
+  X25519 = 2;
+}
+
+enum SecretExchange {
+  SECRET_EXCHANGE_UNKNOWN = 0;
+  HMAC_SHA256 = 1;
+}
+
+message PairingConfiguration {
+  repeated KeyExchange preferred_key_exchanges = 1;
+  repeated SecretExchange preferred_secret_exchanges = 2; // Tag 18
+  RoleType client_role = 3;  
+}
+
+message PairingConfigurationAck {
+  KeyExchange selected_key_exchange = 1;
+  SecretExchange selected_secret_exchange = 2;
+}
 
 message Encoding {
   enum EncodingType {
@@ -46,28 +77,27 @@ message Encoding {
     ENCODING_TYPE_HEXADECIMAL = 3;
     ENCODING_TYPE_QRCODE = 4;
   }
-
-  EncodingType type = 1;
-  uint32 symbol_length = 2;
+  
+  EncodingType type = 1;   // Tag 8
+  uint32 symbol_length = 2; // Tag 16
 }
 
-message Options {
-  enum RoleType {
-    ROLE_TYPE_UNKNOWN = 0;
-    ROLE_TYPE_INPUT = 1;
-    ROLE_TYPE_OUTPUT = 2;
-  }
-
-  repeated Encoding input_encodings = 1;
-  repeated Encoding output_encodings = 2;
-  RoleType preferred_role = 3;
+enum RoleType {
+  ROLE_TYPE_UNKNOWN = 0;
+  ROLE_TYPE_INPUT = 1;
+  ROLE_TYPE_OUTPUT = 2;
 }
 
-message OptionsAck {}
-
-message Configuration {
-  Encoding encoding = 1;
-  Options.RoleType client_role = 2;
+message PairingOptions {
+  repeated Encoding input_encodings = 1;   // Tag 10
+  repeated Encoding output_encodings = 2;  // Tag 18
+  RoleType preferred_role = 3;             // Tag 24
+  //repeated KeyExchange preferred_key_exchanges = 4;
+  //repeated SecretExchange preferred_secret_exchanges = 5;
 }
 
-message ConfigurationAck {}
+message PairingOptionsAck {
+  Encoding selected_input_encoding = 1;
+  Encoding selected_output_encoding = 2;
+  RoleType selected_role = 3;
+}

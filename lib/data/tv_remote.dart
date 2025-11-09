@@ -127,7 +127,11 @@ class TvRemoteClient {
       // _setupPairingListener();
       await Future.delayed(Duration(milliseconds: 500));
 
-      await _sendPairingRequest();
+      _sendPairingRequest();
+      // await Future.delayed(Duration(milliseconds: 500));
+      // _sendPairingConfiguration();
+      // _sendPairingOption();
+
       // Send pairing request using OuterMessage protocol
     } catch (e) {
       print('❌ Pairing connection failed: $e\n');
@@ -159,6 +163,105 @@ class TvRemoteClient {
 
     print('✅ Sent PairingRequest\n');
   }
+
+  Future<void> _sendPairingOptionsInput() async {
+    final options = PairingOptions()
+      ..inputEncodings.add(
+        Encoding()
+          ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+          ..symbolLength = 6,
+      )
+      ..preferredRole = RoleType.ROLE_TYPE_INPUT;
+
+    final outer = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingOption = options;
+
+    final payload = outer.writeToBuffer();
+    final lenPrefix = encodeVarint(payload.length);
+
+    _pairingSocket!.add([...lenPrefix, ...payload]);
+    await _pairingSocket!.flush();
+  }
+
+  // Step 3: Send PairingOptions AGAIN (SECOND message)
+  // This time with OUTPUT encodings - YES, SEND IT TWICE!
+  Future<void> _sendPairingOptionsOutput() async {
+    final options = PairingOptions()
+      ..outputEncodings.add(
+        Encoding()
+          ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+          ..symbolLength = 6,
+      )
+      ..preferredRole = RoleType.ROLE_TYPE_OUTPUT;
+
+    final outer = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingOption = options;
+
+    final payload = outer.writeToBuffer();
+    final lenPrefix = encodeVarint(payload.length);
+
+    _pairingSocket!.add([...lenPrefix, ...payload]);
+    await _pairingSocket!.flush();
+
+    print('TV should display PIN now!');
+  }
+  // Step 4: Send Pairing Secret (after user sees PIN on TV)
+  // Future<void> _sendPairingSecret(String pin) async {
+  //   // Hash the PIN with certificates
+  //   final secretHash = await _computeSecretHash(pin);
+
+  //   final secret = PairingSecret()
+  //     ..secret = secretHash;
+
+  //   final outer = OuterMessage()
+  //     ..protocolVersion = 2
+  //     ..status = 200
+  //     ..pairingSecret = secret;
+
+  //   final payload = outer.writeToBuffer();
+  //   final lenPrefix = _encodeVarint(payload.length);
+
+  //   _pairingSocket!.add([...lenPrefix, ...payload]);
+  //   await _pairingSocket!.flush();
+
+  //   print('✅ Sent PairingSecret');
+  // }
+
+  // Compute the secret hash as per protocol
+  // Future<Uint8List> _computeSecretHash(String pin) async {
+  //   // Extract RSA public keys from certificates
+  //   final clientCert = _clientCertificate; // Your client certificate
+  //   final serverCert = _serverCertificate; // Server certificate from TLS handshake
+
+  //   // Parse certificates and get RSA public keys
+  //   // (You'll need to extract modulus and exponent from both certs)
+
+  //   final digest = crypto.sha256;
+  //   final output = AccumulatorSink<crypto.Digest>();
+  //   final input = digest.startChunkedConversion(output);
+
+  //   // Add client modulus
+  //   input.add(_clientModulus);
+  //   // Add client exponent
+  //   input.add(_clientExponent);
+  //   // Add server modulus
+  //   input.add(_serverModulus);
+  //   // Add server exponent
+  //   input.add(_serverExponent);
+
+  //   // Add last 4 characters of PIN as bytes
+  //   final pinLast4 = pin.substring(2, 6); // Characters at index 2-5
+  //   final pinBytes = hex.decode(pinLast4);
+  //   input.add(pinBytes);
+
+  //   input.close();
+
+  //   return Uint8List.fromList(output.events.single.bytes);
+  // }
 
   // Future<void> sendKeyEvent(AndroidKeyCode keyCode, String description) async {
   //   final cmd = KeyEvent()
@@ -233,8 +336,6 @@ class TvRemoteClient {
 
         // Parse protobuf
         final msg = OuterMessage.fromBuffer(messageBytes);
-        print('✅ protocol=${msg.protocolVersion}, status=${msg.status}');
-        print('   message type = ${msg.whichMessage()}');
 
         // Handle the message
         _handleOuterMessage(msg);
@@ -253,24 +354,78 @@ class TvRemoteClient {
   }
 
   void _handleOuterMessage(OuterMessage msg) {
+    print('whichMessage  =====> ${msg.whichMessage()}');
+    print('msg status  =====> ${msg.status}');
+
     switch (msg.whichMessage()) {
       case OuterMessage_Message.pairingResponse:
         print('🔐 Received PairingResponse');
-        if (msg.hasPairingResponse()) {
-          _sendPairingConfiguration();
+        _sendPairingOption();
+        // _sendPairingOptionsWithCrypto();
+        // _sendPairingConfiguration();
+        break;
+
+      case OuterMessage_Message.pairingRequestAck:
+        print('✅ PairingRequest ack acknowledged');
+        break;
+      case OuterMessage_Message.pairingConfigurationAck:
+        print('✅ PairingConfiguration acknowledged');
+        if (msg.pairingConfigurationAck.hasSelectedKeyExchange()) {
+          print(
+            '   Key exchange: ${msg.pairingConfigurationAck.selectedKeyExchange}',
+          );
         }
         break;
 
-      // case OuterMessage_Message.secretResponse:
-      //   print('🔑 Received SecretResponse: status=${msg.secretResponse.status}');
-      //   break;
+      case OuterMessage_Message.pairingOption:
+        print('✅ TV confirmed encoding settings');
+        // print(
+        //   'preferredKeyExchanges ${msg.pairingOption.preferredKeyExchanges}',
+        // );
+        // print(
+        //   'preferredSecretExchanges ${msg.pairingOption.preferredSecretExchanges}',
+        // );
 
-      // case OuterMessage_Message.error:
-      //   print('❌ Received Error: ${msg.error}');
-      //   break;
+        if (msg.pairingOption.outputEncodings.isNotEmpty) {
+          final encoding = msg.pairingOption.outputEncodings.first;
+
+          print(
+            '   Encoding: ${encoding.type}, Length: ${encoding.symbolLength}',
+          );
+        }
+        print('   Role: ${msg.pairingOption.preferredRole}');
+
+        // Check the role the TV selected
+        if (msg.pairingOption.preferredRole == RoleType.ROLE_TYPE_OUTPUT ||
+            msg.pairingOption.preferredRole == RoleType.ROLE_TYPE_INPUT) {
+          print('📺 PIN should be displayed on TV screen NOW!');
+        }
+        _sendPairingConfiguration();
+        break;
+
+      case OuterMessage_Message.pairingOptionAck:
+        print('✅ PairingOptions acknowledged');
+        print('📺 TV should display PIN now!');
+        break;
+
+      case OuterMessage_Message.secretResponse:
+        if (msg.secretResponse.status == 200) {
+          print('🎉 Pairing successful!');
+        } else {
+          print('❌ Pairing failed: ${msg.secretResponse.status}');
+        }
+        break;
+
+      case OuterMessage_Message.notSet:
+        if (msg.status == 400) {
+          print('❌ Error 400 - Bad request');
+        } else if (msg.status == 200) {
+          print('✅ Empty 200 acknowledgment');
+        }
+        break;
 
       default:
-        print('⚠️ Unknown message type: ${msg.whichMessage()}');
+        print('⚠️ Unknown message: ${msg.whichMessage()}');
     }
   }
 
@@ -324,19 +479,13 @@ class TvRemoteClient {
   }
 
   Future<void> enterPairingCode(String pin) async {
-    if (_pairingSocket == null) {
-      throw Exception('Not in pairing mode');
-    }
-
-    print('🔐 Computing secret for PIN: $pin\n');
-
     // Compute SHA-256 hash as per protocol
     final secret = _computePairingSecret(pin);
 
-    final secretMsg = PairingSecret()..encryptedSecret = secret;
+    final secretMsg = PairingSecret()..secret = secret;
 
     final outerMessage = OuterMessage()
-      ..protocolVersion = 2
+      ..protocolVersion = 1
       ..status = 200
       ..pairingSecret = secretMsg;
 
@@ -347,51 +496,92 @@ class TvRemoteClient {
     print('✅ Sent pairing secret\n');
   }
 
-  Future<void> _sendPairingConfiguration() async {
-    print('📤 Sending PairingConfiguration...\n');
+  // Send Options instead of Configuration!
+  Future<void> _sendPairingOptionsWithCrypto() async {
+    print('📤 Sending PairingConfiguration (Crypto Negotiation)...\n');
 
-    final encoding = Encoding()
-      ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
-      ..symbolLength = 6;
-
-    final config = Configuration()
-      ..encoding = encoding
-      ..clientRole = Options_RoleType.ROLE_TYPE_INPUT;
-
-    final outerMessage = OuterMessage()
-      ..protocolVersion = 2
-      ..status = 200
-      ..pairingConfiguration = config;
-
-    final bytes = outerMessage.writeToBuffer();
-    _pairingSocket!.add(bytes);
-    await _pairingSocket!.flush();
-
-    print('✅ Sent PairingConfiguration\n');
-  }
-
-  Future<void> _sendPairingOption() async {
-    print('📤 Sending PairingOption...\n');
-
-    final encoding = Encoding()
-      ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
-      ..symbolLength = 6;
-
-    final options = Options()
-      ..inputEncodings.add(encoding)
-      ..outputEncodings.add(encoding)
-      ..preferredRole = Options_RoleType.ROLE_TYPE_INPUT;
+    final options = PairingOptions()
+      // 1. Send Crypto Prefs
+      // ..preferredKeyExchanges.add(KeyExchange.ECDH_P256)
+      // ..preferredSecretExchanges.add(SecretExchange.HMAC_SHA256)
+      ..inputEncodings.add(
+        Encoding()
+          ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+          ..symbolLength = 6,
+      )
+      // Add output encoding (same as input)
+      // ..outputEncodings.add(
+      //   Encoding()
+      //     ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+      //     ..symbolLength = 6,
+      // )
+      ..preferredRole = RoleType.ROLE_TYPE_INPUT;
 
     final outerMessage = OuterMessage()
       ..protocolVersion = 2
       ..status = 200
       ..pairingOption = options;
+    final payload = outerMessage.writeToBuffer();
+    final lengthPrefix = encodeVarint(payload.length);
+    final messageToSend = [...lengthPrefix, ...payload];
+    _pairingSocket!.add(messageToSend);
+    // send with 4-byte big-endian length prefix as you already do
 
-    final bytes = outerMessage.writeToBuffer();
-    _pairingSocket!.add(bytes);
+    _pairingSocket!.add(messageToSend);
     await _pairingSocket!.flush();
 
-    print('✅ Sent PairingOption\n');
+    print('✅ Sent PairingOptionWithConfig\n');
+    // ... (use your correct 4-byte prefix logic to send the message)
+  }
+
+  Future<void> _sendPairingConfiguration() async {
+    final config = PairingConfiguration()
+      ..preferredKeyExchanges.add(KeyExchange.X25519)
+      ..preferredSecretExchanges.add(SecretExchange.HMAC_SHA256)
+      ..clientRole = RoleType.ROLE_TYPE_OUTPUT;
+
+    final outer = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingConfiguration = config;
+
+    final payload = outer.writeToBuffer();
+    final lenPrefix = encodeVarint(payload.length);
+
+    print('📤 Sending PairingConfiguration...');
+    _pairingSocket!.add([...lenPrefix, ...payload]);
+    await _pairingSocket!.flush();
+    print('✅ Sent PairingConfiguration');
+  }
+
+  Future<void> _sendPairingOption() async {
+    final options = PairingOptions()
+      // Add input encoding
+      ..inputEncodings.add(
+        Encoding()
+          ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+          ..symbolLength = 6,
+      )
+      // Add output encoding (same as input)
+      // ..outputEncodings.add(
+      //   Encoding()
+      //     ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+      //     ..symbolLength = 6,
+      // )
+      ..preferredRole = RoleType.ROLE_TYPE_INPUT;
+
+    final outer = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingOption = options;
+
+    final payload = outer.writeToBuffer();
+    final lenPrefix = encodeVarint(payload.length);
+
+    print('📤 Sending PairingOptions...');
+    _pairingSocket!.add([...lenPrefix, ...payload]);
+    await _pairingSocket!.flush();
+    print('✅ Sent PairingOptions');
   }
 
   Future<void> connect() async {

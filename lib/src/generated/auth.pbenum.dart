@@ -14,6 +14,69 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class KeyExchange extends $pb.ProtobufEnum {
+  static const KeyExchange KEY_EXCHANGE_UNKNOWN =
+      KeyExchange._(0, _omitEnumNames ? '' : 'KEY_EXCHANGE_UNKNOWN');
+  static const KeyExchange ECDH_P256 =
+      KeyExchange._(1, _omitEnumNames ? '' : 'ECDH_P256');
+  static const KeyExchange X25519 =
+      KeyExchange._(2, _omitEnumNames ? '' : 'X25519');
+
+  static const $core.List<KeyExchange> values = <KeyExchange>[
+    KEY_EXCHANGE_UNKNOWN,
+    ECDH_P256,
+    X25519,
+  ];
+
+  static final $core.List<KeyExchange?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static KeyExchange? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const KeyExchange._(super.value, super.name);
+}
+
+class SecretExchange extends $pb.ProtobufEnum {
+  static const SecretExchange SECRET_EXCHANGE_UNKNOWN =
+      SecretExchange._(0, _omitEnumNames ? '' : 'SECRET_EXCHANGE_UNKNOWN');
+  static const SecretExchange HMAC_SHA256 =
+      SecretExchange._(1, _omitEnumNames ? '' : 'HMAC_SHA256');
+
+  static const $core.List<SecretExchange> values = <SecretExchange>[
+    SECRET_EXCHANGE_UNKNOWN,
+    HMAC_SHA256,
+  ];
+
+  static final $core.List<SecretExchange?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 1);
+  static SecretExchange? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const SecretExchange._(super.value, super.name);
+}
+
+class RoleType extends $pb.ProtobufEnum {
+  static const RoleType ROLE_TYPE_UNKNOWN =
+      RoleType._(0, _omitEnumNames ? '' : 'ROLE_TYPE_UNKNOWN');
+  static const RoleType ROLE_TYPE_INPUT =
+      RoleType._(1, _omitEnumNames ? '' : 'ROLE_TYPE_INPUT');
+  static const RoleType ROLE_TYPE_OUTPUT =
+      RoleType._(2, _omitEnumNames ? '' : 'ROLE_TYPE_OUTPUT');
+
+  static const $core.List<RoleType> values = <RoleType>[
+    ROLE_TYPE_UNKNOWN,
+    ROLE_TYPE_INPUT,
+    ROLE_TYPE_OUTPUT,
+  ];
+
+  static final $core.List<RoleType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static RoleType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const RoleType._(super.value, super.name);
+}
+
 class Encoding_EncodingType extends $pb.ProtobufEnum {
   static const Encoding_EncodingType ENCODING_TYPE_UNKNOWN =
       Encoding_EncodingType._(0, _omitEnumNames ? '' : 'ENCODING_TYPE_UNKNOWN');
@@ -43,28 +106,6 @@ class Encoding_EncodingType extends $pb.ProtobufEnum {
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
   const Encoding_EncodingType._(super.value, super.name);
-}
-
-class Options_RoleType extends $pb.ProtobufEnum {
-  static const Options_RoleType ROLE_TYPE_UNKNOWN =
-      Options_RoleType._(0, _omitEnumNames ? '' : 'ROLE_TYPE_UNKNOWN');
-  static const Options_RoleType ROLE_TYPE_INPUT =
-      Options_RoleType._(1, _omitEnumNames ? '' : 'ROLE_TYPE_INPUT');
-  static const Options_RoleType ROLE_TYPE_OUTPUT =
-      Options_RoleType._(2, _omitEnumNames ? '' : 'ROLE_TYPE_OUTPUT');
-
-  static const $core.List<Options_RoleType> values = <Options_RoleType>[
-    ROLE_TYPE_UNKNOWN,
-    ROLE_TYPE_INPUT,
-    ROLE_TYPE_OUTPUT,
-  ];
-
-  static final $core.List<Options_RoleType?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static Options_RoleType? valueOf($core.int value) =>
-      value < 0 || value >= _byValue.length ? null : _byValue[value];
-
-  const Options_RoleType._(super.value, super.name);
 }
 
 const $core.bool _omitEnumNames =
