@@ -14,143 +14,237 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class RemoteKeyCode extends $pb.ProtobufEnum {
-  static const RemoteKeyCode KEYCODE_UNKNOWN =
-      RemoteKeyCode._(0, _omitEnumNames ? '' : 'KEYCODE_UNKNOWN');
+class RemoteDirection extends $pb.ProtobufEnum {
+  static const RemoteDirection REMOTE_DIRECTION_UNKNOWN =
+      RemoteDirection._(0, _omitEnumNames ? '' : 'REMOTE_DIRECTION_UNKNOWN');
+  static const RemoteDirection PRESSED =
+      RemoteDirection._(1, _omitEnumNames ? '' : 'PRESSED');
+  static const RemoteDirection RELEASED =
+      RemoteDirection._(2, _omitEnumNames ? '' : 'RELEASED');
+  static const RemoteDirection SHORT_PRESS =
+      RemoteDirection._(3, _omitEnumNames ? '' : 'SHORT_PRESS');
+
+  static const $core.List<RemoteDirection> values = <RemoteDirection>[
+    REMOTE_DIRECTION_UNKNOWN,
+    PRESSED,
+    RELEASED,
+    SHORT_PRESS,
+  ];
+
+  static final $core.List<RemoteDirection?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static RemoteDirection? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const RemoteDirection._(super.value, super.name);
+}
+
+class RemoteVolumeDirection extends $pb.ProtobufEnum {
+  static const RemoteVolumeDirection VOLUME_DIRECTION_UNKNOWN =
+      RemoteVolumeDirection._(
+          0, _omitEnumNames ? '' : 'VOLUME_DIRECTION_UNKNOWN');
+  static const RemoteVolumeDirection VOLUME_UP =
+      RemoteVolumeDirection._(1, _omitEnumNames ? '' : 'VOLUME_UP');
+  static const RemoteVolumeDirection VOLUME_DOWN =
+      RemoteVolumeDirection._(2, _omitEnumNames ? '' : 'VOLUME_DOWN');
+
+  static const $core.List<RemoteVolumeDirection> values =
+      <RemoteVolumeDirection>[
+    VOLUME_DIRECTION_UNKNOWN,
+    VOLUME_UP,
+    VOLUME_DOWN,
+  ];
+
+  static final $core.List<RemoteVolumeDirection?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static RemoteVolumeDirection? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const RemoteVolumeDirection._(super.value, super.name);
+}
+
+class RemoteKeyInject_RemoteKeyCode extends $pb.ProtobufEnum {
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_UNKNOWN =
+      RemoteKeyInject_RemoteKeyCode._(
+          0, _omitEnumNames ? '' : 'KEYCODE_UNKNOWN');
 
   /// navigation
-  static const RemoteKeyCode KEYCODE_DPAD_UP =
-      RemoteKeyCode._(19, _omitEnumNames ? '' : 'KEYCODE_DPAD_UP');
-  static const RemoteKeyCode KEYCODE_DPAD_DOWN =
-      RemoteKeyCode._(20, _omitEnumNames ? '' : 'KEYCODE_DPAD_DOWN');
-  static const RemoteKeyCode KEYCODE_DPAD_LEFT =
-      RemoteKeyCode._(21, _omitEnumNames ? '' : 'KEYCODE_DPAD_LEFT');
-  static const RemoteKeyCode KEYCODE_DPAD_RIGHT =
-      RemoteKeyCode._(22, _omitEnumNames ? '' : 'KEYCODE_DPAD_RIGHT');
-  static const RemoteKeyCode KEYCODE_DPAD_CENTER =
-      RemoteKeyCode._(23, _omitEnumNames ? '' : 'KEYCODE_DPAD_CENTER');
-  static const RemoteKeyCode KEYCODE_BACK =
-      RemoteKeyCode._(4, _omitEnumNames ? '' : 'KEYCODE_BACK');
-  static const RemoteKeyCode KEYCODE_HOME =
-      RemoteKeyCode._(3, _omitEnumNames ? '' : 'KEYCODE_HOME');
-  static const RemoteKeyCode KEYCODE_MENU =
-      RemoteKeyCode._(82, _omitEnumNames ? '' : 'KEYCODE_MENU');
-  static const RemoteKeyCode KEYCODE_GUIDE =
-      RemoteKeyCode._(172, _omitEnumNames ? '' : 'KEYCODE_GUIDE');
-  static const RemoteKeyCode KEYCODE_INFO =
-      RemoteKeyCode._(165, _omitEnumNames ? '' : 'KEYCODE_INFO');
-  static const RemoteKeyCode KEYCODE_SETTINGS =
-      RemoteKeyCode._(176, _omitEnumNames ? '' : 'KEYCODE_SETTINGS');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_DPAD_UP =
+      RemoteKeyInject_RemoteKeyCode._(
+          19, _omitEnumNames ? '' : 'KEYCODE_DPAD_UP');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_DPAD_DOWN =
+      RemoteKeyInject_RemoteKeyCode._(
+          20, _omitEnumNames ? '' : 'KEYCODE_DPAD_DOWN');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_DPAD_LEFT =
+      RemoteKeyInject_RemoteKeyCode._(
+          21, _omitEnumNames ? '' : 'KEYCODE_DPAD_LEFT');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_DPAD_RIGHT =
+      RemoteKeyInject_RemoteKeyCode._(
+          22, _omitEnumNames ? '' : 'KEYCODE_DPAD_RIGHT');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_DPAD_CENTER =
+      RemoteKeyInject_RemoteKeyCode._(
+          23, _omitEnumNames ? '' : 'KEYCODE_DPAD_CENTER');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_BACK =
+      RemoteKeyInject_RemoteKeyCode._(4, _omitEnumNames ? '' : 'KEYCODE_BACK');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_HOME =
+      RemoteKeyInject_RemoteKeyCode._(3, _omitEnumNames ? '' : 'KEYCODE_HOME');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MENU =
+      RemoteKeyInject_RemoteKeyCode._(82, _omitEnumNames ? '' : 'KEYCODE_MENU');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_GUIDE =
+      RemoteKeyInject_RemoteKeyCode._(
+          172, _omitEnumNames ? '' : 'KEYCODE_GUIDE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_INFO =
+      RemoteKeyInject_RemoteKeyCode._(
+          165, _omitEnumNames ? '' : 'KEYCODE_INFO');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_SETTINGS =
+      RemoteKeyInject_RemoteKeyCode._(
+          176, _omitEnumNames ? '' : 'KEYCODE_SETTINGS');
 
   /// media
-  static const RemoteKeyCode KEYCODE_MEDIA_PLAY =
-      RemoteKeyCode._(126, _omitEnumNames ? '' : 'KEYCODE_MEDIA_PLAY');
-  static const RemoteKeyCode KEYCODE_MEDIA_PAUSE =
-      RemoteKeyCode._(127, _omitEnumNames ? '' : 'KEYCODE_MEDIA_PAUSE');
-  static const RemoteKeyCode KEYCODE_MEDIA_PLAY_PAUSE =
-      RemoteKeyCode._(85, _omitEnumNames ? '' : 'KEYCODE_MEDIA_PLAY_PAUSE');
-  static const RemoteKeyCode KEYCODE_MEDIA_STOP =
-      RemoteKeyCode._(86, _omitEnumNames ? '' : 'KEYCODE_MEDIA_STOP');
-  static const RemoteKeyCode KEYCODE_MEDIA_NEXT =
-      RemoteKeyCode._(87, _omitEnumNames ? '' : 'KEYCODE_MEDIA_NEXT');
-  static const RemoteKeyCode KEYCODE_MEDIA_PREVIOUS =
-      RemoteKeyCode._(88, _omitEnumNames ? '' : 'KEYCODE_MEDIA_PREVIOUS');
-  static const RemoteKeyCode KEYCODE_MEDIA_REWIND =
-      RemoteKeyCode._(89, _omitEnumNames ? '' : 'KEYCODE_MEDIA_REWIND');
-  static const RemoteKeyCode KEYCODE_MEDIA_FAST_FORWARD =
-      RemoteKeyCode._(90, _omitEnumNames ? '' : 'KEYCODE_MEDIA_FAST_FORWARD');
-  static const RemoteKeyCode KEYCODE_MEDIA_RECORD =
-      RemoteKeyCode._(130, _omitEnumNames ? '' : 'KEYCODE_MEDIA_RECORD');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_PLAY =
+      RemoteKeyInject_RemoteKeyCode._(
+          126, _omitEnumNames ? '' : 'KEYCODE_MEDIA_PLAY');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_PAUSE =
+      RemoteKeyInject_RemoteKeyCode._(
+          127, _omitEnumNames ? '' : 'KEYCODE_MEDIA_PAUSE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_PLAY_PAUSE =
+      RemoteKeyInject_RemoteKeyCode._(
+          85, _omitEnumNames ? '' : 'KEYCODE_MEDIA_PLAY_PAUSE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_STOP =
+      RemoteKeyInject_RemoteKeyCode._(
+          86, _omitEnumNames ? '' : 'KEYCODE_MEDIA_STOP');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_NEXT =
+      RemoteKeyInject_RemoteKeyCode._(
+          87, _omitEnumNames ? '' : 'KEYCODE_MEDIA_NEXT');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_PREVIOUS =
+      RemoteKeyInject_RemoteKeyCode._(
+          88, _omitEnumNames ? '' : 'KEYCODE_MEDIA_PREVIOUS');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_REWIND =
+      RemoteKeyInject_RemoteKeyCode._(
+          89, _omitEnumNames ? '' : 'KEYCODE_MEDIA_REWIND');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_FAST_FORWARD =
+      RemoteKeyInject_RemoteKeyCode._(
+          90, _omitEnumNames ? '' : 'KEYCODE_MEDIA_FAST_FORWARD');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_RECORD =
+      RemoteKeyInject_RemoteKeyCode._(
+          130, _omitEnumNames ? '' : 'KEYCODE_MEDIA_RECORD');
 
   /// volume
-  static const RemoteKeyCode KEYCODE_VOLUME_UP =
-      RemoteKeyCode._(24, _omitEnumNames ? '' : 'KEYCODE_VOLUME_UP');
-  static const RemoteKeyCode KEYCODE_VOLUME_DOWN =
-      RemoteKeyCode._(25, _omitEnumNames ? '' : 'KEYCODE_VOLUME_DOWN');
-  static const RemoteKeyCode KEYCODE_MUTE =
-      RemoteKeyCode._(91, _omitEnumNames ? '' : 'KEYCODE_MUTE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_VOLUME_UP =
+      RemoteKeyInject_RemoteKeyCode._(
+          24, _omitEnumNames ? '' : 'KEYCODE_VOLUME_UP');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_VOLUME_DOWN =
+      RemoteKeyInject_RemoteKeyCode._(
+          25, _omitEnumNames ? '' : 'KEYCODE_VOLUME_DOWN');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_MUTE =
+      RemoteKeyInject_RemoteKeyCode._(91, _omitEnumNames ? '' : 'KEYCODE_MUTE');
 
   /// tv_specific
-  static const RemoteKeyCode KEYCODE_TV =
-      RemoteKeyCode._(170, _omitEnumNames ? '' : 'KEYCODE_TV');
-  static const RemoteKeyCode KEYCODE_TV_POWER =
-      RemoteKeyCode._(177, _omitEnumNames ? '' : 'KEYCODE_TV_POWER');
-  static const RemoteKeyCode KEYCODE_TV_INPUT =
-      RemoteKeyCode._(178, _omitEnumNames ? '' : 'KEYCODE_TV_INPUT');
-  static const RemoteKeyCode KEYCODE_CHANNEL_UP =
-      RemoteKeyCode._(166, _omitEnumNames ? '' : 'KEYCODE_CHANNEL_UP');
-  static const RemoteKeyCode KEYCODE_CHANNEL_DOWN =
-      RemoteKeyCode._(167, _omitEnumNames ? '' : 'KEYCODE_CHANNEL_DOWN');
-  static const RemoteKeyCode KEYCODE_TV_RADIO_SERVICE =
-      RemoteKeyCode._(232, _omitEnumNames ? '' : 'KEYCODE_TV_RADIO_SERVICE');
-  static const RemoteKeyCode KEYCODE_TV_DATA_SERVICE =
-      RemoteKeyCode._(230, _omitEnumNames ? '' : 'KEYCODE_TV_DATA_SERVICE');
-  static const RemoteKeyCode KEYCODE_TV_TELETEXT =
-      RemoteKeyCode._(233, _omitEnumNames ? '' : 'KEYCODE_TV_TELETEXT');
-  static const RemoteKeyCode KEYCODE_TV_NETWORK =
-      RemoteKeyCode._(241, _omitEnumNames ? '' : 'KEYCODE_TV_NETWORK');
-  static const RemoteKeyCode KEYCODE_TV_SATELLITE =
-      RemoteKeyCode._(237, _omitEnumNames ? '' : 'KEYCODE_TV_SATELLITE');
-  static const RemoteKeyCode KEYCODE_TV_ANTENNA_CABLE =
-      RemoteKeyCode._(238, _omitEnumNames ? '' : 'KEYCODE_TV_ANTENNA_CABLE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV =
+      RemoteKeyInject_RemoteKeyCode._(170, _omitEnumNames ? '' : 'KEYCODE_TV');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_POWER =
+      RemoteKeyInject_RemoteKeyCode._(
+          177, _omitEnumNames ? '' : 'KEYCODE_TV_POWER');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_INPUT =
+      RemoteKeyInject_RemoteKeyCode._(
+          178, _omitEnumNames ? '' : 'KEYCODE_TV_INPUT');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_CHANNEL_UP =
+      RemoteKeyInject_RemoteKeyCode._(
+          166, _omitEnumNames ? '' : 'KEYCODE_CHANNEL_UP');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_CHANNEL_DOWN =
+      RemoteKeyInject_RemoteKeyCode._(
+          167, _omitEnumNames ? '' : 'KEYCODE_CHANNEL_DOWN');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_RADIO_SERVICE =
+      RemoteKeyInject_RemoteKeyCode._(
+          232, _omitEnumNames ? '' : 'KEYCODE_TV_RADIO_SERVICE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_DATA_SERVICE =
+      RemoteKeyInject_RemoteKeyCode._(
+          230, _omitEnumNames ? '' : 'KEYCODE_TV_DATA_SERVICE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_TELETEXT =
+      RemoteKeyInject_RemoteKeyCode._(
+          233, _omitEnumNames ? '' : 'KEYCODE_TV_TELETEXT');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_NETWORK =
+      RemoteKeyInject_RemoteKeyCode._(
+          241, _omitEnumNames ? '' : 'KEYCODE_TV_NETWORK');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_SATELLITE =
+      RemoteKeyInject_RemoteKeyCode._(
+          237, _omitEnumNames ? '' : 'KEYCODE_TV_SATELLITE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_ANTENNA_CABLE =
+      RemoteKeyInject_RemoteKeyCode._(
+          238, _omitEnumNames ? '' : 'KEYCODE_TV_ANTENNA_CABLE');
 
   /// system
-  static const RemoteKeyCode KEYCODE_POWER =
-      RemoteKeyCode._(26, _omitEnumNames ? '' : 'KEYCODE_POWER');
-  static const RemoteKeyCode KEYCODE_SLEEP =
-      RemoteKeyCode._(223, _omitEnumNames ? '' : 'KEYCODE_SLEEP');
-  static const RemoteKeyCode KEYCODE_WAKEUP =
-      RemoteKeyCode._(224, _omitEnumNames ? '' : 'KEYCODE_WAKEUP');
-  static const RemoteKeyCode KEYCODE_APP_SWITCH =
-      RemoteKeyCode._(187, _omitEnumNames ? '' : 'KEYCODE_APP_SWITCH');
-  static const RemoteKeyCode KEYCODE_ASSIST =
-      RemoteKeyCode._(219, _omitEnumNames ? '' : 'KEYCODE_ASSIST');
-  static const RemoteKeyCode KEYCODE_VOICE_ASSIST =
-      RemoteKeyCode._(231, _omitEnumNames ? '' : 'KEYCODE_VOICE_ASSIST');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_POWER =
+      RemoteKeyInject_RemoteKeyCode._(
+          26, _omitEnumNames ? '' : 'KEYCODE_POWER');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_SLEEP =
+      RemoteKeyInject_RemoteKeyCode._(
+          223, _omitEnumNames ? '' : 'KEYCODE_SLEEP');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_WAKEUP =
+      RemoteKeyInject_RemoteKeyCode._(
+          224, _omitEnumNames ? '' : 'KEYCODE_WAKEUP');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_APP_SWITCH =
+      RemoteKeyInject_RemoteKeyCode._(
+          187, _omitEnumNames ? '' : 'KEYCODE_APP_SWITCH');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_ASSIST =
+      RemoteKeyInject_RemoteKeyCode._(
+          219, _omitEnumNames ? '' : 'KEYCODE_ASSIST');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_VOICE_ASSIST =
+      RemoteKeyInject_RemoteKeyCode._(
+          231, _omitEnumNames ? '' : 'KEYCODE_VOICE_ASSIST');
 
   /// numeric
-  static const RemoteKeyCode KEYCODE_0 =
-      RemoteKeyCode._(7, _omitEnumNames ? '' : 'KEYCODE_0');
-  static const RemoteKeyCode KEYCODE_1 =
-      RemoteKeyCode._(8, _omitEnumNames ? '' : 'KEYCODE_1');
-  static const RemoteKeyCode KEYCODE_2 =
-      RemoteKeyCode._(9, _omitEnumNames ? '' : 'KEYCODE_2');
-  static const RemoteKeyCode KEYCODE_3 =
-      RemoteKeyCode._(10, _omitEnumNames ? '' : 'KEYCODE_3');
-  static const RemoteKeyCode KEYCODE_4 =
-      RemoteKeyCode._(11, _omitEnumNames ? '' : 'KEYCODE_4');
-  static const RemoteKeyCode KEYCODE_5 =
-      RemoteKeyCode._(12, _omitEnumNames ? '' : 'KEYCODE_5');
-  static const RemoteKeyCode KEYCODE_6 =
-      RemoteKeyCode._(13, _omitEnumNames ? '' : 'KEYCODE_6');
-  static const RemoteKeyCode KEYCODE_7 =
-      RemoteKeyCode._(14, _omitEnumNames ? '' : 'KEYCODE_7');
-  static const RemoteKeyCode KEYCODE_8 =
-      RemoteKeyCode._(15, _omitEnumNames ? '' : 'KEYCODE_8');
-  static const RemoteKeyCode KEYCODE_9 =
-      RemoteKeyCode._(16, _omitEnumNames ? '' : 'KEYCODE_9');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_0 =
+      RemoteKeyInject_RemoteKeyCode._(7, _omitEnumNames ? '' : 'KEYCODE_0');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_1 =
+      RemoteKeyInject_RemoteKeyCode._(8, _omitEnumNames ? '' : 'KEYCODE_1');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_2 =
+      RemoteKeyInject_RemoteKeyCode._(9, _omitEnumNames ? '' : 'KEYCODE_2');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_3 =
+      RemoteKeyInject_RemoteKeyCode._(10, _omitEnumNames ? '' : 'KEYCODE_3');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_4 =
+      RemoteKeyInject_RemoteKeyCode._(11, _omitEnumNames ? '' : 'KEYCODE_4');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_5 =
+      RemoteKeyInject_RemoteKeyCode._(12, _omitEnumNames ? '' : 'KEYCODE_5');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_6 =
+      RemoteKeyInject_RemoteKeyCode._(13, _omitEnumNames ? '' : 'KEYCODE_6');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_7 =
+      RemoteKeyInject_RemoteKeyCode._(14, _omitEnumNames ? '' : 'KEYCODE_7');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_8 =
+      RemoteKeyInject_RemoteKeyCode._(15, _omitEnumNames ? '' : 'KEYCODE_8');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_9 =
+      RemoteKeyInject_RemoteKeyCode._(16, _omitEnumNames ? '' : 'KEYCODE_9');
 
   /// misc
-  static const RemoteKeyCode KEYCODE_ENTER =
-      RemoteKeyCode._(66, _omitEnumNames ? '' : 'KEYCODE_ENTER');
-  static const RemoteKeyCode KEYCODE_DEL =
-      RemoteKeyCode._(67, _omitEnumNames ? '' : 'KEYCODE_DEL');
-  static const RemoteKeyCode KEYCODE_SPACE =
-      RemoteKeyCode._(62, _omitEnumNames ? '' : 'KEYCODE_SPACE');
-  static const RemoteKeyCode KEYCODE_PAGE_UP =
-      RemoteKeyCode._(92, _omitEnumNames ? '' : 'KEYCODE_PAGE_UP');
-  static const RemoteKeyCode KEYCODE_PAGE_DOWN =
-      RemoteKeyCode._(93, _omitEnumNames ? '' : 'KEYCODE_PAGE_DOWN');
-  static const RemoteKeyCode KEYCODE_PROG_RED =
-      RemoteKeyCode._(183, _omitEnumNames ? '' : 'KEYCODE_PROG_RED');
-  static const RemoteKeyCode KEYCODE_PROG_GREEN =
-      RemoteKeyCode._(184, _omitEnumNames ? '' : 'KEYCODE_PROG_GREEN');
-  static const RemoteKeyCode KEYCODE_PROG_YELLOW =
-      RemoteKeyCode._(185, _omitEnumNames ? '' : 'KEYCODE_PROG_YELLOW');
-  static const RemoteKeyCode KEYCODE_PROG_BLUE =
-      RemoteKeyCode._(186, _omitEnumNames ? '' : 'KEYCODE_PROG_BLUE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_ENTER =
+      RemoteKeyInject_RemoteKeyCode._(
+          66, _omitEnumNames ? '' : 'KEYCODE_ENTER');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_DEL =
+      RemoteKeyInject_RemoteKeyCode._(67, _omitEnumNames ? '' : 'KEYCODE_DEL');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_SPACE =
+      RemoteKeyInject_RemoteKeyCode._(
+          62, _omitEnumNames ? '' : 'KEYCODE_SPACE');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_PAGE_UP =
+      RemoteKeyInject_RemoteKeyCode._(
+          92, _omitEnumNames ? '' : 'KEYCODE_PAGE_UP');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_PAGE_DOWN =
+      RemoteKeyInject_RemoteKeyCode._(
+          93, _omitEnumNames ? '' : 'KEYCODE_PAGE_DOWN');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_PROG_RED =
+      RemoteKeyInject_RemoteKeyCode._(
+          183, _omitEnumNames ? '' : 'KEYCODE_PROG_RED');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_PROG_GREEN =
+      RemoteKeyInject_RemoteKeyCode._(
+          184, _omitEnumNames ? '' : 'KEYCODE_PROG_GREEN');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_PROG_YELLOW =
+      RemoteKeyInject_RemoteKeyCode._(
+          185, _omitEnumNames ? '' : 'KEYCODE_PROG_YELLOW');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_PROG_BLUE =
+      RemoteKeyInject_RemoteKeyCode._(
+          186, _omitEnumNames ? '' : 'KEYCODE_PROG_BLUE');
 
-  static const $core.List<RemoteKeyCode> values = <RemoteKeyCode>[
+  static const $core.List<RemoteKeyInject_RemoteKeyCode> values =
+      <RemoteKeyInject_RemoteKeyCode>[
     KEYCODE_UNKNOWN,
     KEYCODE_DPAD_UP,
     KEYCODE_DPAD_DOWN,
@@ -213,60 +307,12 @@ class RemoteKeyCode extends $pb.ProtobufEnum {
     KEYCODE_PROG_BLUE,
   ];
 
-  static final $core.Map<$core.int, RemoteKeyCode> _byValue =
+  static final $core.Map<$core.int, RemoteKeyInject_RemoteKeyCode> _byValue =
       $pb.ProtobufEnum.initByValue(values);
-  static RemoteKeyCode? valueOf($core.int value) => _byValue[value];
+  static RemoteKeyInject_RemoteKeyCode? valueOf($core.int value) =>
+      _byValue[value];
 
-  const RemoteKeyCode._(super.value, super.name);
-}
-
-class RemoteDirection extends $pb.ProtobufEnum {
-  static const RemoteDirection REMOTE_DIRECTION_UNKNOWN =
-      RemoteDirection._(0, _omitEnumNames ? '' : 'REMOTE_DIRECTION_UNKNOWN');
-  static const RemoteDirection START_LONG_PRESS =
-      RemoteDirection._(1, _omitEnumNames ? '' : 'START_LONG_PRESS');
-  static const RemoteDirection END_LONG_PRESS =
-      RemoteDirection._(2, _omitEnumNames ? '' : 'END_LONG_PRESS');
-  static const RemoteDirection SHORT_PRESS =
-      RemoteDirection._(3, _omitEnumNames ? '' : 'SHORT_PRESS');
-
-  static const $core.List<RemoteDirection> values = <RemoteDirection>[
-    REMOTE_DIRECTION_UNKNOWN,
-    START_LONG_PRESS,
-    END_LONG_PRESS,
-    SHORT_PRESS,
-  ];
-
-  static final $core.List<RemoteDirection?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 3);
-  static RemoteDirection? valueOf($core.int value) =>
-      value < 0 || value >= _byValue.length ? null : _byValue[value];
-
-  const RemoteDirection._(super.value, super.name);
-}
-
-class RemoteErrorCode extends $pb.ProtobufEnum {
-  static const RemoteErrorCode REMOTE_ERROR_CODE_UNKNOWN =
-      RemoteErrorCode._(0, _omitEnumNames ? '' : 'REMOTE_ERROR_CODE_UNKNOWN');
-  static const RemoteErrorCode ERROR_INVALID_SECRET =
-      RemoteErrorCode._(401, _omitEnumNames ? '' : 'ERROR_INVALID_SECRET');
-  static const RemoteErrorCode ERROR_PAIRING_TIMEOUT =
-      RemoteErrorCode._(408, _omitEnumNames ? '' : 'ERROR_PAIRING_TIMEOUT');
-  static const RemoteErrorCode ERROR_GENERIC =
-      RemoteErrorCode._(500, _omitEnumNames ? '' : 'ERROR_GENERIC');
-
-  static const $core.List<RemoteErrorCode> values = <RemoteErrorCode>[
-    REMOTE_ERROR_CODE_UNKNOWN,
-    ERROR_INVALID_SECRET,
-    ERROR_PAIRING_TIMEOUT,
-    ERROR_GENERIC,
-  ];
-
-  static final $core.Map<$core.int, RemoteErrorCode> _byValue =
-      $pb.ProtobufEnum.initByValue(values);
-  static RemoteErrorCode? valueOf($core.int value) => _byValue[value];
-
-  const RemoteErrorCode._(super.value, super.name);
+  const RemoteKeyInject_RemoteKeyCode._(super.value, super.name);
 }
 
 const $core.bool _omitEnumNames =

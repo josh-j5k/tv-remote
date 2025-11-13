@@ -14,57 +14,76 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'keycodes.pbenum.dart';
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'keycodes.pbenum.dart';
 
-enum RemoteMessage_MessageType {
-  remoteCommand,
+enum RemoteMessage_Message {
+  remoteConfigure,
   remoteSetActive,
   remotePingRequest,
   remotePingResponse,
+  remoteKeyInject,
+  remoteImeKeyInject,
   remoteError,
   remoteSetVolumeLevel,
-  remoteAdjustVolumeLevel,
-  remoteImeKeyInject,
+  remoteAppInfo,
   remoteImeBatchEdit,
-  remoteDeviceInfo,
-  remoteAppLinkLaunchRequest,
+  remoteAdjustVolumeLevel,
+  remoteSetPreferredAudioDevice,
+  remoteResetPreferredAudioDevice,
+  remotePowerStatus,
+  remoteGetPowerStatus,
+  remoteStartApp,
   notSet
 }
 
 class RemoteMessage extends $pb.GeneratedMessage {
   factory RemoteMessage({
-    RemoteCommand? remoteCommand,
+    RemoteConfigure? remoteConfigure,
     RemoteSetActive? remoteSetActive,
     RemotePingRequest? remotePingRequest,
     RemotePingResponse? remotePingResponse,
+    RemoteKeyInject? remoteKeyInject,
+    RemoteImeKeyInject? remoteImeKeyInject,
     RemoteError? remoteError,
     RemoteSetVolumeLevel? remoteSetVolumeLevel,
-    RemoteAdjustVolumeLevel? remoteAdjustVolumeLevel,
-    RemoteImeKeyInject? remoteImeKeyInject,
+    RemoteAppInfo? remoteAppInfo,
     RemoteImeBatchEdit? remoteImeBatchEdit,
-    RemoteDeviceInfo? remoteDeviceInfo,
-    RemoteAppLinkLaunchRequest? remoteAppLinkLaunchRequest,
+    RemoteAdjustVolumeLevel? remoteAdjustVolumeLevel,
+    RemoteSetPreferredAudioDevice? remoteSetPreferredAudioDevice,
+    RemoteResetPreferredAudioDevice? remoteResetPreferredAudioDevice,
+    RemotePowerStatus? remotePowerStatus,
+    RemoteGetPowerStatus? remoteGetPowerStatus,
+    RemoteStartApp? remoteStartApp,
   }) {
     final result = create();
-    if (remoteCommand != null) result.remoteCommand = remoteCommand;
+    if (remoteConfigure != null) result.remoteConfigure = remoteConfigure;
     if (remoteSetActive != null) result.remoteSetActive = remoteSetActive;
     if (remotePingRequest != null) result.remotePingRequest = remotePingRequest;
     if (remotePingResponse != null)
       result.remotePingResponse = remotePingResponse;
+    if (remoteKeyInject != null) result.remoteKeyInject = remoteKeyInject;
+    if (remoteImeKeyInject != null)
+      result.remoteImeKeyInject = remoteImeKeyInject;
     if (remoteError != null) result.remoteError = remoteError;
     if (remoteSetVolumeLevel != null)
       result.remoteSetVolumeLevel = remoteSetVolumeLevel;
-    if (remoteAdjustVolumeLevel != null)
-      result.remoteAdjustVolumeLevel = remoteAdjustVolumeLevel;
-    if (remoteImeKeyInject != null)
-      result.remoteImeKeyInject = remoteImeKeyInject;
+    if (remoteAppInfo != null) result.remoteAppInfo = remoteAppInfo;
     if (remoteImeBatchEdit != null)
       result.remoteImeBatchEdit = remoteImeBatchEdit;
-    if (remoteDeviceInfo != null) result.remoteDeviceInfo = remoteDeviceInfo;
-    if (remoteAppLinkLaunchRequest != null)
-      result.remoteAppLinkLaunchRequest = remoteAppLinkLaunchRequest;
+    if (remoteAdjustVolumeLevel != null)
+      result.remoteAdjustVolumeLevel = remoteAdjustVolumeLevel;
+    if (remoteSetPreferredAudioDevice != null)
+      result.remoteSetPreferredAudioDevice = remoteSetPreferredAudioDevice;
+    if (remoteResetPreferredAudioDevice != null)
+      result.remoteResetPreferredAudioDevice = remoteResetPreferredAudioDevice;
+    if (remotePowerStatus != null) result.remotePowerStatus = remotePowerStatus;
+    if (remoteGetPowerStatus != null)
+      result.remoteGetPowerStatus = remoteGetPowerStatus;
+    if (remoteStartApp != null) result.remoteStartApp = remoteStartApp;
     return result;
   }
 
@@ -77,51 +96,68 @@ class RemoteMessage extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, RemoteMessage_MessageType>
-      _RemoteMessage_MessageTypeByTag = {
-    5: RemoteMessage_MessageType.remoteCommand,
-    8: RemoteMessage_MessageType.remoteSetActive,
-    9: RemoteMessage_MessageType.remotePingRequest,
-    10: RemoteMessage_MessageType.remotePingResponse,
-    11: RemoteMessage_MessageType.remoteError,
-    12: RemoteMessage_MessageType.remoteSetVolumeLevel,
-    13: RemoteMessage_MessageType.remoteAdjustVolumeLevel,
-    14: RemoteMessage_MessageType.remoteImeKeyInject,
-    15: RemoteMessage_MessageType.remoteImeBatchEdit,
-    17: RemoteMessage_MessageType.remoteDeviceInfo,
-    18: RemoteMessage_MessageType.remoteAppLinkLaunchRequest,
-    0: RemoteMessage_MessageType.notSet
+  static const $core.Map<$core.int, RemoteMessage_Message>
+      _RemoteMessage_MessageByTag = {
+    1: RemoteMessage_Message.remoteConfigure,
+    2: RemoteMessage_Message.remoteSetActive,
+    8: RemoteMessage_Message.remotePingRequest,
+    9: RemoteMessage_Message.remotePingResponse,
+    10: RemoteMessage_Message.remoteKeyInject,
+    11: RemoteMessage_Message.remoteImeKeyInject,
+    15: RemoteMessage_Message.remoteError,
+    18: RemoteMessage_Message.remoteSetVolumeLevel,
+    20: RemoteMessage_Message.remoteAppInfo,
+    21: RemoteMessage_Message.remoteImeBatchEdit,
+    25: RemoteMessage_Message.remoteAdjustVolumeLevel,
+    31: RemoteMessage_Message.remoteSetPreferredAudioDevice,
+    32: RemoteMessage_Message.remoteResetPreferredAudioDevice,
+    35: RemoteMessage_Message.remotePowerStatus,
+    36: RemoteMessage_Message.remoteGetPowerStatus,
+    330: RemoteMessage_Message.remoteStartApp,
+    0: RemoteMessage_Message.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'RemoteMessage',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
       createEmptyInstance: create)
-    ..oo(0, [5, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18])
-    ..aOM<RemoteCommand>(5, _omitFieldNames ? '' : 'remoteCommand',
-        subBuilder: RemoteCommand.create)
-    ..aOM<RemoteSetActive>(8, _omitFieldNames ? '' : 'remoteSetActive',
+    ..oo(0, [1, 2, 8, 9, 10, 11, 15, 18, 20, 21, 25, 31, 32, 35, 36, 330])
+    ..aOM<RemoteConfigure>(1, _omitFieldNames ? '' : 'remoteConfigure',
+        subBuilder: RemoteConfigure.create)
+    ..aOM<RemoteSetActive>(2, _omitFieldNames ? '' : 'remoteSetActive',
         subBuilder: RemoteSetActive.create)
-    ..aOM<RemotePingRequest>(9, _omitFieldNames ? '' : 'remotePingRequest',
+    ..aOM<RemotePingRequest>(8, _omitFieldNames ? '' : 'remotePingRequest',
         subBuilder: RemotePingRequest.create)
-    ..aOM<RemotePingResponse>(10, _omitFieldNames ? '' : 'remotePingResponse',
+    ..aOM<RemotePingResponse>(9, _omitFieldNames ? '' : 'remotePingResponse',
         subBuilder: RemotePingResponse.create)
-    ..aOM<RemoteError>(11, _omitFieldNames ? '' : 'remoteError',
+    ..aOM<RemoteKeyInject>(10, _omitFieldNames ? '' : 'remoteKeyInject',
+        subBuilder: RemoteKeyInject.create)
+    ..aOM<RemoteImeKeyInject>(11, _omitFieldNames ? '' : 'remoteImeKeyInject',
+        subBuilder: RemoteImeKeyInject.create)
+    ..aOM<RemoteError>(15, _omitFieldNames ? '' : 'remoteError',
         subBuilder: RemoteError.create)
     ..aOM<RemoteSetVolumeLevel>(
-        12, _omitFieldNames ? '' : 'remoteSetVolumeLevel',
+        18, _omitFieldNames ? '' : 'remoteSetVolumeLevel',
         subBuilder: RemoteSetVolumeLevel.create)
-    ..aOM<RemoteAdjustVolumeLevel>(
-        13, _omitFieldNames ? '' : 'remoteAdjustVolumeLevel',
-        subBuilder: RemoteAdjustVolumeLevel.create)
-    ..aOM<RemoteImeKeyInject>(14, _omitFieldNames ? '' : 'remoteImeKeyInject',
-        subBuilder: RemoteImeKeyInject.create)
-    ..aOM<RemoteImeBatchEdit>(15, _omitFieldNames ? '' : 'remoteImeBatchEdit',
+    ..aOM<RemoteAppInfo>(20, _omitFieldNames ? '' : 'remoteAppInfo',
+        subBuilder: RemoteAppInfo.create)
+    ..aOM<RemoteImeBatchEdit>(21, _omitFieldNames ? '' : 'remoteImeBatchEdit',
         subBuilder: RemoteImeBatchEdit.create)
-    ..aOM<RemoteDeviceInfo>(17, _omitFieldNames ? '' : 'remoteDeviceInfo',
-        subBuilder: RemoteDeviceInfo.create)
-    ..aOM<RemoteAppLinkLaunchRequest>(
-        18, _omitFieldNames ? '' : 'remoteAppLinkLaunchRequest',
-        subBuilder: RemoteAppLinkLaunchRequest.create)
+    ..aOM<RemoteAdjustVolumeLevel>(
+        25, _omitFieldNames ? '' : 'remoteAdjustVolumeLevel',
+        subBuilder: RemoteAdjustVolumeLevel.create)
+    ..aOM<RemoteSetPreferredAudioDevice>(
+        31, _omitFieldNames ? '' : 'remoteSetPreferredAudioDevice',
+        subBuilder: RemoteSetPreferredAudioDevice.create)
+    ..aOM<RemoteResetPreferredAudioDevice>(
+        32, _omitFieldNames ? '' : 'remoteResetPreferredAudioDevice',
+        subBuilder: RemoteResetPreferredAudioDevice.create)
+    ..aOM<RemotePowerStatus>(35, _omitFieldNames ? '' : 'remotePowerStatus',
+        subBuilder: RemotePowerStatus.create)
+    ..aOM<RemoteGetPowerStatus>(
+        36, _omitFieldNames ? '' : 'remoteGetPowerStatus',
+        subBuilder: RemoteGetPowerStatus.create)
+    ..aOM<RemoteStartApp>(330, _omitFieldNames ? '' : 'remoteStartApp',
+        subBuilder: RemoteStartApp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -145,160 +181,229 @@ class RemoteMessage extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<RemoteMessage>(create);
   static RemoteMessage? _defaultInstance;
 
-  @$pb.TagNumber(5)
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   @$pb.TagNumber(8)
   @$pb.TagNumber(9)
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
-  @$pb.TagNumber(12)
-  @$pb.TagNumber(13)
-  @$pb.TagNumber(14)
   @$pb.TagNumber(15)
-  @$pb.TagNumber(17)
   @$pb.TagNumber(18)
-  RemoteMessage_MessageType whichMessageType() =>
-      _RemoteMessage_MessageTypeByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(5)
+  @$pb.TagNumber(20)
+  @$pb.TagNumber(21)
+  @$pb.TagNumber(25)
+  @$pb.TagNumber(31)
+  @$pb.TagNumber(32)
+  @$pb.TagNumber(35)
+  @$pb.TagNumber(36)
+  @$pb.TagNumber(330)
+  RemoteMessage_Message whichMessage() =>
+      _RemoteMessage_MessageByTag[$_whichOneof(0)]!;
+  @$pb.TagNumber(1)
+  @$pb.TagNumber(2)
   @$pb.TagNumber(8)
   @$pb.TagNumber(9)
   @$pb.TagNumber(10)
   @$pb.TagNumber(11)
-  @$pb.TagNumber(12)
-  @$pb.TagNumber(13)
-  @$pb.TagNumber(14)
   @$pb.TagNumber(15)
-  @$pb.TagNumber(17)
   @$pb.TagNumber(18)
-  void clearMessageType() => $_clearField($_whichOneof(0));
+  @$pb.TagNumber(20)
+  @$pb.TagNumber(21)
+  @$pb.TagNumber(25)
+  @$pb.TagNumber(31)
+  @$pb.TagNumber(32)
+  @$pb.TagNumber(35)
+  @$pb.TagNumber(36)
+  @$pb.TagNumber(330)
+  void clearMessage() => $_clearField($_whichOneof(0));
 
-  @$pb.TagNumber(5)
-  RemoteCommand get remoteCommand => $_getN(0);
-  @$pb.TagNumber(5)
-  set remoteCommand(RemoteCommand value) => $_setField(5, value);
-  @$pb.TagNumber(5)
-  $core.bool hasRemoteCommand() => $_has(0);
-  @$pb.TagNumber(5)
-  void clearRemoteCommand() => $_clearField(5);
-  @$pb.TagNumber(5)
-  RemoteCommand ensureRemoteCommand() => $_ensure(0);
+  @$pb.TagNumber(1)
+  RemoteConfigure get remoteConfigure => $_getN(0);
+  @$pb.TagNumber(1)
+  set remoteConfigure(RemoteConfigure value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRemoteConfigure() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRemoteConfigure() => $_clearField(1);
+  @$pb.TagNumber(1)
+  RemoteConfigure ensureRemoteConfigure() => $_ensure(0);
 
-  @$pb.TagNumber(8)
+  @$pb.TagNumber(2)
   RemoteSetActive get remoteSetActive => $_getN(1);
-  @$pb.TagNumber(8)
-  set remoteSetActive(RemoteSetActive value) => $_setField(8, value);
-  @$pb.TagNumber(8)
+  @$pb.TagNumber(2)
+  set remoteSetActive(RemoteSetActive value) => $_setField(2, value);
+  @$pb.TagNumber(2)
   $core.bool hasRemoteSetActive() => $_has(1);
-  @$pb.TagNumber(8)
-  void clearRemoteSetActive() => $_clearField(8);
-  @$pb.TagNumber(8)
+  @$pb.TagNumber(2)
+  void clearRemoteSetActive() => $_clearField(2);
+  @$pb.TagNumber(2)
   RemoteSetActive ensureRemoteSetActive() => $_ensure(1);
 
-  @$pb.TagNumber(9)
+  @$pb.TagNumber(8)
   RemotePingRequest get remotePingRequest => $_getN(2);
-  @$pb.TagNumber(9)
-  set remotePingRequest(RemotePingRequest value) => $_setField(9, value);
-  @$pb.TagNumber(9)
+  @$pb.TagNumber(8)
+  set remotePingRequest(RemotePingRequest value) => $_setField(8, value);
+  @$pb.TagNumber(8)
   $core.bool hasRemotePingRequest() => $_has(2);
-  @$pb.TagNumber(9)
-  void clearRemotePingRequest() => $_clearField(9);
-  @$pb.TagNumber(9)
+  @$pb.TagNumber(8)
+  void clearRemotePingRequest() => $_clearField(8);
+  @$pb.TagNumber(8)
   RemotePingRequest ensureRemotePingRequest() => $_ensure(2);
 
-  @$pb.TagNumber(10)
+  @$pb.TagNumber(9)
   RemotePingResponse get remotePingResponse => $_getN(3);
-  @$pb.TagNumber(10)
-  set remotePingResponse(RemotePingResponse value) => $_setField(10, value);
-  @$pb.TagNumber(10)
+  @$pb.TagNumber(9)
+  set remotePingResponse(RemotePingResponse value) => $_setField(9, value);
+  @$pb.TagNumber(9)
   $core.bool hasRemotePingResponse() => $_has(3);
-  @$pb.TagNumber(10)
-  void clearRemotePingResponse() => $_clearField(10);
-  @$pb.TagNumber(10)
+  @$pb.TagNumber(9)
+  void clearRemotePingResponse() => $_clearField(9);
+  @$pb.TagNumber(9)
   RemotePingResponse ensureRemotePingResponse() => $_ensure(3);
 
-  @$pb.TagNumber(11)
-  RemoteError get remoteError => $_getN(4);
-  @$pb.TagNumber(11)
-  set remoteError(RemoteError value) => $_setField(11, value);
-  @$pb.TagNumber(11)
-  $core.bool hasRemoteError() => $_has(4);
-  @$pb.TagNumber(11)
-  void clearRemoteError() => $_clearField(11);
-  @$pb.TagNumber(11)
-  RemoteError ensureRemoteError() => $_ensure(4);
+  @$pb.TagNumber(10)
+  RemoteKeyInject get remoteKeyInject => $_getN(4);
+  @$pb.TagNumber(10)
+  set remoteKeyInject(RemoteKeyInject value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasRemoteKeyInject() => $_has(4);
+  @$pb.TagNumber(10)
+  void clearRemoteKeyInject() => $_clearField(10);
+  @$pb.TagNumber(10)
+  RemoteKeyInject ensureRemoteKeyInject() => $_ensure(4);
 
-  @$pb.TagNumber(12)
-  RemoteSetVolumeLevel get remoteSetVolumeLevel => $_getN(5);
-  @$pb.TagNumber(12)
-  set remoteSetVolumeLevel(RemoteSetVolumeLevel value) => $_setField(12, value);
-  @$pb.TagNumber(12)
-  $core.bool hasRemoteSetVolumeLevel() => $_has(5);
-  @$pb.TagNumber(12)
-  void clearRemoteSetVolumeLevel() => $_clearField(12);
-  @$pb.TagNumber(12)
-  RemoteSetVolumeLevel ensureRemoteSetVolumeLevel() => $_ensure(5);
+  @$pb.TagNumber(11)
+  RemoteImeKeyInject get remoteImeKeyInject => $_getN(5);
+  @$pb.TagNumber(11)
+  set remoteImeKeyInject(RemoteImeKeyInject value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasRemoteImeKeyInject() => $_has(5);
+  @$pb.TagNumber(11)
+  void clearRemoteImeKeyInject() => $_clearField(11);
+  @$pb.TagNumber(11)
+  RemoteImeKeyInject ensureRemoteImeKeyInject() => $_ensure(5);
 
-  @$pb.TagNumber(13)
-  RemoteAdjustVolumeLevel get remoteAdjustVolumeLevel => $_getN(6);
-  @$pb.TagNumber(13)
+  @$pb.TagNumber(15)
+  RemoteError get remoteError => $_getN(6);
+  @$pb.TagNumber(15)
+  set remoteError(RemoteError value) => $_setField(15, value);
+  @$pb.TagNumber(15)
+  $core.bool hasRemoteError() => $_has(6);
+  @$pb.TagNumber(15)
+  void clearRemoteError() => $_clearField(15);
+  @$pb.TagNumber(15)
+  RemoteError ensureRemoteError() => $_ensure(6);
+
+  @$pb.TagNumber(18)
+  RemoteSetVolumeLevel get remoteSetVolumeLevel => $_getN(7);
+  @$pb.TagNumber(18)
+  set remoteSetVolumeLevel(RemoteSetVolumeLevel value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasRemoteSetVolumeLevel() => $_has(7);
+  @$pb.TagNumber(18)
+  void clearRemoteSetVolumeLevel() => $_clearField(18);
+  @$pb.TagNumber(18)
+  RemoteSetVolumeLevel ensureRemoteSetVolumeLevel() => $_ensure(7);
+
+  @$pb.TagNumber(20)
+  RemoteAppInfo get remoteAppInfo => $_getN(8);
+  @$pb.TagNumber(20)
+  set remoteAppInfo(RemoteAppInfo value) => $_setField(20, value);
+  @$pb.TagNumber(20)
+  $core.bool hasRemoteAppInfo() => $_has(8);
+  @$pb.TagNumber(20)
+  void clearRemoteAppInfo() => $_clearField(20);
+  @$pb.TagNumber(20)
+  RemoteAppInfo ensureRemoteAppInfo() => $_ensure(8);
+
+  @$pb.TagNumber(21)
+  RemoteImeBatchEdit get remoteImeBatchEdit => $_getN(9);
+  @$pb.TagNumber(21)
+  set remoteImeBatchEdit(RemoteImeBatchEdit value) => $_setField(21, value);
+  @$pb.TagNumber(21)
+  $core.bool hasRemoteImeBatchEdit() => $_has(9);
+  @$pb.TagNumber(21)
+  void clearRemoteImeBatchEdit() => $_clearField(21);
+  @$pb.TagNumber(21)
+  RemoteImeBatchEdit ensureRemoteImeBatchEdit() => $_ensure(9);
+
+  @$pb.TagNumber(25)
+  RemoteAdjustVolumeLevel get remoteAdjustVolumeLevel => $_getN(10);
+  @$pb.TagNumber(25)
   set remoteAdjustVolumeLevel(RemoteAdjustVolumeLevel value) =>
-      $_setField(13, value);
-  @$pb.TagNumber(13)
-  $core.bool hasRemoteAdjustVolumeLevel() => $_has(6);
-  @$pb.TagNumber(13)
-  void clearRemoteAdjustVolumeLevel() => $_clearField(13);
-  @$pb.TagNumber(13)
-  RemoteAdjustVolumeLevel ensureRemoteAdjustVolumeLevel() => $_ensure(6);
+      $_setField(25, value);
+  @$pb.TagNumber(25)
+  $core.bool hasRemoteAdjustVolumeLevel() => $_has(10);
+  @$pb.TagNumber(25)
+  void clearRemoteAdjustVolumeLevel() => $_clearField(25);
+  @$pb.TagNumber(25)
+  RemoteAdjustVolumeLevel ensureRemoteAdjustVolumeLevel() => $_ensure(10);
 
-  @$pb.TagNumber(14)
-  RemoteImeKeyInject get remoteImeKeyInject => $_getN(7);
-  @$pb.TagNumber(14)
-  set remoteImeKeyInject(RemoteImeKeyInject value) => $_setField(14, value);
-  @$pb.TagNumber(14)
-  $core.bool hasRemoteImeKeyInject() => $_has(7);
-  @$pb.TagNumber(14)
-  void clearRemoteImeKeyInject() => $_clearField(14);
-  @$pb.TagNumber(14)
-  RemoteImeKeyInject ensureRemoteImeKeyInject() => $_ensure(7);
+  @$pb.TagNumber(31)
+  RemoteSetPreferredAudioDevice get remoteSetPreferredAudioDevice => $_getN(11);
+  @$pb.TagNumber(31)
+  set remoteSetPreferredAudioDevice(RemoteSetPreferredAudioDevice value) =>
+      $_setField(31, value);
+  @$pb.TagNumber(31)
+  $core.bool hasRemoteSetPreferredAudioDevice() => $_has(11);
+  @$pb.TagNumber(31)
+  void clearRemoteSetPreferredAudioDevice() => $_clearField(31);
+  @$pb.TagNumber(31)
+  RemoteSetPreferredAudioDevice ensureRemoteSetPreferredAudioDevice() =>
+      $_ensure(11);
 
-  @$pb.TagNumber(15)
-  RemoteImeBatchEdit get remoteImeBatchEdit => $_getN(8);
-  @$pb.TagNumber(15)
-  set remoteImeBatchEdit(RemoteImeBatchEdit value) => $_setField(15, value);
-  @$pb.TagNumber(15)
-  $core.bool hasRemoteImeBatchEdit() => $_has(8);
-  @$pb.TagNumber(15)
-  void clearRemoteImeBatchEdit() => $_clearField(15);
-  @$pb.TagNumber(15)
-  RemoteImeBatchEdit ensureRemoteImeBatchEdit() => $_ensure(8);
+  @$pb.TagNumber(32)
+  RemoteResetPreferredAudioDevice get remoteResetPreferredAudioDevice =>
+      $_getN(12);
+  @$pb.TagNumber(32)
+  set remoteResetPreferredAudioDevice(RemoteResetPreferredAudioDevice value) =>
+      $_setField(32, value);
+  @$pb.TagNumber(32)
+  $core.bool hasRemoteResetPreferredAudioDevice() => $_has(12);
+  @$pb.TagNumber(32)
+  void clearRemoteResetPreferredAudioDevice() => $_clearField(32);
+  @$pb.TagNumber(32)
+  RemoteResetPreferredAudioDevice ensureRemoteResetPreferredAudioDevice() =>
+      $_ensure(12);
 
-  @$pb.TagNumber(17)
-  RemoteDeviceInfo get remoteDeviceInfo => $_getN(9);
-  @$pb.TagNumber(17)
-  set remoteDeviceInfo(RemoteDeviceInfo value) => $_setField(17, value);
-  @$pb.TagNumber(17)
-  $core.bool hasRemoteDeviceInfo() => $_has(9);
-  @$pb.TagNumber(17)
-  void clearRemoteDeviceInfo() => $_clearField(17);
-  @$pb.TagNumber(17)
-  RemoteDeviceInfo ensureRemoteDeviceInfo() => $_ensure(9);
+  @$pb.TagNumber(35)
+  RemotePowerStatus get remotePowerStatus => $_getN(13);
+  @$pb.TagNumber(35)
+  set remotePowerStatus(RemotePowerStatus value) => $_setField(35, value);
+  @$pb.TagNumber(35)
+  $core.bool hasRemotePowerStatus() => $_has(13);
+  @$pb.TagNumber(35)
+  void clearRemotePowerStatus() => $_clearField(35);
+  @$pb.TagNumber(35)
+  RemotePowerStatus ensureRemotePowerStatus() => $_ensure(13);
 
-  @$pb.TagNumber(18)
-  RemoteAppLinkLaunchRequest get remoteAppLinkLaunchRequest => $_getN(10);
-  @$pb.TagNumber(18)
-  set remoteAppLinkLaunchRequest(RemoteAppLinkLaunchRequest value) =>
-      $_setField(18, value);
-  @$pb.TagNumber(18)
-  $core.bool hasRemoteAppLinkLaunchRequest() => $_has(10);
-  @$pb.TagNumber(18)
-  void clearRemoteAppLinkLaunchRequest() => $_clearField(18);
-  @$pb.TagNumber(18)
-  RemoteAppLinkLaunchRequest ensureRemoteAppLinkLaunchRequest() => $_ensure(10);
+  @$pb.TagNumber(36)
+  RemoteGetPowerStatus get remoteGetPowerStatus => $_getN(14);
+  @$pb.TagNumber(36)
+  set remoteGetPowerStatus(RemoteGetPowerStatus value) => $_setField(36, value);
+  @$pb.TagNumber(36)
+  $core.bool hasRemoteGetPowerStatus() => $_has(14);
+  @$pb.TagNumber(36)
+  void clearRemoteGetPowerStatus() => $_clearField(36);
+  @$pb.TagNumber(36)
+  RemoteGetPowerStatus ensureRemoteGetPowerStatus() => $_ensure(14);
+
+  @$pb.TagNumber(330)
+  RemoteStartApp get remoteStartApp => $_getN(15);
+  @$pb.TagNumber(330)
+  set remoteStartApp(RemoteStartApp value) => $_setField(330, value);
+  @$pb.TagNumber(330)
+  $core.bool hasRemoteStartApp() => $_has(15);
+  @$pb.TagNumber(330)
+  void clearRemoteStartApp() => $_clearField(330);
+  @$pb.TagNumber(330)
+  RemoteStartApp ensureRemoteStartApp() => $_ensure(15);
 }
 
-class RemoteCommand extends $pb.GeneratedMessage {
-  factory RemoteCommand({
-    $core.int? keyCode,
-    $core.int? direction,
+class RemoteKeyInject extends $pb.GeneratedMessage {
+  factory RemoteKeyInject({
+    RemoteKeyInject_RemoteKeyCode? keyCode,
+    RemoteDirection? direction,
   }) {
     final result = create();
     if (keyCode != null) result.keyCode = keyCode;
@@ -306,66 +411,256 @@ class RemoteCommand extends $pb.GeneratedMessage {
     return result;
   }
 
-  RemoteCommand._();
+  RemoteKeyInject._();
 
-  factory RemoteCommand.fromBuffer($core.List<$core.int> data,
+  factory RemoteKeyInject.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoteCommand.fromJson($core.String json,
+  factory RemoteKeyInject.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteCommand',
+      _omitMessageNames ? '' : 'RemoteKeyInject',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'keyCode')
-    ..aI(2, _omitFieldNames ? '' : 'direction')
+    ..aE<RemoteKeyInject_RemoteKeyCode>(1, _omitFieldNames ? '' : 'keyCode',
+        enumValues: RemoteKeyInject_RemoteKeyCode.values)
+    ..aE<RemoteDirection>(2, _omitFieldNames ? '' : 'direction',
+        enumValues: RemoteDirection.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteCommand clone() => deepCopy();
+  RemoteKeyInject clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteCommand copyWith(void Function(RemoteCommand) updates) =>
-      super.copyWith((message) => updates(message as RemoteCommand))
-          as RemoteCommand;
+  RemoteKeyInject copyWith(void Function(RemoteKeyInject) updates) =>
+      super.copyWith((message) => updates(message as RemoteKeyInject))
+          as RemoteKeyInject;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoteCommand create() => RemoteCommand._();
+  static RemoteKeyInject create() => RemoteKeyInject._();
   @$core.override
-  RemoteCommand createEmptyInstance() => create();
-  static $pb.PbList<RemoteCommand> createRepeated() =>
-      $pb.PbList<RemoteCommand>();
+  RemoteKeyInject createEmptyInstance() => create();
+  static $pb.PbList<RemoteKeyInject> createRepeated() =>
+      $pb.PbList<RemoteKeyInject>();
   @$core.pragma('dart2js:noInline')
-  static RemoteCommand getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteCommand>(create);
-  static RemoteCommand? _defaultInstance;
+  static RemoteKeyInject getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteKeyInject>(create);
+  static RemoteKeyInject? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get keyCode => $_getIZ(0);
+  RemoteKeyInject_RemoteKeyCode get keyCode => $_getN(0);
   @$pb.TagNumber(1)
-  set keyCode($core.int value) => $_setSignedInt32(0, value);
+  set keyCode(RemoteKeyInject_RemoteKeyCode value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasKeyCode() => $_has(0);
   @$pb.TagNumber(1)
   void clearKeyCode() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get direction => $_getIZ(1);
+  RemoteDirection get direction => $_getN(1);
   @$pb.TagNumber(2)
-  set direction($core.int value) => $_setSignedInt32(1, value);
+  set direction(RemoteDirection value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasDirection() => $_has(1);
   @$pb.TagNumber(2)
   void clearDirection() => $_clearField(2);
 }
 
+/// Configuration messages
+class RemoteConfigure extends $pb.GeneratedMessage {
+  factory RemoteConfigure({
+    $core.int? code1,
+    RemoteDeviceInfo? deviceInfo,
+  }) {
+    final result = create();
+    if (code1 != null) result.code1 = code1;
+    if (deviceInfo != null) result.deviceInfo = deviceInfo;
+    return result;
+  }
+
+  RemoteConfigure._();
+
+  factory RemoteConfigure.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteConfigure.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteConfigure',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'code1', fieldType: $pb.PbFieldType.OU3)
+    ..aOM<RemoteDeviceInfo>(2, _omitFieldNames ? '' : 'deviceInfo',
+        subBuilder: RemoteDeviceInfo.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteConfigure clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteConfigure copyWith(void Function(RemoteConfigure) updates) =>
+      super.copyWith((message) => updates(message as RemoteConfigure))
+          as RemoteConfigure;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteConfigure create() => RemoteConfigure._();
+  @$core.override
+  RemoteConfigure createEmptyInstance() => create();
+  static $pb.PbList<RemoteConfigure> createRepeated() =>
+      $pb.PbList<RemoteConfigure>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteConfigure getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteConfigure>(create);
+  static RemoteConfigure? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get code1 => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set code1($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCode1() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode1() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  RemoteDeviceInfo get deviceInfo => $_getN(1);
+  @$pb.TagNumber(2)
+  set deviceInfo(RemoteDeviceInfo value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDeviceInfo() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDeviceInfo() => $_clearField(2);
+  @$pb.TagNumber(2)
+  RemoteDeviceInfo ensureDeviceInfo() => $_ensure(1);
+}
+
+class RemoteDeviceInfo extends $pb.GeneratedMessage {
+  factory RemoteDeviceInfo({
+    $core.int? model,
+    $core.String? vendor,
+    $core.int? unknown1,
+    $core.String? unknown2,
+    $core.String? packageName,
+    $core.String? appVersion,
+  }) {
+    final result = create();
+    if (model != null) result.model = model;
+    if (vendor != null) result.vendor = vendor;
+    if (unknown1 != null) result.unknown1 = unknown1;
+    if (unknown2 != null) result.unknown2 = unknown2;
+    if (packageName != null) result.packageName = packageName;
+    if (appVersion != null) result.appVersion = appVersion;
+    return result;
+  }
+
+  RemoteDeviceInfo._();
+
+  factory RemoteDeviceInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteDeviceInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteDeviceInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'model', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'vendor')
+    ..aI(3, _omitFieldNames ? '' : 'unknown1', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(4, _omitFieldNames ? '' : 'unknown2')
+    ..aOS(5, _omitFieldNames ? '' : 'packageName')
+    ..aOS(6, _omitFieldNames ? '' : 'appVersion')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteDeviceInfo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteDeviceInfo copyWith(void Function(RemoteDeviceInfo) updates) =>
+      super.copyWith((message) => updates(message as RemoteDeviceInfo))
+          as RemoteDeviceInfo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteDeviceInfo create() => RemoteDeviceInfo._();
+  @$core.override
+  RemoteDeviceInfo createEmptyInstance() => create();
+  static $pb.PbList<RemoteDeviceInfo> createRepeated() =>
+      $pb.PbList<RemoteDeviceInfo>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteDeviceInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteDeviceInfo>(create);
+  static RemoteDeviceInfo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get model => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set model($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasModel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearModel() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get vendor => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set vendor($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVendor() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVendor() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get unknown1 => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set unknown1($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasUnknown1() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearUnknown1() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get unknown2 => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set unknown2($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasUnknown2() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearUnknown2() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get packageName => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set packageName($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPackageName() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPackageName() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get appVersion => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set appVersion($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasAppVersion() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearAppVersion() => $_clearField(6);
+}
+
 class RemoteSetActive extends $pb.GeneratedMessage {
   factory RemoteSetActive({
-    $core.bool? active,
+    $core.int? active,
   }) {
     final result = create();
     if (active != null) result.active = active;
@@ -385,7 +680,7 @@ class RemoteSetActive extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'RemoteSetActive',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
       createEmptyInstance: create)
-    ..aOB(1, _omitFieldNames ? '' : 'active')
+    ..aI(1, _omitFieldNames ? '' : 'active', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -410,307 +705,25 @@ class RemoteSetActive extends $pb.GeneratedMessage {
   static RemoteSetActive? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.bool get active => $_getBF(0);
+  $core.int get active => $_getIZ(0);
   @$pb.TagNumber(1)
-  set active($core.bool value) => $_setBool(0, value);
+  set active($core.int value) => $_setUnsignedInt32(0, value);
   @$pb.TagNumber(1)
   $core.bool hasActive() => $_has(0);
   @$pb.TagNumber(1)
   void clearActive() => $_clearField(1);
 }
 
-class RemotePingRequest extends $pb.GeneratedMessage {
-  factory RemotePingRequest() => create();
-
-  RemotePingRequest._();
-
-  factory RemotePingRequest.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RemotePingRequest.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemotePingRequest',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
-      createEmptyInstance: create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemotePingRequest clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemotePingRequest copyWith(void Function(RemotePingRequest) updates) =>
-      super.copyWith((message) => updates(message as RemotePingRequest))
-          as RemotePingRequest;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static RemotePingRequest create() => RemotePingRequest._();
-  @$core.override
-  RemotePingRequest createEmptyInstance() => create();
-  static $pb.PbList<RemotePingRequest> createRepeated() =>
-      $pb.PbList<RemotePingRequest>();
-  @$core.pragma('dart2js:noInline')
-  static RemotePingRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemotePingRequest>(create);
-  static RemotePingRequest? _defaultInstance;
-}
-
-class RemotePingResponse extends $pb.GeneratedMessage {
-  factory RemotePingResponse() => create();
-
-  RemotePingResponse._();
-
-  factory RemotePingResponse.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RemotePingResponse.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemotePingResponse',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
-      createEmptyInstance: create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemotePingResponse clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemotePingResponse copyWith(void Function(RemotePingResponse) updates) =>
-      super.copyWith((message) => updates(message as RemotePingResponse))
-          as RemotePingResponse;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static RemotePingResponse create() => RemotePingResponse._();
-  @$core.override
-  RemotePingResponse createEmptyInstance() => create();
-  static $pb.PbList<RemotePingResponse> createRepeated() =>
-      $pb.PbList<RemotePingResponse>();
-  @$core.pragma('dart2js:noInline')
-  static RemotePingResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemotePingResponse>(create);
-  static RemotePingResponse? _defaultInstance;
-}
-
-class RemoteError extends $pb.GeneratedMessage {
-  factory RemoteError({
-    $core.int? errorCode,
-  }) {
-    final result = create();
-    if (errorCode != null) result.errorCode = errorCode;
-    return result;
-  }
-
-  RemoteError._();
-
-  factory RemoteError.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RemoteError.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteError',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'errorCode')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteError clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteError copyWith(void Function(RemoteError) updates) =>
-      super.copyWith((message) => updates(message as RemoteError))
-          as RemoteError;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static RemoteError create() => RemoteError._();
-  @$core.override
-  RemoteError createEmptyInstance() => create();
-  static $pb.PbList<RemoteError> createRepeated() => $pb.PbList<RemoteError>();
-  @$core.pragma('dart2js:noInline')
-  static RemoteError getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteError>(create);
-  static RemoteError? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get errorCode => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set errorCode($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasErrorCode() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearErrorCode() => $_clearField(1);
-}
-
-class RemoteSetVolumeLevel extends $pb.GeneratedMessage {
-  factory RemoteSetVolumeLevel({
-    $core.int? volumeLevel,
-    $core.int? volumeMax,
-    $core.int? volumeMin,
-    $core.bool? volumeMuted,
-  }) {
-    final result = create();
-    if (volumeLevel != null) result.volumeLevel = volumeLevel;
-    if (volumeMax != null) result.volumeMax = volumeMax;
-    if (volumeMin != null) result.volumeMin = volumeMin;
-    if (volumeMuted != null) result.volumeMuted = volumeMuted;
-    return result;
-  }
-
-  RemoteSetVolumeLevel._();
-
-  factory RemoteSetVolumeLevel.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RemoteSetVolumeLevel.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteSetVolumeLevel',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'volumeLevel')
-    ..aI(2, _omitFieldNames ? '' : 'volumeMax')
-    ..aI(3, _omitFieldNames ? '' : 'volumeMin')
-    ..aOB(4, _omitFieldNames ? '' : 'volumeMuted')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteSetVolumeLevel clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteSetVolumeLevel copyWith(void Function(RemoteSetVolumeLevel) updates) =>
-      super.copyWith((message) => updates(message as RemoteSetVolumeLevel))
-          as RemoteSetVolumeLevel;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static RemoteSetVolumeLevel create() => RemoteSetVolumeLevel._();
-  @$core.override
-  RemoteSetVolumeLevel createEmptyInstance() => create();
-  static $pb.PbList<RemoteSetVolumeLevel> createRepeated() =>
-      $pb.PbList<RemoteSetVolumeLevel>();
-  @$core.pragma('dart2js:noInline')
-  static RemoteSetVolumeLevel getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteSetVolumeLevel>(create);
-  static RemoteSetVolumeLevel? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get volumeLevel => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set volumeLevel($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasVolumeLevel() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearVolumeLevel() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.int get volumeMax => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set volumeMax($core.int value) => $_setSignedInt32(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasVolumeMax() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearVolumeMax() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.int get volumeMin => $_getIZ(2);
-  @$pb.TagNumber(3)
-  set volumeMin($core.int value) => $_setSignedInt32(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasVolumeMin() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearVolumeMin() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.bool get volumeMuted => $_getBF(3);
-  @$pb.TagNumber(4)
-  set volumeMuted($core.bool value) => $_setBool(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasVolumeMuted() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearVolumeMuted() => $_clearField(4);
-}
-
-class RemoteAdjustVolumeLevel extends $pb.GeneratedMessage {
-  factory RemoteAdjustVolumeLevel({
-    $core.int? delta,
-  }) {
-    final result = create();
-    if (delta != null) result.delta = delta;
-    return result;
-  }
-
-  RemoteAdjustVolumeLevel._();
-
-  factory RemoteAdjustVolumeLevel.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RemoteAdjustVolumeLevel.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteAdjustVolumeLevel',
-      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'delta')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteAdjustVolumeLevel clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteAdjustVolumeLevel copyWith(
-          void Function(RemoteAdjustVolumeLevel) updates) =>
-      super.copyWith((message) => updates(message as RemoteAdjustVolumeLevel))
-          as RemoteAdjustVolumeLevel;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static RemoteAdjustVolumeLevel create() => RemoteAdjustVolumeLevel._();
-  @$core.override
-  RemoteAdjustVolumeLevel createEmptyInstance() => create();
-  static $pb.PbList<RemoteAdjustVolumeLevel> createRepeated() =>
-      $pb.PbList<RemoteAdjustVolumeLevel>();
-  @$core.pragma('dart2js:noInline')
-  static RemoteAdjustVolumeLevel getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteAdjustVolumeLevel>(create);
-  static RemoteAdjustVolumeLevel? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get delta => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set delta($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasDelta() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDelta() => $_clearField(1);
-}
-
 class RemoteImeKeyInject extends $pb.GeneratedMessage {
   factory RemoteImeKeyInject({
     $core.String? textField,
-    $core.int? appPackageName,
+    $core.int? keyCode,
+    RemoteDirection? direction,
   }) {
     final result = create();
     if (textField != null) result.textField = textField;
-    if (appPackageName != null) result.appPackageName = appPackageName;
+    if (keyCode != null) result.keyCode = keyCode;
+    if (direction != null) result.direction = direction;
     return result;
   }
 
@@ -728,7 +741,9 @@ class RemoteImeKeyInject extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'textField')
-    ..aI(2, _omitFieldNames ? '' : 'appPackageName')
+    ..aI(2, _omitFieldNames ? '' : 'keyCode', fieldType: $pb.PbFieldType.OU3)
+    ..aE<RemoteDirection>(3, _omitFieldNames ? '' : 'direction',
+        enumValues: RemoteDirection.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -762,31 +777,35 @@ class RemoteImeKeyInject extends $pb.GeneratedMessage {
   void clearTextField() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get appPackageName => $_getIZ(1);
+  $core.int get keyCode => $_getIZ(1);
   @$pb.TagNumber(2)
-  set appPackageName($core.int value) => $_setSignedInt32(1, value);
+  set keyCode($core.int value) => $_setUnsignedInt32(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasAppPackageName() => $_has(1);
+  $core.bool hasKeyCode() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAppPackageName() => $_clearField(2);
+  void clearKeyCode() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  RemoteDirection get direction => $_getN(2);
+  @$pb.TagNumber(3)
+  set direction(RemoteDirection value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDirection() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDirection() => $_clearField(3);
 }
 
+/// IME (text input)
 class RemoteImeBatchEdit extends $pb.GeneratedMessage {
   factory RemoteImeBatchEdit({
-    $core.int? deleteBeforeLength,
-    $core.int? deleteAfterLength,
-    $core.String? newCursorPosition,
-    $core.String? newText,
-    $core.bool? newCompositionText,
+    $core.int? imeCounter,
+    $core.int? fieldCounter,
+    RemoteImeEditInfo? editInfo,
   }) {
     final result = create();
-    if (deleteBeforeLength != null)
-      result.deleteBeforeLength = deleteBeforeLength;
-    if (deleteAfterLength != null) result.deleteAfterLength = deleteAfterLength;
-    if (newCursorPosition != null) result.newCursorPosition = newCursorPosition;
-    if (newText != null) result.newText = newText;
-    if (newCompositionText != null)
-      result.newCompositionText = newCompositionText;
+    if (imeCounter != null) result.imeCounter = imeCounter;
+    if (fieldCounter != null) result.fieldCounter = fieldCounter;
+    if (editInfo != null) result.editInfo = editInfo;
     return result;
   }
 
@@ -803,11 +822,11 @@ class RemoteImeBatchEdit extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'RemoteImeBatchEdit',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'deleteBeforeLength')
-    ..aI(2, _omitFieldNames ? '' : 'deleteAfterLength')
-    ..aOS(3, _omitFieldNames ? '' : 'newCursorPosition')
-    ..aOS(4, _omitFieldNames ? '' : 'newText')
-    ..aOB(5, _omitFieldNames ? '' : 'newCompositionText')
+    ..aI(1, _omitFieldNames ? '' : 'imeCounter', fieldType: $pb.PbFieldType.OU3)
+    ..aI(2, _omitFieldNames ? '' : 'fieldCounter',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aOM<RemoteImeEditInfo>(3, _omitFieldNames ? '' : 'editInfo',
+        subBuilder: RemoteImeEditInfo.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -832,223 +851,855 @@ class RemoteImeBatchEdit extends $pb.GeneratedMessage {
   static RemoteImeBatchEdit? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get deleteBeforeLength => $_getIZ(0);
+  $core.int get imeCounter => $_getIZ(0);
   @$pb.TagNumber(1)
-  set deleteBeforeLength($core.int value) => $_setSignedInt32(0, value);
+  set imeCounter($core.int value) => $_setUnsignedInt32(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasDeleteBeforeLength() => $_has(0);
+  $core.bool hasImeCounter() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDeleteBeforeLength() => $_clearField(1);
+  void clearImeCounter() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get deleteAfterLength => $_getIZ(1);
+  $core.int get fieldCounter => $_getIZ(1);
   @$pb.TagNumber(2)
-  set deleteAfterLength($core.int value) => $_setSignedInt32(1, value);
+  set fieldCounter($core.int value) => $_setUnsignedInt32(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasDeleteAfterLength() => $_has(1);
+  $core.bool hasFieldCounter() => $_has(1);
   @$pb.TagNumber(2)
-  void clearDeleteAfterLength() => $_clearField(2);
+  void clearFieldCounter() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get newCursorPosition => $_getSZ(2);
+  RemoteImeEditInfo get editInfo => $_getN(2);
   @$pb.TagNumber(3)
-  set newCursorPosition($core.String value) => $_setString(2, value);
+  set editInfo(RemoteImeEditInfo value) => $_setField(3, value);
   @$pb.TagNumber(3)
-  $core.bool hasNewCursorPosition() => $_has(2);
+  $core.bool hasEditInfo() => $_has(2);
   @$pb.TagNumber(3)
-  void clearNewCursorPosition() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get newText => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set newText($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasNewText() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearNewText() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.bool get newCompositionText => $_getBF(4);
-  @$pb.TagNumber(5)
-  set newCompositionText($core.bool value) => $_setBool(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasNewCompositionText() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearNewCompositionText() => $_clearField(5);
+  void clearEditInfo() => $_clearField(3);
+  @$pb.TagNumber(3)
+  RemoteImeEditInfo ensureEditInfo() => $_ensure(2);
 }
 
-class RemoteDeviceInfo extends $pb.GeneratedMessage {
-  factory RemoteDeviceInfo({
-    $core.String? model,
-    $core.String? vendor,
-    $core.int? unknown1,
-    $core.String? unknown2,
+class RemoteImeEditInfo extends $pb.GeneratedMessage {
+  factory RemoteImeEditInfo({
+    $core.int? insert,
+    RemoteTextFieldStatus? textFieldStatus,
+  }) {
+    final result = create();
+    if (insert != null) result.insert = insert;
+    if (textFieldStatus != null) result.textFieldStatus = textFieldStatus;
+    return result;
+  }
+
+  RemoteImeEditInfo._();
+
+  factory RemoteImeEditInfo.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteImeEditInfo.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteImeEditInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'insert', fieldType: $pb.PbFieldType.OU3)
+    ..aOM<RemoteTextFieldStatus>(2, _omitFieldNames ? '' : 'textFieldStatus',
+        subBuilder: RemoteTextFieldStatus.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteImeEditInfo clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteImeEditInfo copyWith(void Function(RemoteImeEditInfo) updates) =>
+      super.copyWith((message) => updates(message as RemoteImeEditInfo))
+          as RemoteImeEditInfo;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteImeEditInfo create() => RemoteImeEditInfo._();
+  @$core.override
+  RemoteImeEditInfo createEmptyInstance() => create();
+  static $pb.PbList<RemoteImeEditInfo> createRepeated() =>
+      $pb.PbList<RemoteImeEditInfo>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteImeEditInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteImeEditInfo>(create);
+  static RemoteImeEditInfo? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get insert => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set insert($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInsert() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInsert() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  RemoteTextFieldStatus get textFieldStatus => $_getN(1);
+  @$pb.TagNumber(2)
+  set textFieldStatus(RemoteTextFieldStatus value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTextFieldStatus() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTextFieldStatus() => $_clearField(2);
+  @$pb.TagNumber(2)
+  RemoteTextFieldStatus ensureTextFieldStatus() => $_ensure(1);
+}
+
+class RemoteTextFieldStatus extends $pb.GeneratedMessage {
+  factory RemoteTextFieldStatus({
+    $core.int? start,
+    $core.int? end,
+    $core.String? value,
+  }) {
+    final result = create();
+    if (start != null) result.start = start;
+    if (end != null) result.end = end;
+    if (value != null) result.value = value;
+    return result;
+  }
+
+  RemoteTextFieldStatus._();
+
+  factory RemoteTextFieldStatus.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteTextFieldStatus.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteTextFieldStatus',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'start', fieldType: $pb.PbFieldType.OU3)
+    ..aI(2, _omitFieldNames ? '' : 'end', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(3, _omitFieldNames ? '' : 'value')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteTextFieldStatus clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteTextFieldStatus copyWith(
+          void Function(RemoteTextFieldStatus) updates) =>
+      super.copyWith((message) => updates(message as RemoteTextFieldStatus))
+          as RemoteTextFieldStatus;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteTextFieldStatus create() => RemoteTextFieldStatus._();
+  @$core.override
+  RemoteTextFieldStatus createEmptyInstance() => create();
+  static $pb.PbList<RemoteTextFieldStatus> createRepeated() =>
+      $pb.PbList<RemoteTextFieldStatus>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteTextFieldStatus getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteTextFieldStatus>(create);
+  static RemoteTextFieldStatus? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get start => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set start($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStart() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStart() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get end => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set end($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEnd() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEnd() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get value => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set value($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasValue() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearValue() => $_clearField(3);
+}
+
+/// App launching
+class RemoteStartApp extends $pb.GeneratedMessage {
+  factory RemoteStartApp({
+    $core.String? intentUri,
+  }) {
+    final result = create();
+    if (intentUri != null) result.intentUri = intentUri;
+    return result;
+  }
+
+  RemoteStartApp._();
+
+  factory RemoteStartApp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteStartApp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteStartApp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'intentUri')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteStartApp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteStartApp copyWith(void Function(RemoteStartApp) updates) =>
+      super.copyWith((message) => updates(message as RemoteStartApp))
+          as RemoteStartApp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteStartApp create() => RemoteStartApp._();
+  @$core.override
+  RemoteStartApp createEmptyInstance() => create();
+  static $pb.PbList<RemoteStartApp> createRepeated() =>
+      $pb.PbList<RemoteStartApp>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteStartApp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteStartApp>(create);
+  static RemoteStartApp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get intentUri => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set intentUri($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasIntentUri() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearIntentUri() => $_clearField(1);
+}
+
+class RemoteAppInfo extends $pb.GeneratedMessage {
+  factory RemoteAppInfo({
+    $core.String? appName,
     $core.String? appPackage,
-    $core.String? appVersion,
   }) {
     final result = create();
-    if (model != null) result.model = model;
-    if (vendor != null) result.vendor = vendor;
-    if (unknown1 != null) result.unknown1 = unknown1;
-    if (unknown2 != null) result.unknown2 = unknown2;
+    if (appName != null) result.appName = appName;
     if (appPackage != null) result.appPackage = appPackage;
-    if (appVersion != null) result.appVersion = appVersion;
     return result;
   }
 
-  RemoteDeviceInfo._();
+  RemoteAppInfo._();
 
-  factory RemoteDeviceInfo.fromBuffer($core.List<$core.int> data,
+  factory RemoteAppInfo.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoteDeviceInfo.fromJson($core.String json,
+  factory RemoteAppInfo.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteDeviceInfo',
+      _omitMessageNames ? '' : 'RemoteAppInfo',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'model')
-    ..aOS(2, _omitFieldNames ? '' : 'vendor')
-    ..aI(3, _omitFieldNames ? '' : 'unknown1')
-    ..aOS(4, _omitFieldNames ? '' : 'unknown2')
-    ..aOS(5, _omitFieldNames ? '' : 'appPackage')
-    ..aOS(6, _omitFieldNames ? '' : 'appVersion')
+    ..aOS(1, _omitFieldNames ? '' : 'appName')
+    ..aOS(2, _omitFieldNames ? '' : 'appPackage')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteDeviceInfo clone() => deepCopy();
+  RemoteAppInfo clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteDeviceInfo copyWith(void Function(RemoteDeviceInfo) updates) =>
-      super.copyWith((message) => updates(message as RemoteDeviceInfo))
-          as RemoteDeviceInfo;
+  RemoteAppInfo copyWith(void Function(RemoteAppInfo) updates) =>
+      super.copyWith((message) => updates(message as RemoteAppInfo))
+          as RemoteAppInfo;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoteDeviceInfo create() => RemoteDeviceInfo._();
+  static RemoteAppInfo create() => RemoteAppInfo._();
   @$core.override
-  RemoteDeviceInfo createEmptyInstance() => create();
-  static $pb.PbList<RemoteDeviceInfo> createRepeated() =>
-      $pb.PbList<RemoteDeviceInfo>();
+  RemoteAppInfo createEmptyInstance() => create();
+  static $pb.PbList<RemoteAppInfo> createRepeated() =>
+      $pb.PbList<RemoteAppInfo>();
   @$core.pragma('dart2js:noInline')
-  static RemoteDeviceInfo getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteDeviceInfo>(create);
-  static RemoteDeviceInfo? _defaultInstance;
+  static RemoteAppInfo getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteAppInfo>(create);
+  static RemoteAppInfo? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get model => $_getSZ(0);
+  $core.String get appName => $_getSZ(0);
   @$pb.TagNumber(1)
-  set model($core.String value) => $_setString(0, value);
+  set appName($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasModel() => $_has(0);
+  $core.bool hasAppName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearModel() => $_clearField(1);
+  void clearAppName() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get vendor => $_getSZ(1);
+  $core.String get appPackage => $_getSZ(1);
   @$pb.TagNumber(2)
-  set vendor($core.String value) => $_setString(1, value);
+  set appPackage($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasVendor() => $_has(1);
+  $core.bool hasAppPackage() => $_has(1);
   @$pb.TagNumber(2)
-  void clearVendor() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.int get unknown1 => $_getIZ(2);
-  @$pb.TagNumber(3)
-  set unknown1($core.int value) => $_setSignedInt32(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasUnknown1() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearUnknown1() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get unknown2 => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set unknown2($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasUnknown2() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearUnknown2() => $_clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.String get appPackage => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set appPackage($core.String value) => $_setString(4, value);
-  @$pb.TagNumber(5)
-  $core.bool hasAppPackage() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearAppPackage() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.String get appVersion => $_getSZ(5);
-  @$pb.TagNumber(6)
-  set appVersion($core.String value) => $_setString(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasAppVersion() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearAppVersion() => $_clearField(6);
+  void clearAppPackage() => $_clearField(2);
 }
 
-class RemoteAppLinkLaunchRequest extends $pb.GeneratedMessage {
-  factory RemoteAppLinkLaunchRequest({
-    $core.String? appLink,
+/// Ping/Pong for keep-alive
+class RemotePingRequest extends $pb.GeneratedMessage {
+  factory RemotePingRequest({
+    $core.int? val1,
   }) {
     final result = create();
-    if (appLink != null) result.appLink = appLink;
+    if (val1 != null) result.val1 = val1;
     return result;
   }
 
-  RemoteAppLinkLaunchRequest._();
+  RemotePingRequest._();
 
-  factory RemoteAppLinkLaunchRequest.fromBuffer($core.List<$core.int> data,
+  factory RemotePingRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoteAppLinkLaunchRequest.fromJson($core.String json,
+  factory RemotePingRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoteAppLinkLaunchRequest',
+      _omitMessageNames ? '' : 'RemotePingRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'appLink')
+    ..aI(1, _omitFieldNames ? '' : 'val1', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteAppLinkLaunchRequest clone() => deepCopy();
+  RemotePingRequest clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoteAppLinkLaunchRequest copyWith(
-          void Function(RemoteAppLinkLaunchRequest) updates) =>
-      super.copyWith(
-              (message) => updates(message as RemoteAppLinkLaunchRequest))
-          as RemoteAppLinkLaunchRequest;
+  RemotePingRequest copyWith(void Function(RemotePingRequest) updates) =>
+      super.copyWith((message) => updates(message as RemotePingRequest))
+          as RemotePingRequest;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoteAppLinkLaunchRequest create() => RemoteAppLinkLaunchRequest._();
+  static RemotePingRequest create() => RemotePingRequest._();
   @$core.override
-  RemoteAppLinkLaunchRequest createEmptyInstance() => create();
-  static $pb.PbList<RemoteAppLinkLaunchRequest> createRepeated() =>
-      $pb.PbList<RemoteAppLinkLaunchRequest>();
+  RemotePingRequest createEmptyInstance() => create();
+  static $pb.PbList<RemotePingRequest> createRepeated() =>
+      $pb.PbList<RemotePingRequest>();
   @$core.pragma('dart2js:noInline')
-  static RemoteAppLinkLaunchRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoteAppLinkLaunchRequest>(create);
-  static RemoteAppLinkLaunchRequest? _defaultInstance;
+  static RemotePingRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemotePingRequest>(create);
+  static RemotePingRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get appLink => $_getSZ(0);
+  $core.int get val1 => $_getIZ(0);
   @$pb.TagNumber(1)
-  set appLink($core.String value) => $_setString(0, value);
+  set val1($core.int value) => $_setUnsignedInt32(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasAppLink() => $_has(0);
+  $core.bool hasVal1() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAppLink() => $_clearField(1);
+  void clearVal1() => $_clearField(1);
+}
+
+class RemotePingResponse extends $pb.GeneratedMessage {
+  factory RemotePingResponse({
+    $core.int? val1,
+  }) {
+    final result = create();
+    if (val1 != null) result.val1 = val1;
+    return result;
+  }
+
+  RemotePingResponse._();
+
+  factory RemotePingResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemotePingResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemotePingResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'val1', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemotePingResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemotePingResponse copyWith(void Function(RemotePingResponse) updates) =>
+      super.copyWith((message) => updates(message as RemotePingResponse))
+          as RemotePingResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemotePingResponse create() => RemotePingResponse._();
+  @$core.override
+  RemotePingResponse createEmptyInstance() => create();
+  static $pb.PbList<RemotePingResponse> createRepeated() =>
+      $pb.PbList<RemotePingResponse>();
+  @$core.pragma('dart2js:noInline')
+  static RemotePingResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemotePingResponse>(create);
+  static RemotePingResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get val1 => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set val1($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasVal1() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVal1() => $_clearField(1);
+}
+
+/// Power status
+class RemoteGetPowerStatus extends $pb.GeneratedMessage {
+  factory RemoteGetPowerStatus() => create();
+
+  RemoteGetPowerStatus._();
+
+  factory RemoteGetPowerStatus.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteGetPowerStatus.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteGetPowerStatus',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteGetPowerStatus clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteGetPowerStatus copyWith(void Function(RemoteGetPowerStatus) updates) =>
+      super.copyWith((message) => updates(message as RemoteGetPowerStatus))
+          as RemoteGetPowerStatus;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteGetPowerStatus create() => RemoteGetPowerStatus._();
+  @$core.override
+  RemoteGetPowerStatus createEmptyInstance() => create();
+  static $pb.PbList<RemoteGetPowerStatus> createRepeated() =>
+      $pb.PbList<RemoteGetPowerStatus>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteGetPowerStatus getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteGetPowerStatus>(create);
+  static RemoteGetPowerStatus? _defaultInstance;
+}
+
+class RemotePowerStatus extends $pb.GeneratedMessage {
+  factory RemotePowerStatus({
+    $core.bool? isPoweredOn,
+  }) {
+    final result = create();
+    if (isPoweredOn != null) result.isPoweredOn = isPoweredOn;
+    return result;
+  }
+
+  RemotePowerStatus._();
+
+  factory RemotePowerStatus.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemotePowerStatus.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemotePowerStatus',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'isPoweredOn')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemotePowerStatus clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemotePowerStatus copyWith(void Function(RemotePowerStatus) updates) =>
+      super.copyWith((message) => updates(message as RemotePowerStatus))
+          as RemotePowerStatus;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemotePowerStatus create() => RemotePowerStatus._();
+  @$core.override
+  RemotePowerStatus createEmptyInstance() => create();
+  static $pb.PbList<RemotePowerStatus> createRepeated() =>
+      $pb.PbList<RemotePowerStatus>();
+  @$core.pragma('dart2js:noInline')
+  static RemotePowerStatus getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemotePowerStatus>(create);
+  static RemotePowerStatus? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get isPoweredOn => $_getBF(0);
+  @$pb.TagNumber(1)
+  set isPoweredOn($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasIsPoweredOn() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearIsPoweredOn() => $_clearField(1);
+}
+
+/// Volume control
+class RemoteSetVolumeLevel extends $pb.GeneratedMessage {
+  factory RemoteSetVolumeLevel({
+    $core.int? volumeLevel,
+    $core.int? volumeMax,
+    $core.bool? isMuted,
+    $core.String? deviceName,
+    $core.int? unknown,
+  }) {
+    final result = create();
+    if (volumeLevel != null) result.volumeLevel = volumeLevel;
+    if (volumeMax != null) result.volumeMax = volumeMax;
+    if (isMuted != null) result.isMuted = isMuted;
+    if (deviceName != null) result.deviceName = deviceName;
+    if (unknown != null) result.unknown = unknown;
+    return result;
+  }
+
+  RemoteSetVolumeLevel._();
+
+  factory RemoteSetVolumeLevel.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteSetVolumeLevel.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteSetVolumeLevel',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'volumeLevel',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aI(2, _omitFieldNames ? '' : 'volumeMax', fieldType: $pb.PbFieldType.OU3)
+    ..aOB(3, _omitFieldNames ? '' : 'isMuted')
+    ..aOS(4, _omitFieldNames ? '' : 'deviceName')
+    ..aI(5, _omitFieldNames ? '' : 'unknown', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteSetVolumeLevel clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteSetVolumeLevel copyWith(void Function(RemoteSetVolumeLevel) updates) =>
+      super.copyWith((message) => updates(message as RemoteSetVolumeLevel))
+          as RemoteSetVolumeLevel;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteSetVolumeLevel create() => RemoteSetVolumeLevel._();
+  @$core.override
+  RemoteSetVolumeLevel createEmptyInstance() => create();
+  static $pb.PbList<RemoteSetVolumeLevel> createRepeated() =>
+      $pb.PbList<RemoteSetVolumeLevel>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteSetVolumeLevel getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteSetVolumeLevel>(create);
+  static RemoteSetVolumeLevel? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get volumeLevel => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set volumeLevel($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasVolumeLevel() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVolumeLevel() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get volumeMax => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set volumeMax($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVolumeMax() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVolumeMax() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get isMuted => $_getBF(2);
+  @$pb.TagNumber(3)
+  set isMuted($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasIsMuted() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearIsMuted() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get deviceName => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set deviceName($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDeviceName() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDeviceName() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get unknown => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set unknown($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasUnknown() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearUnknown() => $_clearField(5);
+}
+
+class RemoteAdjustVolumeLevel extends $pb.GeneratedMessage {
+  factory RemoteAdjustVolumeLevel({
+    RemoteVolumeDirection? direction,
+  }) {
+    final result = create();
+    if (direction != null) result.direction = direction;
+    return result;
+  }
+
+  RemoteAdjustVolumeLevel._();
+
+  factory RemoteAdjustVolumeLevel.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteAdjustVolumeLevel.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteAdjustVolumeLevel',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aE<RemoteVolumeDirection>(1, _omitFieldNames ? '' : 'direction',
+        enumValues: RemoteVolumeDirection.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteAdjustVolumeLevel clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteAdjustVolumeLevel copyWith(
+          void Function(RemoteAdjustVolumeLevel) updates) =>
+      super.copyWith((message) => updates(message as RemoteAdjustVolumeLevel))
+          as RemoteAdjustVolumeLevel;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteAdjustVolumeLevel create() => RemoteAdjustVolumeLevel._();
+  @$core.override
+  RemoteAdjustVolumeLevel createEmptyInstance() => create();
+  static $pb.PbList<RemoteAdjustVolumeLevel> createRepeated() =>
+      $pb.PbList<RemoteAdjustVolumeLevel>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteAdjustVolumeLevel getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteAdjustVolumeLevel>(create);
+  static RemoteAdjustVolumeLevel? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  RemoteVolumeDirection get direction => $_getN(0);
+  @$pb.TagNumber(1)
+  set direction(RemoteVolumeDirection value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDirection() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDirection() => $_clearField(1);
+}
+
+class RemoteSetPreferredAudioDevice extends $pb.GeneratedMessage {
+  factory RemoteSetPreferredAudioDevice({
+    $core.String? deviceId,
+  }) {
+    final result = create();
+    if (deviceId != null) result.deviceId = deviceId;
+    return result;
+  }
+
+  RemoteSetPreferredAudioDevice._();
+
+  factory RemoteSetPreferredAudioDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteSetPreferredAudioDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteSetPreferredAudioDevice',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'deviceId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteSetPreferredAudioDevice clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteSetPreferredAudioDevice copyWith(
+          void Function(RemoteSetPreferredAudioDevice) updates) =>
+      super.copyWith(
+              (message) => updates(message as RemoteSetPreferredAudioDevice))
+          as RemoteSetPreferredAudioDevice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteSetPreferredAudioDevice create() =>
+      RemoteSetPreferredAudioDevice._();
+  @$core.override
+  RemoteSetPreferredAudioDevice createEmptyInstance() => create();
+  static $pb.PbList<RemoteSetPreferredAudioDevice> createRepeated() =>
+      $pb.PbList<RemoteSetPreferredAudioDevice>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteSetPreferredAudioDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteSetPreferredAudioDevice>(create);
+  static RemoteSetPreferredAudioDevice? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get deviceId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set deviceId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDeviceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDeviceId() => $_clearField(1);
+}
+
+class RemoteResetPreferredAudioDevice extends $pb.GeneratedMessage {
+  factory RemoteResetPreferredAudioDevice() => create();
+
+  RemoteResetPreferredAudioDevice._();
+
+  factory RemoteResetPreferredAudioDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteResetPreferredAudioDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteResetPreferredAudioDevice',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteResetPreferredAudioDevice clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteResetPreferredAudioDevice copyWith(
+          void Function(RemoteResetPreferredAudioDevice) updates) =>
+      super.copyWith(
+              (message) => updates(message as RemoteResetPreferredAudioDevice))
+          as RemoteResetPreferredAudioDevice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteResetPreferredAudioDevice create() =>
+      RemoteResetPreferredAudioDevice._();
+  @$core.override
+  RemoteResetPreferredAudioDevice createEmptyInstance() => create();
+  static $pb.PbList<RemoteResetPreferredAudioDevice> createRepeated() =>
+      $pb.PbList<RemoteResetPreferredAudioDevice>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteResetPreferredAudioDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteResetPreferredAudioDevice>(
+          create);
+  static RemoteResetPreferredAudioDevice? _defaultInstance;
+}
+
+/// Error handling
+class RemoteError extends $pb.GeneratedMessage {
+  factory RemoteError({
+    $core.int? errorCode,
+    $core.String? errorMessage,
+  }) {
+    final result = create();
+    if (errorCode != null) result.errorCode = errorCode;
+    if (errorMessage != null) result.errorMessage = errorMessage;
+    return result;
+  }
+
+  RemoteError._();
+
+  factory RemoteError.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoteError.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoteError',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'remote'),
+      createEmptyInstance: create)
+    ..aI(1, _omitFieldNames ? '' : 'errorCode', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'errorMessage')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteError clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoteError copyWith(void Function(RemoteError) updates) =>
+      super.copyWith((message) => updates(message as RemoteError))
+          as RemoteError;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoteError create() => RemoteError._();
+  @$core.override
+  RemoteError createEmptyInstance() => create();
+  static $pb.PbList<RemoteError> createRepeated() => $pb.PbList<RemoteError>();
+  @$core.pragma('dart2js:noInline')
+  static RemoteError getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoteError>(create);
+  static RemoteError? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get errorCode => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set errorCode($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasErrorCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearErrorCode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get errorMessage => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set errorMessage($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasErrorMessage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearErrorMessage() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

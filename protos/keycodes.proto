@@ -3,162 +3,210 @@
 package remote;
 
 message RemoteMessage {
-  oneof message_type {
-    RemoteCommand remote_command = 5;
-    RemoteSetActive remote_set_active = 8;
-    RemotePingRequest remote_ping_request = 9;
-    RemotePingResponse remote_ping_response = 10;
-    RemoteError remote_error = 11;
-    RemoteSetVolumeLevel remote_set_volume_level = 12;
-    RemoteAdjustVolumeLevel remote_adjust_volume_level = 13;
-    RemoteImeKeyInject remote_ime_key_inject = 14;
-    RemoteImeBatchEdit remote_ime_batch_edit = 15;
-    RemoteDeviceInfo remote_device_info = 17;
-    RemoteAppLinkLaunchRequest remote_app_link_launch_request = 18;
+  oneof message {
+    RemoteConfigure remote_configure = 1;           // Tag 10
+    RemoteSetActive remote_set_active = 2;          // Tag 18
+    RemoteKeyInject remote_key_inject = 10;         // Tag 82
+    RemoteImeKeyInject remote_ime_key_inject = 11;  // Tag 90
+    RemoteImeBatchEdit remote_ime_batch_edit = 21;  // Tag 170,1
+    RemoteStartApp remote_start_app = 330;          // Tag 210,5
+    RemotePingRequest remote_ping_request = 8;      // Tag 66
+    RemotePingResponse remote_ping_response = 9;    // Tag 74
+    RemoteError remote_error = 15;                  // Tag 122
+    RemoteSetVolumeLevel remote_set_volume_level = 18;  // Tag 146,3
+    RemoteAdjustVolumeLevel remote_adjust_volume_level = 25;  // Tag 202,1
+    RemoteResetPreferredAudioDevice remote_reset_preferred_audio_device = 32;  // Tag 2,2
+    RemoteAppInfo remote_app_info = 20;             // Tag 162,1
+    RemoteSetPreferredAudioDevice remote_set_preferred_audio_device = 31;  // Tag 250,1
+    RemoteGetPowerStatus remote_get_power_status = 36;  // Tag 34,2
+    RemotePowerStatus remote_power_status = 35;     // Tag 26,2
   }
 }
-
-enum RemoteKeyCode {
-  KEYCODE_UNKNOWN = 0;
+message RemoteKeyInject {
+  enum RemoteKeyCode {
+    KEYCODE_UNKNOWN = 0;
 
   // navigation
-  KEYCODE_DPAD_UP = 19;
-  KEYCODE_DPAD_DOWN = 20;
-  KEYCODE_DPAD_LEFT = 21;
-  KEYCODE_DPAD_RIGHT = 22;
-  KEYCODE_DPAD_CENTER = 23;
-  KEYCODE_BACK = 4;
-  KEYCODE_HOME = 3;
-  KEYCODE_MENU = 82;
-  KEYCODE_GUIDE = 172;
-  KEYCODE_INFO = 165;
-  KEYCODE_SETTINGS = 176;
+    KEYCODE_DPAD_UP = 19;
+    KEYCODE_DPAD_DOWN = 20;
+    KEYCODE_DPAD_LEFT = 21;
+    KEYCODE_DPAD_RIGHT = 22;
+    KEYCODE_DPAD_CENTER = 23;
+    KEYCODE_BACK = 4;
+    KEYCODE_HOME = 3;
+    KEYCODE_MENU = 82;
+    KEYCODE_GUIDE = 172;
+    KEYCODE_INFO = 165;
+    KEYCODE_SETTINGS = 176;
 
   // media
-  KEYCODE_MEDIA_PLAY = 126;
-  KEYCODE_MEDIA_PAUSE = 127;
-  KEYCODE_MEDIA_PLAY_PAUSE = 85;
-  KEYCODE_MEDIA_STOP = 86;
-  KEYCODE_MEDIA_NEXT = 87;
-  KEYCODE_MEDIA_PREVIOUS = 88;
-  KEYCODE_MEDIA_REWIND = 89;
-  KEYCODE_MEDIA_FAST_FORWARD = 90;
-  KEYCODE_MEDIA_RECORD = 130;
+    KEYCODE_MEDIA_PLAY = 126;
+    KEYCODE_MEDIA_PAUSE = 127;
+    KEYCODE_MEDIA_PLAY_PAUSE = 85;
+    KEYCODE_MEDIA_STOP = 86;
+    KEYCODE_MEDIA_NEXT = 87;
+    KEYCODE_MEDIA_PREVIOUS = 88;
+    KEYCODE_MEDIA_REWIND = 89;
+    KEYCODE_MEDIA_FAST_FORWARD = 90;
+    KEYCODE_MEDIA_RECORD = 130;
 
   // volume
-  KEYCODE_VOLUME_UP = 24;
-  KEYCODE_VOLUME_DOWN = 25;
-  KEYCODE_MUTE = 91;
+    KEYCODE_VOLUME_UP = 24;
+    KEYCODE_VOLUME_DOWN = 25;
+    KEYCODE_MUTE = 91;
 
   // tv_specific
-  KEYCODE_TV = 170;
-  KEYCODE_TV_POWER = 177;
-  KEYCODE_TV_INPUT = 178;
-  KEYCODE_CHANNEL_UP = 166;
-  KEYCODE_CHANNEL_DOWN = 167;
-  KEYCODE_TV_RADIO_SERVICE = 232;
-  KEYCODE_TV_DATA_SERVICE = 230;
-  KEYCODE_TV_TELETEXT = 233;
-  KEYCODE_TV_NETWORK = 241;
-  KEYCODE_TV_SATELLITE = 237;
-  KEYCODE_TV_ANTENNA_CABLE = 238;
+    KEYCODE_TV = 170;
+    KEYCODE_TV_POWER = 177;
+    KEYCODE_TV_INPUT = 178;
+    KEYCODE_CHANNEL_UP = 166;
+    KEYCODE_CHANNEL_DOWN = 167;
+    KEYCODE_TV_RADIO_SERVICE = 232;
+    KEYCODE_TV_DATA_SERVICE = 230;
+    KEYCODE_TV_TELETEXT = 233;
+    KEYCODE_TV_NETWORK = 241;
+    KEYCODE_TV_SATELLITE = 237;
+    KEYCODE_TV_ANTENNA_CABLE = 238;
 
   // system
-  KEYCODE_POWER = 26;
-  KEYCODE_SLEEP = 223;
-  KEYCODE_WAKEUP = 224;
-  KEYCODE_APP_SWITCH = 187;
-  KEYCODE_ASSIST = 219;
-  KEYCODE_VOICE_ASSIST = 231;
+    KEYCODE_POWER = 26;
+    KEYCODE_SLEEP = 223;
+    KEYCODE_WAKEUP = 224;
+    KEYCODE_APP_SWITCH = 187;
+    KEYCODE_ASSIST = 219;
+    KEYCODE_VOICE_ASSIST = 231;
 
   // numeric
-  KEYCODE_0 = 7;
-  KEYCODE_1 = 8;
-  KEYCODE_2 = 9;
-  KEYCODE_3 = 10;
-  KEYCODE_4 = 11;
-  KEYCODE_5 = 12;
-  KEYCODE_6 = 13;
-  KEYCODE_7 = 14;
-  KEYCODE_8 = 15;
-  KEYCODE_9 = 16;
+    KEYCODE_0 = 7;
+    KEYCODE_1 = 8;
+    KEYCODE_2 = 9;
+    KEYCODE_3 = 10;
+    KEYCODE_4 = 11;
+    KEYCODE_5 = 12;
+    KEYCODE_6 = 13;
+    KEYCODE_7 = 14;
+    KEYCODE_8 = 15;
+    KEYCODE_9 = 16;
 
   // misc
-  KEYCODE_ENTER = 66;
-  KEYCODE_DEL = 67;
-  KEYCODE_SPACE = 62;
-  KEYCODE_PAGE_UP = 92;
-  KEYCODE_PAGE_DOWN = 93;
-  KEYCODE_PROG_RED = 183;
-  KEYCODE_PROG_GREEN = 184;
-  KEYCODE_PROG_YELLOW = 185;
-  KEYCODE_PROG_BLUE = 186;
+    KEYCODE_ENTER = 66;
+    KEYCODE_DEL = 67;
+    KEYCODE_SPACE = 62;
+    KEYCODE_PAGE_UP = 92;
+    KEYCODE_PAGE_DOWN = 93;
+    KEYCODE_PROG_RED = 183;
+    KEYCODE_PROG_GREEN = 184;
+    KEYCODE_PROG_YELLOW = 185;
+    KEYCODE_PROG_BLUE = 186;
+  }
+
+  RemoteKeyCode key_code = 1;
+  RemoteDirection direction = 2;
 }
 
-message RemoteCommand {
-  int32 key_code = 1;
-  int32 direction = 2;
+// Configuration messages
+message RemoteConfigure {
+  uint32 code1 = 1;  // Usually 622 (which is varint for: 8, 238, 4)
+  RemoteDeviceInfo device_info = 2;
 }
 
-enum RemoteDirection {
-  REMOTE_DIRECTION_UNKNOWN = 0;
-  START_LONG_PRESS = 1;
-  END_LONG_PRESS = 2;
-  SHORT_PRESS = 3;
+message RemoteDeviceInfo {
+  uint32 model = 1;
+  string vendor = 2;
+  uint32 unknown1 = 3;
+  string unknown2 = 4;
+  string package_name = 5;
+  string app_version = 6;
 }
 
 message RemoteSetActive {
-  bool active = 1;
-}
-
-message RemotePingRequest {}
-
-message RemotePingResponse {}
-
-message RemoteError {
-  int32 error_code = 1;
-}
-
-enum RemoteErrorCode {
-  REMOTE_ERROR_CODE_UNKNOWN = 0;
-  ERROR_INVALID_SECRET = 401;
-  ERROR_PAIRING_TIMEOUT = 408;
-  ERROR_GENERIC = 500;
-}
-
-message RemoteSetVolumeLevel {
-  int32 volume_level = 1;
-  int32 volume_max = 2;
-  int32 volume_min = 3;
-  bool volume_muted = 4;
-}
-
-message RemoteAdjustVolumeLevel {
-  int32 delta = 1;
+  uint32 active = 1;  // Usually 622
 }
 
 message RemoteImeKeyInject {
   string text_field = 1;
-  int32 app_package_name = 2;
+  uint32 key_code = 2;
+  RemoteDirection direction = 3;
 }
 
+enum RemoteDirection {
+  REMOTE_DIRECTION_UNKNOWN = 0;
+  PRESSED = 1;          // Key press down
+  RELEASED = 2;         // Key release up
+  SHORT_PRESS = 3;      // Complete press and release
+}
+
+// IME (text input)
 message RemoteImeBatchEdit {
-  int32 delete_before_length = 1;
-  int32 delete_after_length = 2;
-  string new_cursor_position = 3;
-  string new_text = 4;
-  bool new_composition_text = 5;
+  uint32 ime_counter = 1;
+  uint32 field_counter = 2;
+  RemoteImeEditInfo edit_info = 3;
 }
 
-message RemoteDeviceInfo {
-  string model = 1;
-  string vendor = 2;
-  int32 unknown1 = 3;
-  string unknown2 = 4;
-  string app_package = 5;
-  string app_version = 6;
+message RemoteImeEditInfo {
+  uint32 insert = 1;
+  RemoteTextFieldStatus text_field_status = 2;
 }
 
-message RemoteAppLinkLaunchRequest {
-  string app_link = 1;
+message RemoteTextFieldStatus {
+  uint32 start = 1;
+  uint32 end = 2;
+  string value = 3;
+}
+
+// App launching
+message RemoteStartApp {
+  string intent_uri = 1;  // Tag 10 - deeplink URL
+}
+
+message RemoteAppInfo {
+  string app_name = 1;
+  string app_package = 2;
+}
+
+// Ping/Pong for keep-alive
+message RemotePingRequest {
+  uint32 val1 = 1;
+}
+
+message RemotePingResponse {
+  uint32 val1 = 1;  // Usually 25
+}
+
+// Power status
+message RemoteGetPowerStatus {}
+
+message RemotePowerStatus {
+  bool is_powered_on = 1;
+}
+
+// Volume control
+message RemoteSetVolumeLevel {
+  uint32 volume_level = 1;
+  uint32 volume_max = 2;
+  bool is_muted = 3;
+  string device_name = 4;
+  uint32 unknown = 5;
+}
+
+message RemoteAdjustVolumeLevel {
+  RemoteVolumeDirection direction = 1;
+}
+
+enum RemoteVolumeDirection {
+  VOLUME_DIRECTION_UNKNOWN = 0;
+  VOLUME_UP = 1;
+  VOLUME_DOWN = 2;
+}
+
+message RemoteSetPreferredAudioDevice {
+  string device_id = 1;
+}
+
+message RemoteResetPreferredAudioDevice {}
+
+// Error handling
+message RemoteError {
+  uint32 error_code = 1;
+  string error_message = 2;
 }

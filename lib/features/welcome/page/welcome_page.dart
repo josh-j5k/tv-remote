@@ -1,13 +1,21 @@
 // import 'dart:io';
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
+
 import 'package:remote_app/data/constants/constants.dart';
 // import 'package:remote_app/data/test_pairing.dart';
 import 'package:remote_app/data/tv_remote.dart';
 import 'package:remote_app/features/home/logic/notifier.dart';
 import 'package:multicast_dns/multicast_dns.dart';
+import 'package:remote_app/features/welcome/page/opt_fun.dart';
+import 'package:remote_app/features/welcome/page/otp_input.dart';
 // import 'package:remote_app/core/utils/discover_device.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:remote_app/src/generated/auth.pb.dart';
+
 import 'package:upnp2/upnp.dart' hide Icon; // <<< SWITCHED to upnp2
 import 'dart:async';
 
@@ -21,13 +29,21 @@ class WelcomeModal extends StatefulWidget {
 }
 
 class _WelcomeModalState extends State<WelcomeModal> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
-    // _loadPreferences();
+    _loadPreferences();
     // discoverAndroidTVs();
+    // showPinDialog();
     discoverDIALDevices();
+    setTVData();
   }
+
+  SharedPreferences? _prefs;
+  TvRemoteClient? _tvRemoteClient;
+  SecureSocket? _commnadSockect;
+  // OuterMessage? _outerMessage;
 
   Future<void> discoverAndroidTVs() async {
     final client = MDnsClient();
@@ -101,36 +117,101 @@ class _WelcomeModalState extends State<WelcomeModal> {
     }
   }
 
-  // ignore: unused_local_variable
-  Future<void> setTVData(item) async {
-    final newValue = Map<String, dynamic>.from(appDataNotifier.value)
-      ..['isConnected'] = true
-      ..['friendlyName'] = item['friendlyName']
-      ..['port'] = item['port']
-      ..['host'] = item['host']
-      ..['scheme'] = item['scheme'];
-    appDataNotifier.value = newValue;
+  Future<void> showPinDialog() async {
+    showOtpDialog(
+      context: _scaffoldKey.currentContext!,
+      title: 'Enter TV PIN',
+      subtitle: 'Enter the pin shown on the TV',
+      length: 6,
+      onCompleted: getPin,
+    );
+  }
 
-    final String link = item['host'];
-    final String wss = link.replaceAll("http", "wss") + ":$port";
-    final remote = TvRemoteClient(host: '192.168.1.185');
-    final alreadyPaired = await remote.initialize();
-    if (!alreadyPaired) {
-      // Start pairing process
-      await remote.startPairing();
+  void handleMessage(OuterMessage msg) {
+    print('whichMessage  =====> ${msg.whichMessage()}');
+    print('msg status  =====> ${msg.status}');
 
-      // // Wait for PIN to appear on TV
-      // print('Enter the PIN shown on TV:');
-      // final pin = stdin.readLineSync()!;
+    switch (msg.whichMessage()) {
+      case OuterMessage_Message.pairingResponse:
+        print('🔐 Received PairingResponse');
+        _tvRemoteClient!.sendPairingOption();
+        break;
 
-      // await remote.enterPairingCode(pin);
+      case OuterMessage_Message.pairingRequestAck:
+        print('✅ PairingRequest ack acknowledged');
+        break;
+      case OuterMessage_Message.pairingConfigurationAck:
+        showPinDialog();
+        break;
 
-      // Wait for pairing to complete
-      await Future.delayed(Duration(seconds: 2));
+      case OuterMessage_Message.pairingOption:
+        print('✅ TV confirmed encoding settings');
+        if (msg.pairingOption.outputEncodings.isNotEmpty) {
+          final encoding = msg.pairingOption.outputEncodings.first;
+
+          print(
+            '   Encoding: ${encoding.type}, Length: ${encoding.symbolLength}',
+          );
+        }
+        print('   Role: ${msg.pairingOption.preferredRole}');
+
+        // Check the role the TV selected
+        if (msg.pairingOption.preferredRole == RoleType.ROLE_TYPE_OUTPUT ||
+            msg.pairingOption.preferredRole == RoleType.ROLE_TYPE_INPUT) {
+          print('📺 PIN should be displayed on TV screen NOW!');
+        }
+
+        _tvRemoteClient!.sendPairingConfiguration();
+        break;
+
+      case OuterMessage_Message.pairingOptionAck:
+        print('✅ PairingOptions acknowledged');
+        print('📺 TV should display PIN now!');
+        break;
+
+      case OuterMessage_Message.pairingSecret:
+        if (msg.status == 200 && msg.pairingSecret.secret.isNotEmpty) {
+          _tvRemoteClient!.onPairingComplete();
+        }
+        break;
+
+      case OuterMessage_Message.notSet:
+        if (msg.status == 400) {
+          print('❌ Error 400 - Bad request');
+        } else if (msg.status == 200) {
+          print('✅ Empty 200 acknowledgment');
+        }
+        break;
+
+      default:
+        print('⚠️ Unknown message: ${msg.whichMessage()}');
     }
+  }
 
-    // Start pairing on port 6467
+  void getPin(String value) {
+    _tvRemoteClient!.sendPairingSecret(value);
+  }
 
+  // ignore: unused_local_variable
+  Future<void> setTVData() async {
+    // final newValue = Map<String, dynamic>.from(appDataNotifier.value)
+    //   ..['isConnected'] = true
+    //   ..['friendlyName'] = item['friendlyName']
+    //   ..['port'] = item['port']
+    //   ..['host'] = item['host']
+    //   ..['scheme'] = item['scheme'];
+    // appDataNotifier.value = newValue;
+
+    // final String link = item['host'];
+    // final String wss = link.replaceAll("http", "wss") + ":$port";
+    _tvRemoteClient = TvRemoteClient(
+      host: '192.168.1.185',
+      handleMessage: handleMessage,
+    );
+    final alreadyPaired = await _tvRemoteClient!.initialize();
+    if (!alreadyPaired) {
+      await _tvRemoteClient!.startPairing();
+    }
     // Navigator.of(context).pop();
   }
 
@@ -161,6 +242,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
                 "scheme": uri.scheme,
                 "port": uri.port,
                 'host': uri.host,
+                'isConnected': appDataNotifier.value['host'] == uri.host,
               });
             });
           }
@@ -176,13 +258,14 @@ class _WelcomeModalState extends State<WelcomeModal> {
   }
 
   Future<void> _loadPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _prefs = await SharedPreferences.getInstance();
     // super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: const Color.fromARGB(249, 7, 7, 21),
       appBar: AppBar(
         title: Text(
@@ -266,7 +349,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
                               return Column(
                                 children: [
                                   TextButton(
-                                    onPressed: () => setTVData(item),
+                                    onPressed: () => setTVData(),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,

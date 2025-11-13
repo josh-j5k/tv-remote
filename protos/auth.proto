@@ -15,7 +15,7 @@ message OuterMessage {
     PairingConfiguration pairing_configuration = 30; // Tag 242,1 = field 30
     PairingConfigurationAck pairing_configuration_ack = 31; // Tag 250,1 = field 31
     PairingSecret pairing_secret = 130;            // Tag 194,2 = field 130  
-    SecretResponse secret_response = 131;
+     PairingAuthenticationMessage pairing_auth_message = 132;
     ErrorMessage error = 200;
   }
 }
@@ -59,16 +59,15 @@ enum SecretExchange {
 }
 
 message PairingConfiguration {
-  repeated KeyExchange preferred_key_exchanges = 1;
-  repeated SecretExchange preferred_secret_exchanges = 2; // Tag 18
-  RoleType client_role = 3;  
+  Encoding encoding = 1;        // The CHOSEN encoding from Options negotiation
+  RoleType client_role = 2;
 }
 
-message PairingConfigurationAck {
-  KeyExchange selected_key_exchange = 1;
-  SecretExchange selected_secret_exchange = 2;
-}
+message PairingConfigurationAck {}
 
+message PairingAuthenticationMessage {
+  bytes secret = 1;  // The encoded secret from pairing
+}
 message Encoding {
   enum EncodingType {
     ENCODING_TYPE_UNKNOWN = 0;
