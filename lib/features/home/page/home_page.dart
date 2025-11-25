@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:remote_app/data/tv_remote.dart';
 import 'package:remote_app/features/home/logic/notifier.dart';
 import 'package:remote_app/features/welcome/page/welcome_page.dart';
+import 'package:remote_app/features/home/logic/observer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:remote_app/src/generated/keycodes.pb.dart';
 
 final btnBgColor = Color.fromARGB(255, 18, 18, 18);
 final btnTextColor = Color.fromARGB(255, 215, 215, 215);
@@ -12,7 +16,53 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with RouteAware {
+  ModalRoute? _route;
+  TvRemoteClient? _remoteClient;
+  SharedPreferences? _prefs;
+  final data = appDataNotifier.value;
+  bool _isMuted = false;
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _route ??= ModalRoute.of(context);
+    routeObserver.subscribe(this, _route!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  // 👇 THIS IS THE IMPORTANT METHOD!
+  @override
+  void didPopNext() {
+    initializeRemoteClient();
+  }
+
+  Future<void> initializeRemoteClient() async {
+    if (data['host'] != null) {
+      _remoteClient = TvRemoteClient(host: data['host']);
+      final alreadyPaired = await _remoteClient!.initialize();
+      if (!alreadyPaired) {
+        return;
+      }
+      _remoteClient!.connect();
+    }
+  }
+
+  //  TvRemoteClient? _remoteClient;
+  Future<void> _loadPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -102,7 +152,11 @@ class _HomePageState extends State<HomePage> {
                               minimumSize: Size(40.0, 40.0),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await _remoteClient?.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_POWER,
+                              );
+                            },
                             child: Icon(
                               Icons.power_settings_new,
                               size: 30,
@@ -115,7 +169,11 @@ class _HomePageState extends State<HomePage> {
                               minimumSize: Size(40, 40),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await _remoteClient?.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_SETTINGS,
+                              );
+                            },
                             child: Icon(
                               Icons.settings,
                               size: 30,
@@ -152,7 +210,12 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
 
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await _remoteClient?.sendKeyCommand(
+                                      RemoteKeyInject_RemoteKeyCode
+                                          .KEYCODE_CHANNEL_UP,
+                                    );
+                                  },
                                   child: Icon(
                                     Icons.keyboard_arrow_up,
                                     size: 30,
@@ -192,7 +255,12 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
 
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await _remoteClient?.sendKeyCommand(
+                                      RemoteKeyInject_RemoteKeyCode
+                                          .KEYCODE_CHANNEL_DOWN,
+                                    );
+                                  },
                                   child: Icon(
                                     Icons.keyboard_arrow_down,
                                     size: 30,
@@ -226,7 +294,12 @@ class _HomePageState extends State<HomePage> {
                                           12,
                                         ),
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        await _remoteClient?.sendKeyCommand(
+                                          RemoteKeyInject_RemoteKeyCode
+                                              .KEYCODE_TV_SATELLITE,
+                                        );
+                                      },
                                       child: Icon(
                                         Icons.search,
                                         size: 30,
@@ -249,9 +322,29 @@ class _HomePageState extends State<HomePage> {
                                           12,
                                         ),
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        if (_isMuted) {
+                                          await _remoteClient?.sendKeyCommand(
+                                            RemoteKeyInject_RemoteKeyCode
+                                                .KEYCODE_VOLUME_UP,
+                                          );
+                                          setState(() {
+                                            _isMuted = false;
+                                          });
+                                        } else {
+                                          await _remoteClient?.sendKeyCommand(
+                                            RemoteKeyInject_RemoteKeyCode
+                                                .KEYCODE_MUTE,
+                                          );
+                                          setState(() {
+                                            _isMuted = true;
+                                          });
+                                        }
+                                      },
                                       child: Icon(
-                                        Icons.volume_mute_outlined,
+                                        !_isMuted
+                                            ? Icons.volume_up
+                                            : Icons.volume_off,
                                         size: 30,
                                         color: btnTextColor,
                                       ),
@@ -318,7 +411,12 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
 
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await _remoteClient?.sendKeyCommand(
+                                      RemoteKeyInject_RemoteKeyCode
+                                          .KEYCODE_VOLUME_UP,
+                                    );
+                                  },
                                   child: Center(
                                     child: Icon(
                                       Icons.add,
@@ -360,7 +458,12 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
 
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    await _remoteClient?.sendKeyCommand(
+                                      RemoteKeyInject_RemoteKeyCode
+                                          .KEYCODE_VOLUME_DOWN,
+                                    );
+                                  },
                                   child: Center(
                                     child: Icon(
                                       Icons.remove,
@@ -386,7 +489,11 @@ class _HomePageState extends State<HomePage> {
                               minimumSize: Size(40.0, 40.0),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await _remoteClient?.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_MENU,
+                              );
+                            },
                             child: Icon(
                               Icons.menu,
                               size: 30,
@@ -399,7 +506,11 @@ class _HomePageState extends State<HomePage> {
                               minimumSize: Size(40, 40),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await _remoteClient?.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_BACK,
+                              );
+                            },
                             child: Icon(
                               Icons.arrow_back,
                               size: 30,
@@ -435,7 +546,12 @@ class _HomePageState extends State<HomePage> {
                                     22,
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  await _remoteClient?.sendKeyCommand(
+                                    RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_DPAD_UP,
+                                  );
+                                },
                                 child: Icon(
                                   Icons.keyboard_arrow_up,
                                   size: 30,
@@ -462,7 +578,12 @@ class _HomePageState extends State<HomePage> {
                                         30,
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await _remoteClient?.sendKeyCommand(
+                                        RemoteKeyInject_RemoteKeyCode
+                                            .KEYCODE_DPAD_LEFT,
+                                      );
+                                    },
                                     child: Icon(
                                       Icons.keyboard_arrow_left,
                                       size: 30,
@@ -478,7 +599,12 @@ class _HomePageState extends State<HomePage> {
                                       minimumSize: Size(40.0, 40.0),
                                       padding: EdgeInsets.all(30.5),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await _remoteClient?.sendKeyCommand(
+                                        RemoteKeyInject_RemoteKeyCode
+                                            .KEYCODE_DPAD_CENTER,
+                                      );
+                                    },
                                     child: Text(
                                       "OK",
                                       style: TextStyle(fontSize: 20.0),
@@ -498,7 +624,12 @@ class _HomePageState extends State<HomePage> {
                                         30,
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await _remoteClient?.sendKeyCommand(
+                                        RemoteKeyInject_RemoteKeyCode
+                                            .KEYCODE_DPAD_RIGHT,
+                                      );
+                                    },
                                     child: Icon(
                                       Icons.keyboard_arrow_right,
                                       size: 30,
@@ -523,7 +654,12 @@ class _HomePageState extends State<HomePage> {
                                     22,
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  await _remoteClient?.sendKeyCommand(
+                                    RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_DPAD_DOWN,
+                                  );
+                                },
                                 child: Icon(
                                   Icons.keyboard_arrow_down,
                                   size: 30,
@@ -557,7 +693,11 @@ class _HomePageState extends State<HomePage> {
                                   12.0,
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () async {
+                                await _remoteClient?.sendKeyCommand(
+                                  RemoteKeyInject_RemoteKeyCode.KEYCODE_HOME,
+                                );
+                              },
                               child: Icon(
                                 Icons.home,
                                 size: 30,
@@ -613,7 +753,7 @@ class _HomePageState extends State<HomePage> {
                                   12.0,
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () async {},
                               child: Text(
                                 "Exit",
                                 style: TextStyle(

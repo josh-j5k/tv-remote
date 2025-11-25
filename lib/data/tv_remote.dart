@@ -22,7 +22,7 @@ import 'package:uuid/uuid.dart';
 
 class TvRemoteClient {
   final String host;
-  final void Function(OuterMessage) handleMessage;
+  final void Function(OuterMessage)? handleMessage;
 
   String? _certPath;
   String? _keyPath;
@@ -34,7 +34,7 @@ class TvRemoteClient {
   bool _isPaired = false;
   bool _isConnected = false;
   dynamic secret;
-  TvRemoteClient({required this.host, required this.handleMessage});
+  TvRemoteClient({required this.host, this.handleMessage});
 
   /// Initialize: Check for stored certificate or generate new one
   Future<bool> initialize() async {
@@ -136,6 +136,7 @@ class TvRemoteClient {
       );
 
       print('✅ Connected to pairing port\n');
+      print(_serverPublicKey);
       _pairingSocket!.listen(
         (data) => handleSocketMessage(data),
         onError: (e) => print('❌ Pairing error: $e'),
@@ -178,12 +179,67 @@ class TvRemoteClient {
     print('✅ Sent PairingRequest\n');
   }
 
+  Future<void> sendPairingConfiguration() async {
+    final config = PairingConfiguration()
+      ..encoding =
+          (Encoding()
+            ..type = Encoding_EncodingType
+                .ENCODING_TYPE_HEXADECIMAL // What TV chose
+            ..symbolLength = 6) // What TV chose
+      ..clientRole = RoleType.ROLE_TYPE_INPUT; // You will INPUT the PIN
+
+    final outer = OuterMessage()
+      ..protocolVersion = 2
+      ..status =
+          200 // Your TV requires this
+      ..pairingConfiguration = config;
+
+    final payload = outer.writeToBuffer();
+    final lenPrefix = encodeVarint(payload.length);
+
+    print('📤 Sending PairingConfiguration with encoding...');
+    print(
+      '   Bytes: ${[...lenPrefix, ...payload].map((b) => b.toRadixString(16)).join(' ')}',
+    );
+
+    _pairingSocket!.add([...lenPrefix, ...payload]);
+    await _pairingSocket!.flush();
+  }
+
+  Future<void> sendPairingOption() async {
+    final options = PairingOptions()
+      // Add input encoding
+      ..inputEncodings.add(
+        Encoding()
+          ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
+          ..symbolLength = 6,
+      )
+      ..preferredRole = RoleType.ROLE_TYPE_INPUT;
+
+    final outer = OuterMessage()
+      ..protocolVersion = 2
+      ..status = 200
+      ..pairingOption = options;
+
+    final payload = outer.writeToBuffer();
+    final lenPrefix = encodeVarint(payload.length);
+
+    print('📤 Sending PairingOptions...');
+
+    _pairingSocket!.add([...lenPrefix, ...payload]);
+    await _pairingSocket!.flush();
+    print('✅ Sent PairingOptions');
+  }
+
   // Step 4: Send Pairing Secret (after user sees PIN on TV)
   Future<void> sendPairingSecret(String pin) async {
     final encodedSecret = await _encodeSecret(pin);
-
-    // Store this for command port later
-    //  final _sharedSecret = Uint8List.fromList(encodedSecret);
+    print('\n📊 Secret Details:');
+    print('   PIN: $pin');
+    print('   Secret length: ${encodedSecret.length} bytes (should be 32)');
+    print(
+      '   Secret hex: ${encodedSecret.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+    );
 
     final secret = PairingSecret()..secret = encodedSecret;
 
@@ -192,24 +248,44 @@ class TvRemoteClient {
       ..status =
           200 // Your TV requires this
       ..pairingSecret = secret;
-
+    print('\n🔍 OuterMessage check:');
+    print('   Has pairingSecret: ${outer.hasPairingSecret()}');
+    print('   Protocol version: ${outer.protocolVersion}');
+    print('   Status: ${outer.status}');
     final payload = outer.writeToBuffer();
-    final lenPrefix = encodeVarint(payload.length);
-
-    print('📤 Sending PairingSecret...');
-    print('   PIN: $pin');
-
+    print('\n📤 Full OuterMessage payload:');
+    print('   Length: ${payload.length} bytes');
     print(
-      '   Bytes: ${[...lenPrefix, ...payload].map((b) => b.toRadixString(16)).join(' ')}',
+      '   Bytes: ${payload.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
     );
 
+    final lenPrefix = encodeVarint(payload.length);
+    print('\n📏 Length prefix:');
+    print(
+      '   Bytes: ${lenPrefix.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+    );
+    print('\n📨 Complete message to send:');
+    print('   Total length: ${[...lenPrefix, ...payload].length} bytes');
+    print(
+      '   Bytes: ${[...lenPrefix, ...payload].map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+    );
+
+    print('\n📤 Sending PairingSecret...');
+    print('📤 Sending Secret message:');
+    print('Pin: $pin');
+    print('   Total bytes: ${payload.length}');
+    print(
+      '   Hex: ${payload.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+    );
+    print('   lenPrefix: $lenPrefix');
+
+    print('   First 50 bytes: ${payload.take(50).toList()}\n');
     _pairingSocket!.add([...lenPrefix, ...payload]);
     await _pairingSocket!.flush();
     print('✅ Sent PairingSecret');
   }
 
   List<int> _buffer = [];
-  List<int> _commandBuffer = [];
   void handleSocketMessage(Uint8List data) {
     print(
       '📥 Received ${data.length} bytes: ${data.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
@@ -265,7 +341,7 @@ class TvRemoteClient {
           _handleCommandMessage(msg);
         } else {
           final msg = OuterMessage.fromBuffer(messageBytes);
-          handleMessage(msg);
+          handleMessage!(msg);
         }
       } catch (e, stackTrace) {
         print('⚠️ Error parsing message: $e');
@@ -339,57 +415,6 @@ class TvRemoteClient {
     await _commandSocket!.flush();
 
     print('✅ Ready to send commands!');
-  }
-
-  Future<void> sendPairingConfiguration() async {
-    final config = PairingConfiguration()
-      ..encoding =
-          (Encoding()
-            ..type = Encoding_EncodingType
-                .ENCODING_TYPE_HEXADECIMAL // What TV chose
-            ..symbolLength = 6) // What TV chose
-      ..clientRole = RoleType.ROLE_TYPE_INPUT; // You will INPUT the PIN
-
-    final outer = OuterMessage()
-      ..protocolVersion = 2
-      ..status =
-          200 // Your TV requires this
-      ..pairingConfiguration = config;
-
-    final payload = outer.writeToBuffer();
-    final lenPrefix = encodeVarint(payload.length);
-
-    print('📤 Sending PairingConfiguration with encoding...');
-    print(
-      '   Bytes: ${[...lenPrefix, ...payload].map((b) => b.toRadixString(16)).join(' ')}',
-    );
-
-    _pairingSocket!.add([...lenPrefix, ...payload]);
-    await _pairingSocket!.flush();
-  }
-
-  Future<void> sendPairingOption() async {
-    final options = PairingOptions()
-      // Add input encoding
-      ..inputEncodings.add(
-        Encoding()
-          ..type = Encoding_EncodingType.ENCODING_TYPE_HEXADECIMAL
-          ..symbolLength = 6,
-      )
-      ..preferredRole = RoleType.ROLE_TYPE_INPUT;
-
-    final outer = OuterMessage()
-      ..protocolVersion = 2
-      ..status = 200
-      ..pairingOption = options;
-
-    final payload = outer.writeToBuffer();
-    final lenPrefix = encodeVarint(payload.length);
-
-    print('📤 Sending PairingOptions...');
-    _pairingSocket!.add([...lenPrefix, ...payload]);
-    await _pairingSocket!.flush();
-    print('✅ Sent PairingOptions');
   }
 
   void _setupCommandListener() {
@@ -735,13 +760,10 @@ class TvRemoteClient {
 
   RSAPublicKey _extractServerPublicKey(X509Certificate cert) {
     try {
-      // _envelope = createPairingSecretEnvelope(serverPublicKeyBytes: cert.der);
-
       final parsed = X509Utils.x509CertificateFromPem(cert.pem);
 
       final pubKeyData = parsed.tbsCertificate!.subjectPublicKeyInfo; // type
       final key = _parsePublicKey(pubKeyData.bytes!);
-
       return key;
     } catch (e, st) {
       print('Error extracting server public key: $e\n$st');
@@ -754,76 +776,124 @@ class TvRemoteClient {
     return parser.parse(pem) as RSAPublicKey;
   }
 
+  // Future<List<int>> _encodeSecret(String pin) async {
+  //   if (pin.length != 6) {
+  //     throw Exception('PIN must be exactly 6 hex characters');
+  //   }
+
+  //   print('🔐 Encoding secret for PIN: $pin\n');
+
+  //   final digest = SHA256Digest();
+
+  //   final clientModulus = _removeLeadingZeros(
+  //     _bigIntToBytes(_clientPublicKey!.modulus!),
+  //   );
+  //   final clientExponent = _removeLeadingZeros(
+  //     _bigIntToBytes(_clientPublicKey!.exponent!),
+  //   );
+  //   final serverModulus = _removeLeadingZeros(
+  //     _bigIntToBytes(_serverPublicKey!.modulus!),
+  //   );
+  //   final serverExponent = _removeLeadingZeros(
+  //     _bigIntToBytes(_serverPublicKey!.exponent!),
+  //   );
+
+  //   digest.update(Uint8List.fromList(clientModulus), 0, clientModulus.length);
+  //   digest.update(Uint8List.fromList(clientExponent), 0, clientExponent.length);
+  //   digest.update(Uint8List.fromList(serverModulus), 0, serverModulus.length);
+  //   digest.update(Uint8List.fromList(serverExponent), 0, serverExponent.length);
+
+  //   // CRITICAL: Use LAST 4 hex characters (2 bytes) - substr($code, 2, 4) in PHP
+  //   final gamma = pin.substring(2); // "2DD950" -> "D950"
+  //   final gammaBytes = <int>[];
+  //   for (var i = 0; i < gamma.length; i += 2) {
+  //     gammaBytes.add(int.parse(gamma.substring(i, i + 2), radix: 16));
+  //   }
+
+  //   print('📌 Using last 4 chars of PIN: "$gamma"');
+  //   print(
+  //     '📌 Gamma bytes (2 bytes): ${gammaBytes.map((b) => '0x${b.toRadixString(16).padLeft(2, '0')}').join(' ')}\n',
+  //   );
+
+  //   digest.update(Uint8List.fromList(gammaBytes), 0, gammaBytes.length);
+
+  //   final hash = Uint8List(digest.digestSize);
+  //   digest.doFinal(hash, 0);
+
+  //   print(
+  //     '✅ Computed hash: ${hash.take(16).map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}\n',
+  //   );
+
+  //   return hash.toList();
+  // }
+
   Future<List<int>> _encodeSecret(String pin) async {
-    if (pin.length != 6) {
-      throw Exception('PIN must be exactly 6 hex characters');
-    }
+    print('🔐 Encoding secret for PIN: $pin\n');
 
-    if (!RegExp(r'^[0-9A-Fa-f]+$').hasMatch(pin)) {
-      throw Exception('PIN must be hexadecimal characters only');
-    }
-    // Use SHA-256
+    // Get modulus and exponent as HEX strings (no leading zeros removed!)
+    final clientModHex = _clientPublicKey!.modulus!.toRadixString(16);
+    final clientExpHex = _clientPublicKey!.exponent!.toRadixString(16);
+    final serverModHex = _serverPublicKey!.modulus!.toRadixString(16);
+    final serverExpHex = _serverPublicKey!.exponent!.toRadixString(16);
+
+    print('Hex string lengths:');
+    print('   Client modulus: ${clientModHex.length} hex chars');
+    print('   Client exponent: ${clientExpHex.length} hex chars');
+    print('   Server modulus: ${serverModHex.length} hex chars');
+    print('   Server exponent: ${serverExpHex.length} hex chars\n');
+
+    final clientModBytes = _hexToBytes(clientModHex);
+    final clientExpBytes = _hexToBytes(clientExpHex);
+    final serverModBytes = _hexToBytes(serverModHex);
+    final serverExpBytes = _hexToBytes(serverExpHex);
+
     final digest = SHA256Digest();
+    digest.update(Uint8List.fromList(clientModBytes), 0, clientModBytes.length);
+    digest.update(Uint8List.fromList(clientExpBytes), 0, clientExpBytes.length);
+    digest.update(Uint8List.fromList(serverModBytes), 0, serverModBytes.length);
+    digest.update(Uint8List.fromList(serverExpBytes), 0, serverExpBytes.length);
 
-    // Get modulus and exponent as byte arrays
-    final clientModulus = _removeLeadingZeros(
-      _bigIntToBytes(_clientPublicKey!.modulus!),
-    );
-    final clientExponent = _removeLeadingZeros(
-      _bigIntToBytes(_clientPublicKey!.exponent!),
-    );
-    final serverModulus = _removeLeadingZeros(
-      _bigIntToBytes(_serverPublicKey!.modulus!),
-    );
-    final serverExponent = _removeLeadingZeros(
-      _bigIntToBytes(_serverPublicKey!.exponent!),
-    );
+    // Last 4 hex characters of PIN
+    final gamma = pin.substring(2); // "2DD950" -> "D950"
+    final gammaBytes = _hexToBytes(gamma);
 
-    print('🔐 Hash inputs:');
+    print('📌 PIN: $pin');
+    print('📌 Gamma (last 4 chars): $gamma');
     print(
-      '   Client modulus: ${clientModulus.map((b) => b.toRadixString(16)).join(' ')}',
-    );
-    print(
-      '   Client exponent: ${clientExponent.map((b) => b.toRadixString(16)).join(' ')}',
-    );
-    print(
-      '   Server modulus: ${serverModulus.map((b) => b.toRadixString(16)).join(' ')}',
-    );
-    print(
-      '   Server exponent: ${serverExponent.map((b) => b.toRadixString(16)).join(' ')}',
+      '📌 Gamma bytes: ${gammaBytes.map((b) => '0x${b.toRadixString(16).padLeft(2, '0')}').join(' ')}\n',
     );
 
-    // Update SHA-256 hash in order
-    digest.update(Uint8List.fromList(clientModulus), 0, clientModulus.length);
-    digest.update(Uint8List.fromList(clientExponent), 0, clientExponent.length);
-    digest.update(Uint8List.fromList(serverModulus), 0, serverModulus.length);
-    digest.update(Uint8List.fromList(serverExponent), 0, serverExponent.length);
+    digest.update(Uint8List.fromList(gammaBytes), 0, gammaBytes.length);
 
-    // Add last 4 characters of the PIN (hex to bytes)
-    // PIN is 6 chars like "A1B2C3" -> use last 4 chars "B2C3"
-    final last4Chars = pin.substring(2, 6);
-    final pinBytes = _hexStringToBytes(last4Chars);
-    print(
-      '   Nonce (last 4 chars): ${pinBytes.map((b) => b.toRadixString(16)).join(' ')}',
-    );
-
-    digest.update(Uint8List.fromList(pinBytes), 0, pinBytes.length);
-
-    // Compute final hash
+    // Compute hash
     final hash = Uint8List(digest.digestSize);
     digest.doFinal(hash, 0);
 
     print(
-      '✅ Encoded secret: ${hash.map((b) => b.toRadixString(16)).join(' ')}',
+      '✅ Computed hash first byte: 0x${hash[0].toRadixString(16).padLeft(2, '0')} (${hash[0]})',
+    );
+    print(
+      '📌 PIN first byte should be: 0x${pin.substring(0, 2)} (${int.parse(pin.substring(0, 2), radix: 16)})\n',
     );
 
-    return hash.toList(); // This is 32 bytes (SHA-256)
+    // Validate
+    final expectedFirstByte = int.parse(pin.substring(0, 2), radix: 16);
+    if (hash[0] != expectedFirstByte) {
+      print('❌ HASH VALIDATION FAILED! First byte mismatch!\n');
+    } else {
+      print('✅ Hash validation passed!\n');
+    }
+
+    return hash.toList();
   }
 }
 
 Uint8List _bigIntToBytes(BigInt bigInt) {
   var hex = bigInt.toRadixString(16);
-  if (hex.length % 2 != 0) hex = '0$hex';
+  if (hex.length % 2 != 0) {
+    hex = '0$hex';
+  }
+
   return Uint8List.fromList(
     List.generate(
       hex.length ~/ 2,
@@ -844,35 +914,25 @@ Uint8List _bigIntToBytes(BigInt bigInt) {
 // }
 
 Uint8List _removeLeadingZeros(Uint8List bytes) {
+  // For RSA modulus, remove ALL leading zeros
+  // The modulus should be exactly the byte length of the key size
   int start = 0;
   while (start < bytes.length && bytes[start] == 0) {
     start++;
   }
-
   return bytes.sublist(start);
 }
 
-List<int> _hexStringToBytes(String hex) {
-  // Remove any spaces or special characters
-  hex = hex.replaceAll(RegExp(r'\s+'), '').toUpperCase();
-
-  // Validate it's a valid hex string
-  if (!RegExp(r'^[0-9A-F]+$').hasMatch(hex)) {
-    throw Exception('Invalid hex string: must contain only 0-9 and A-F');
-  }
-
-  // Must be even length (each byte is 2 hex chars)
+List<int> _hexToBytes(String hex) {
   if (hex.length % 2 != 0) {
-    throw Exception('Hex string must have even length');
+    hex = '0$hex';
   }
 
-  // Convert hex string to bytes: "B2C3" -> [0xB2, 0xC3]
-  final bytes = <int>[];
-  for (int i = 0; i < hex.length; i += 2) {
-    bytes.add(int.parse(hex.substring(i, i + 2), radix: 16));
+  final result = <int>[];
+  for (var i = 0; i < hex.length; i += 2) {
+    result.add(int.parse(hex.substring(i, i + 2), radix: 16));
   }
-
-  return bytes;
+  return result;
 }
 
 Uint8List encodeVarint(int value) {

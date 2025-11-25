@@ -37,13 +37,10 @@ class _WelcomeModalState extends State<WelcomeModal> {
     // discoverAndroidTVs();
     // showPinDialog();
     discoverDIALDevices();
-    setTVData();
   }
 
   SharedPreferences? _prefs;
   TvRemoteClient? _tvRemoteClient;
-  SecureSocket? _commnadSockect;
-  // OuterMessage? _outerMessage;
 
   Future<void> discoverAndroidTVs() async {
     final client = MDnsClient();
@@ -193,25 +190,26 @@ class _WelcomeModalState extends State<WelcomeModal> {
   }
 
   // ignore: unused_local_variable
-  Future<void> setTVData() async {
-    // final newValue = Map<String, dynamic>.from(appDataNotifier.value)
-    //   ..['isConnected'] = true
-    //   ..['friendlyName'] = item['friendlyName']
-    //   ..['port'] = item['port']
-    //   ..['host'] = item['host']
-    //   ..['scheme'] = item['scheme'];
-    // appDataNotifier.value = newValue;
+  Future<void> setTVData(item) async {
+    final newValue = Map<String, dynamic>.from(appDataNotifier.value)
+      ..['isConnected'] = true
+      ..['friendlyName'] = item['friendlyName']
+      ..['port'] = item['port']
+      ..['host'] = item['host']
+      ..['scheme'] = item['scheme'];
+    appDataNotifier.value = newValue;
 
-    // final String link = item['host'];
-    // final String wss = link.replaceAll("http", "wss") + ":$port";
+    //  host: '192.168.1.185',
+
     _tvRemoteClient = TvRemoteClient(
-      host: '192.168.1.185',
+      host: item['host'],
       handleMessage: handleMessage,
     );
     final alreadyPaired = await _tvRemoteClient!.initialize();
     if (!alreadyPaired) {
       await _tvRemoteClient!.startPairing();
     }
+
     // Navigator.of(context).pop();
   }
 
@@ -349,7 +347,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
                               return Column(
                                 children: [
                                   TextButton(
-                                    onPressed: () => setTVData(),
+                                    onPressed: () => setTVData(item),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,

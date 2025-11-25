@@ -11,7 +11,7 @@ class WidgetTree extends StatefulWidget {
   State<WidgetTree> createState() => _WidgetTreeState();
 }
 
-class _WidgetTreeState extends State<WidgetTree> {
+class _WidgetTreeState extends State<WidgetTree> with RouteAware {
   @override
   void initState() {
     super.initState();
@@ -20,7 +20,7 @@ class _WidgetTreeState extends State<WidgetTree> {
       final bool? isConnected = prefs.getBool('connected');
       appDataNotifier.value['isConnected'] = isConnected ?? false;
       if (!appDataNotifier.value['isConnected']) {
-        Navigator.push(
+        await Navigator.push(
           // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
