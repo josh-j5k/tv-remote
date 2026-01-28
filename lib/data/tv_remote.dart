@@ -764,6 +764,7 @@ class TvRemoteClient {
 
       final pubKeyData = parsed.tbsCertificate!.subjectPublicKeyInfo; // type
       final key = _parsePublicKey(pubKeyData.bytes!);
+
       return key;
     } catch (e, st) {
       print('Error extracting server public key: $e\n$st');
@@ -884,8 +885,52 @@ class TvRemoteClient {
       print('✅ Hash validation passed!\n');
     }
 
-    return hash.toList();
+    // Use OAEPEncoding which implements AsymmetricBlockCipher
+    final encryptor = OAEPEncoding(RSAEngine())
+      ..init(true, PublicKeyParameter<RSAPublicKey>(_serverPublicKey!));
+
+    try {
+      print('🔐 Encrypting hash with RSA...');
+
+      // Pass the encryptor (AsymmetricBlockCipher) and the hash (Uint8List)
+      final encryptedSecret = _processInBlocks(encryptor, hash);
+
+      print(
+        '📦 Encrypted Secret Length: ${encryptedSecret.length} bytes (Should be 256)',
+      );
+
+      return encryptedSecret.toList();
+    } catch (e) {
+      print('❌ Encryption failed: $e');
+      rethrow;
+    }
   }
+}
+
+/// Helper to process data with PointyCastle engines
+Uint8List _processInBlocks(AsymmetricBlockCipher engine, Uint8List input) {
+  final numBlocks = (input.length / engine.inputBlockSize).ceil();
+  final output = Uint8List(numBlocks * engine.outputBlockSize);
+  var inputOffset = 0;
+  var outputOffset = 0;
+
+  while (inputOffset < input.length) {
+    final chunkSize = (inputOffset + engine.inputBlockSize <= input.length)
+        ? engine.inputBlockSize
+        : input.length - inputOffset;
+
+    outputOffset += engine.processBlock(
+      input,
+      inputOffset,
+      chunkSize,
+      output,
+      outputOffset,
+    );
+
+    inputOffset += chunkSize;
+  }
+
+  return output.sublist(0, outputOffset);
 }
 
 Uint8List _bigIntToBytes(BigInt bigInt) {
