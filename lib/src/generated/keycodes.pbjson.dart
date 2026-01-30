@@ -68,42 +68,6 @@ const RemoteMessage$json = {
       '10': 'remoteSetActive'
     },
     {
-      '1': 'remote_key_inject',
-      '3': 10,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteKeyInject',
-      '9': 0,
-      '10': 'remoteKeyInject'
-    },
-    {
-      '1': 'remote_ime_key_inject',
-      '3': 11,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteImeKeyInject',
-      '9': 0,
-      '10': 'remoteImeKeyInject'
-    },
-    {
-      '1': 'remote_ime_batch_edit',
-      '3': 21,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteImeBatchEdit',
-      '9': 0,
-      '10': 'remoteImeBatchEdit'
-    },
-    {
-      '1': 'remote_start_app',
-      '3': 330,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteStartApp',
-      '9': 0,
-      '10': 'remoteStartApp'
-    },
-    {
       '1': 'remote_ping_request',
       '3': 8,
       '4': 1,
@@ -122,6 +86,24 @@ const RemoteMessage$json = {
       '10': 'remotePingResponse'
     },
     {
+      '1': 'remote_key_inject',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteKeyInject',
+      '9': 0,
+      '10': 'remoteKeyInject'
+    },
+    {
+      '1': 'remote_ime_key_inject',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteImeKeyInject',
+      '9': 0,
+      '10': 'remoteImeKeyInject'
+    },
+    {
       '1': 'remote_error',
       '3': 15,
       '4': 1,
@@ -129,33 +111,6 @@ const RemoteMessage$json = {
       '6': '.remote.RemoteError',
       '9': 0,
       '10': 'remoteError'
-    },
-    {
-      '1': 'remote_set_volume_level',
-      '3': 18,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteSetVolumeLevel',
-      '9': 0,
-      '10': 'remoteSetVolumeLevel'
-    },
-    {
-      '1': 'remote_adjust_volume_level',
-      '3': 25,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteAdjustVolumeLevel',
-      '9': 0,
-      '10': 'remoteAdjustVolumeLevel'
-    },
-    {
-      '1': 'remote_reset_preferred_audio_device',
-      '3': 32,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteResetPreferredAudioDevice',
-      '9': 0,
-      '10': 'remoteResetPreferredAudioDevice'
     },
     {
       '1': 'remote_app_info',
@@ -167,6 +122,24 @@ const RemoteMessage$json = {
       '10': 'remoteAppInfo'
     },
     {
+      '1': 'remote_ime_batch_edit',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteImeBatchEdit',
+      '9': 0,
+      '10': 'remoteImeBatchEdit'
+    },
+    {
+      '1': 'remote_adjust_volume_level',
+      '3': 25,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteAdjustVolumeLevel',
+      '9': 0,
+      '10': 'remoteAdjustVolumeLevel'
+    },
+    {
       '1': 'remote_set_preferred_audio_device',
       '3': 31,
       '4': 1,
@@ -174,6 +147,24 @@ const RemoteMessage$json = {
       '6': '.remote.RemoteSetPreferredAudioDevice',
       '9': 0,
       '10': 'remoteSetPreferredAudioDevice'
+    },
+    {
+      '1': 'remote_reset_preferred_audio_device',
+      '3': 32,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteResetPreferredAudioDevice',
+      '9': 0,
+      '10': 'remoteResetPreferredAudioDevice'
+    },
+    {
+      '1': 'remote_power_status',
+      '3': 35,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemotePowerStatus',
+      '9': 0,
+      '10': 'remotePowerStatus'
     },
     {
       '1': 'remote_get_power_status',
@@ -185,13 +176,31 @@ const RemoteMessage$json = {
       '10': 'remoteGetPowerStatus'
     },
     {
-      '1': 'remote_power_status',
-      '3': 35,
+      '1': 'remote_power_info',
+      '3': 40,
       '4': 1,
       '5': 11,
-      '6': '.remote.RemotePowerStatus',
+      '6': '.remote.RemotePowerInfo',
       '9': 0,
-      '10': 'remotePowerStatus'
+      '10': 'remotePowerInfo'
+    },
+    {
+      '1': 'remote_volume_info',
+      '3': 50,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteVolumeInfo',
+      '9': 0,
+      '10': 'remoteVolumeInfo'
+    },
+    {
+      '1': 'remote_start_app',
+      '3': 330,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteStartApp',
+      '9': 0,
+      '10': 'remoteStartApp'
     },
   ],
   '8': [
@@ -203,28 +212,30 @@ const RemoteMessage$json = {
 final $typed_data.Uint8List remoteMessageDescriptor = $convert.base64Decode(
     'Cg1SZW1vdGVNZXNzYWdlEkQKEHJlbW90ZV9jb25maWd1cmUYASABKAsyFy5yZW1vdGUuUmVtb3'
     'RlQ29uZmlndXJlSABSD3JlbW90ZUNvbmZpZ3VyZRJFChFyZW1vdGVfc2V0X2FjdGl2ZRgCIAEo'
-    'CzIXLnJlbW90ZS5SZW1vdGVTZXRBY3RpdmVIAFIPcmVtb3RlU2V0QWN0aXZlEkUKEXJlbW90ZV'
-    '9rZXlfaW5qZWN0GAogASgLMhcucmVtb3RlLlJlbW90ZUtleUluamVjdEgAUg9yZW1vdGVLZXlJ'
-    'bmplY3QSTwoVcmVtb3RlX2ltZV9rZXlfaW5qZWN0GAsgASgLMhoucmVtb3RlLlJlbW90ZUltZU'
-    'tleUluamVjdEgAUhJyZW1vdGVJbWVLZXlJbmplY3QSTwoVcmVtb3RlX2ltZV9iYXRjaF9lZGl0'
-    'GBUgASgLMhoucmVtb3RlLlJlbW90ZUltZUJhdGNoRWRpdEgAUhJyZW1vdGVJbWVCYXRjaEVkaX'
-    'QSQwoQcmVtb3RlX3N0YXJ0X2FwcBjKAiABKAsyFi5yZW1vdGUuUmVtb3RlU3RhcnRBcHBIAFIO'
-    'cmVtb3RlU3RhcnRBcHASSwoTcmVtb3RlX3BpbmdfcmVxdWVzdBgIIAEoCzIZLnJlbW90ZS5SZW'
-    '1vdGVQaW5nUmVxdWVzdEgAUhFyZW1vdGVQaW5nUmVxdWVzdBJOChRyZW1vdGVfcGluZ19yZXNw'
-    'b25zZRgJIAEoCzIaLnJlbW90ZS5SZW1vdGVQaW5nUmVzcG9uc2VIAFIScmVtb3RlUGluZ1Jlc3'
-    'BvbnNlEjgKDHJlbW90ZV9lcnJvchgPIAEoCzITLnJlbW90ZS5SZW1vdGVFcnJvckgAUgtyZW1v'
-    'dGVFcnJvchJVChdyZW1vdGVfc2V0X3ZvbHVtZV9sZXZlbBgSIAEoCzIcLnJlbW90ZS5SZW1vdG'
-    'VTZXRWb2x1bWVMZXZlbEgAUhRyZW1vdGVTZXRWb2x1bWVMZXZlbBJeChpyZW1vdGVfYWRqdXN0'
-    'X3ZvbHVtZV9sZXZlbBgZIAEoCzIfLnJlbW90ZS5SZW1vdGVBZGp1c3RWb2x1bWVMZXZlbEgAUh'
-    'dyZW1vdGVBZGp1c3RWb2x1bWVMZXZlbBJ3CiNyZW1vdGVfcmVzZXRfcHJlZmVycmVkX2F1ZGlv'
-    'X2RldmljZRggIAEoCzInLnJlbW90ZS5SZW1vdGVSZXNldFByZWZlcnJlZEF1ZGlvRGV2aWNlSA'
-    'BSH3JlbW90ZVJlc2V0UHJlZmVycmVkQXVkaW9EZXZpY2USPwoPcmVtb3RlX2FwcF9pbmZvGBQg'
-    'ASgLMhUucmVtb3RlLlJlbW90ZUFwcEluZm9IAFINcmVtb3RlQXBwSW5mbxJxCiFyZW1vdGVfc2'
-    'V0X3ByZWZlcnJlZF9hdWRpb19kZXZpY2UYHyABKAsyJS5yZW1vdGUuUmVtb3RlU2V0UHJlZmVy'
-    'cmVkQXVkaW9EZXZpY2VIAFIdcmVtb3RlU2V0UHJlZmVycmVkQXVkaW9EZXZpY2USVQoXcmVtb3'
-    'RlX2dldF9wb3dlcl9zdGF0dXMYJCABKAsyHC5yZW1vdGUuUmVtb3RlR2V0UG93ZXJTdGF0dXNI'
-    'AFIUcmVtb3RlR2V0UG93ZXJTdGF0dXMSSwoTcmVtb3RlX3Bvd2VyX3N0YXR1cxgjIAEoCzIZLn'
-    'JlbW90ZS5SZW1vdGVQb3dlclN0YXR1c0gAUhFyZW1vdGVQb3dlclN0YXR1c0IJCgdtZXNzYWdl');
+    'CzIXLnJlbW90ZS5SZW1vdGVTZXRBY3RpdmVIAFIPcmVtb3RlU2V0QWN0aXZlEksKE3JlbW90ZV'
+    '9waW5nX3JlcXVlc3QYCCABKAsyGS5yZW1vdGUuUmVtb3RlUGluZ1JlcXVlc3RIAFIRcmVtb3Rl'
+    'UGluZ1JlcXVlc3QSTgoUcmVtb3RlX3BpbmdfcmVzcG9uc2UYCSABKAsyGi5yZW1vdGUuUmVtb3'
+    'RlUGluZ1Jlc3BvbnNlSABSEnJlbW90ZVBpbmdSZXNwb25zZRJFChFyZW1vdGVfa2V5X2luamVj'
+    'dBgKIAEoCzIXLnJlbW90ZS5SZW1vdGVLZXlJbmplY3RIAFIPcmVtb3RlS2V5SW5qZWN0Ek8KFX'
+    'JlbW90ZV9pbWVfa2V5X2luamVjdBgLIAEoCzIaLnJlbW90ZS5SZW1vdGVJbWVLZXlJbmplY3RI'
+    'AFIScmVtb3RlSW1lS2V5SW5qZWN0EjgKDHJlbW90ZV9lcnJvchgPIAEoCzITLnJlbW90ZS5SZW'
+    '1vdGVFcnJvckgAUgtyZW1vdGVFcnJvchI/Cg9yZW1vdGVfYXBwX2luZm8YFCABKAsyFS5yZW1v'
+    'dGUuUmVtb3RlQXBwSW5mb0gAUg1yZW1vdGVBcHBJbmZvEk8KFXJlbW90ZV9pbWVfYmF0Y2hfZW'
+    'RpdBgVIAEoCzIaLnJlbW90ZS5SZW1vdGVJbWVCYXRjaEVkaXRIAFIScmVtb3RlSW1lQmF0Y2hF'
+    'ZGl0El4KGnJlbW90ZV9hZGp1c3Rfdm9sdW1lX2xldmVsGBkgASgLMh8ucmVtb3RlLlJlbW90ZU'
+    'FkanVzdFZvbHVtZUxldmVsSABSF3JlbW90ZUFkanVzdFZvbHVtZUxldmVsEnEKIXJlbW90ZV9z'
+    'ZXRfcHJlZmVycmVkX2F1ZGlvX2RldmljZRgfIAEoCzIlLnJlbW90ZS5SZW1vdGVTZXRQcmVmZX'
+    'JyZWRBdWRpb0RldmljZUgAUh1yZW1vdGVTZXRQcmVmZXJyZWRBdWRpb0RldmljZRJ3CiNyZW1v'
+    'dGVfcmVzZXRfcHJlZmVycmVkX2F1ZGlvX2RldmljZRggIAEoCzInLnJlbW90ZS5SZW1vdGVSZX'
+    'NldFByZWZlcnJlZEF1ZGlvRGV2aWNlSABSH3JlbW90ZVJlc2V0UHJlZmVycmVkQXVkaW9EZXZp'
+    'Y2USSwoTcmVtb3RlX3Bvd2VyX3N0YXR1cxgjIAEoCzIZLnJlbW90ZS5SZW1vdGVQb3dlclN0YX'
+    'R1c0gAUhFyZW1vdGVQb3dlclN0YXR1cxJVChdyZW1vdGVfZ2V0X3Bvd2VyX3N0YXR1cxgkIAEo'
+    'CzIcLnJlbW90ZS5SZW1vdGVHZXRQb3dlclN0YXR1c0gAUhRyZW1vdGVHZXRQb3dlclN0YXR1cx'
+    'JFChFyZW1vdGVfcG93ZXJfaW5mbxgoIAEoCzIXLnJlbW90ZS5SZW1vdGVQb3dlckluZm9IAFIP'
+    'cmVtb3RlUG93ZXJJbmZvEkgKEnJlbW90ZV92b2x1bWVfaW5mbxgyIAEoCzIYLnJlbW90ZS5SZW'
+    '1vdGVWb2x1bWVJbmZvSABSEHJlbW90ZVZvbHVtZUluZm8SQwoQcmVtb3RlX3N0YXJ0X2FwcBjK'
+    'AiABKAsyFi5yZW1vdGUuUmVtb3RlU3RhcnRBcHBIAFIOcmVtb3RlU3RhcnRBcHBCCQoHbWVzc2'
+    'FnZQ==');
 
 @$core.Deprecated('Use remoteKeyInjectDescriptor instead')
 const RemoteKeyInject$json = {
@@ -372,9 +383,9 @@ final $typed_data.Uint8List remoteConfigureDescriptor = $convert.base64Decode(
 const RemoteDeviceInfo$json = {
   '1': 'RemoteDeviceInfo',
   '2': [
-    {'1': 'model', '3': 1, '4': 1, '5': 13, '10': 'model'},
+    {'1': 'model', '3': 1, '4': 1, '5': 9, '10': 'model'},
     {'1': 'vendor', '3': 2, '4': 1, '5': 9, '10': 'vendor'},
-    {'1': 'unknown1', '3': 3, '4': 1, '5': 13, '10': 'unknown1'},
+    {'1': 'unknown1', '3': 3, '4': 1, '5': 5, '10': 'unknown1'},
     {'1': 'unknown2', '3': 4, '4': 1, '5': 9, '10': 'unknown2'},
     {'1': 'package_name', '3': 5, '4': 1, '5': 9, '10': 'packageName'},
     {'1': 'app_version', '3': 6, '4': 1, '5': 9, '10': 'appVersion'},
@@ -383,10 +394,46 @@ const RemoteDeviceInfo$json = {
 
 /// Descriptor for `RemoteDeviceInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List remoteDeviceInfoDescriptor = $convert.base64Decode(
-    'ChBSZW1vdGVEZXZpY2VJbmZvEhQKBW1vZGVsGAEgASgNUgVtb2RlbBIWCgZ2ZW5kb3IYAiABKA'
-    'lSBnZlbmRvchIaCgh1bmtub3duMRgDIAEoDVIIdW5rbm93bjESGgoIdW5rbm93bjIYBCABKAlS'
+    'ChBSZW1vdGVEZXZpY2VJbmZvEhQKBW1vZGVsGAEgASgJUgVtb2RlbBIWCgZ2ZW5kb3IYAiABKA'
+    'lSBnZlbmRvchIaCgh1bmtub3duMRgDIAEoBVIIdW5rbm93bjESGgoIdW5rbm93bjIYBCABKAlS'
     'CHVua25vd24yEiEKDHBhY2thZ2VfbmFtZRgFIAEoCVILcGFja2FnZU5hbWUSHwoLYXBwX3Zlcn'
     'Npb24YBiABKAlSCmFwcFZlcnNpb24=');
+
+@$core.Deprecated('Use remoteVolumeInfoDescriptor instead')
+const RemoteVolumeInfo$json = {
+  '1': 'RemoteVolumeInfo',
+  '2': [
+    {'1': 'audio_device_id', '3': 1, '4': 1, '5': 5, '10': 'audioDeviceId'},
+    {'1': 'max_volume', '3': 2, '4': 1, '5': 5, '10': 'maxVolume'},
+    {'1': 'device_name', '3': 3, '4': 1, '5': 9, '10': 'deviceName'},
+    {'1': 'current_volume', '3': 4, '4': 1, '5': 5, '10': 'currentVolume'},
+    {'1': 'is_muted', '3': 5, '4': 1, '5': 8, '10': 'isMuted'},
+    {'1': 'volume_step', '3': 6, '4': 1, '5': 5, '10': 'volumeStep'},
+    {'1': 'unknown1', '3': 7, '4': 1, '5': 5, '10': 'unknown1'},
+    {'1': 'unknown2', '3': 8, '4': 1, '5': 8, '10': 'unknown2'},
+  ],
+};
+
+/// Descriptor for `RemoteVolumeInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteVolumeInfoDescriptor = $convert.base64Decode(
+    'ChBSZW1vdGVWb2x1bWVJbmZvEiYKD2F1ZGlvX2RldmljZV9pZBgBIAEoBVINYXVkaW9EZXZpY2'
+    'VJZBIdCgptYXhfdm9sdW1lGAIgASgFUgltYXhWb2x1bWUSHwoLZGV2aWNlX25hbWUYAyABKAlS'
+    'CmRldmljZU5hbWUSJQoOY3VycmVudF92b2x1bWUYBCABKAVSDWN1cnJlbnRWb2x1bWUSGQoIaX'
+    'NfbXV0ZWQYBSABKAhSB2lzTXV0ZWQSHwoLdm9sdW1lX3N0ZXAYBiABKAVSCnZvbHVtZVN0ZXAS'
+    'GgoIdW5rbm93bjEYByABKAVSCHVua25vd24xEhoKCHVua25vd24yGAggASgIUgh1bmtub3duMg'
+    '==');
+
+@$core.Deprecated('Use remotePowerInfoDescriptor instead')
+const RemotePowerInfo$json = {
+  '1': 'RemotePowerInfo',
+  '2': [
+    {'1': 'is_on', '3': 1, '4': 1, '5': 8, '10': 'isOn'},
+  ],
+};
+
+/// Descriptor for `RemotePowerInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remotePowerInfoDescriptor = $convert
+    .base64Decode('Cg9SZW1vdGVQb3dlckluZm8SEwoFaXNfb24YASABKAhSBGlzT24=');
 
 @$core.Deprecated('Use remoteSetActiveDescriptor instead')
 const RemoteSetActive$json = {
@@ -513,25 +560,29 @@ final $typed_data.Uint8List remoteAppInfoDescriptor = $convert.base64Decode(
 const RemotePingRequest$json = {
   '1': 'RemotePingRequest',
   '2': [
-    {'1': 'val1', '3': 1, '4': 1, '5': 13, '10': 'val1'},
+    {'1': 'val1', '3': 1, '4': 1, '5': 5, '10': 'val1'},
+    {'1': 'val2', '3': 2, '4': 1, '5': 3, '10': 'val2'},
   ],
 };
 
 /// Descriptor for `RemotePingRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List remotePingRequestDescriptor = $convert
-    .base64Decode('ChFSZW1vdGVQaW5nUmVxdWVzdBISCgR2YWwxGAEgASgNUgR2YWwx');
+final $typed_data.Uint8List remotePingRequestDescriptor = $convert.base64Decode(
+    'ChFSZW1vdGVQaW5nUmVxdWVzdBISCgR2YWwxGAEgASgFUgR2YWwxEhIKBHZhbDIYAiABKANSBH'
+    'ZhbDI=');
 
 @$core.Deprecated('Use remotePingResponseDescriptor instead')
 const RemotePingResponse$json = {
   '1': 'RemotePingResponse',
   '2': [
-    {'1': 'val1', '3': 1, '4': 1, '5': 13, '10': 'val1'},
+    {'1': 'val1', '3': 1, '4': 1, '5': 5, '10': 'val1'},
+    {'1': 'val2', '3': 2, '4': 1, '5': 3, '10': 'val2'},
   ],
 };
 
 /// Descriptor for `RemotePingResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List remotePingResponseDescriptor = $convert
-    .base64Decode('ChJSZW1vdGVQaW5nUmVzcG9uc2USEgoEdmFsMRgBIAEoDVIEdmFsMQ==');
+final $typed_data.Uint8List remotePingResponseDescriptor = $convert.base64Decode(
+    'ChJSZW1vdGVQaW5nUmVzcG9uc2USEgoEdmFsMRgBIAEoBVIEdmFsMRISCgR2YWwyGAIgASgDUg'
+    'R2YWwy');
 
 @$core.Deprecated('Use remoteGetPowerStatusDescriptor instead')
 const RemoteGetPowerStatus$json = {

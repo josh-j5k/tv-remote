@@ -4,22 +4,23 @@ package remote;
 
 message RemoteMessage {
   oneof message {
-    RemoteConfigure remote_configure = 1;           // Tag 10
-    RemoteSetActive remote_set_active = 2;          // Tag 18
-    RemoteKeyInject remote_key_inject = 10;         // Tag 82
-    RemoteImeKeyInject remote_ime_key_inject = 11;  // Tag 90
-    RemoteImeBatchEdit remote_ime_batch_edit = 21;  // Tag 170,1
-    RemoteStartApp remote_start_app = 330;          // Tag 210,5
-    RemotePingRequest remote_ping_request = 8;      // Tag 66
-    RemotePingResponse remote_ping_response = 9;    // Tag 74
-    RemoteError remote_error = 15;                  // Tag 122
-    RemoteSetVolumeLevel remote_set_volume_level = 18;  // Tag 146,3
-    RemoteAdjustVolumeLevel remote_adjust_volume_level = 25;  // Tag 202,1
-    RemoteResetPreferredAudioDevice remote_reset_preferred_audio_device = 32;  // Tag 2,2
-    RemoteAppInfo remote_app_info = 20;             // Tag 162,1
-    RemoteSetPreferredAudioDevice remote_set_preferred_audio_device = 31;  // Tag 250,1
-    RemoteGetPowerStatus remote_get_power_status = 36;  // Tag 34,2
-    RemotePowerStatus remote_power_status = 35;     // Tag 26,2
+    RemoteConfigure remote_configure = 1;
+    RemoteSetActive remote_set_active = 2;
+    RemotePingRequest remote_ping_request = 8;
+    RemotePingResponse remote_ping_response = 9;
+    RemoteKeyInject remote_key_inject = 10;
+    RemoteImeKeyInject remote_ime_key_inject = 11;
+    RemoteError remote_error = 15;
+    RemoteAppInfo remote_app_info = 20;
+    RemoteImeBatchEdit remote_ime_batch_edit = 21;
+    RemoteAdjustVolumeLevel remote_adjust_volume_level = 25;
+    RemoteSetPreferredAudioDevice remote_set_preferred_audio_device = 31;
+    RemoteResetPreferredAudioDevice remote_reset_preferred_audio_device = 32;
+    RemotePowerStatus remote_power_status = 35;
+    RemoteGetPowerStatus remote_get_power_status = 36;
+    RemotePowerInfo remote_power_info = 40;
+    RemoteVolumeInfo remote_volume_info = 50;
+    RemoteStartApp remote_start_app = 330;
   }
 }
 message RemoteKeyInject {
@@ -111,14 +112,27 @@ message RemoteConfigure {
 }
 
 message RemoteDeviceInfo {
-  uint32 model = 1;
+  string model = 1;
   string vendor = 2;
-  uint32 unknown1 = 3;
+  int32 unknown1 = 3;
   string unknown2 = 4;
   string package_name = 5;
   string app_version = 6;
 }
+message RemoteVolumeInfo {
+  int32 audio_device_id = 1;
+  int32 max_volume = 2;
+  string device_name = 3;
+  int32 current_volume = 4;
+  bool is_muted = 5;
+  int32 volume_step = 6;
+  int32 unknown1 = 7;
+  bool unknown2 = 8;
+}
 
+message RemotePowerInfo {
+  bool is_on = 1;
+}
 message RemoteSetActive {
   uint32 active = 1;  // Usually 622
 }
@@ -164,13 +178,14 @@ message RemoteAppInfo {
   string app_package = 2;
 }
 
-// Ping/Pong for keep-alive
 message RemotePingRequest {
-  uint32 val1 = 1;
+  int32 val1 = 1;
+  int64 val2 = 2;
 }
 
 message RemotePingResponse {
-  uint32 val1 = 1;  // Usually 25
+  int32 val1 = 1;
+  int64 val2 = 2;  // Add this field!
 }
 
 // Power status

@@ -1,5 +1,6 @@
 // import 'dart:io';
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -171,6 +172,11 @@ class _WelcomeModalState extends State<WelcomeModal> {
           _tvRemoteClient!.onPairingComplete();
         }
         break;
+      case OuterMessage_Message.pairingSecretAck:
+        if (msg.status == 200 && msg.pairingSecretAck.secret.isNotEmpty) {
+          _tvRemoteClient!.onPairingComplete();
+        }
+        break;
 
       case OuterMessage_Message.notSet:
         if (msg.status == 400) {
@@ -200,7 +206,12 @@ class _WelcomeModalState extends State<WelcomeModal> {
     appDataNotifier.value = newValue;
 
     //  host: '192.168.1.185',
-
+    final host = item['host'];
+    final prefHost = _prefs!.getString('atv_key_$host');
+    if (prefHost != null) {
+      Navigator.of(context).pop();
+      return;
+    }
     _tvRemoteClient = TvRemoteClient(
       host: item['host'],
       handleMessage: handleMessage,
@@ -210,12 +221,21 @@ class _WelcomeModalState extends State<WelcomeModal> {
       await _tvRemoteClient!.startPairing();
     }
 
-    // Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   List<Map<String, dynamic>> data = [];
   Future<void> discoverDIALDevices() async {
     final disc = DeviceDiscoverer();
+    // setState(() {
+    //   data.add({
+    //     "friendlyName": "star_tv",
+    //     "scheme": 'http',
+    //     "port": "8008",
+    //     'host': "192.168.1.185",
+    //     'isConnected': false,
+    //   });
+    // });
     await disc.start(ipv6: false);
     disc.quickDiscoverClients().listen(
       (client) async {
@@ -226,6 +246,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
         //     usn.contains('android') ||
         //     usn.contains('nfandroid') ||
         //     server.contains('chromecast');
+
         bool isValidLocation =
             client.location != null && client.location!.contains(".xml");
 
@@ -367,7 +388,12 @@ class _WelcomeModalState extends State<WelcomeModal> {
                                               ),
                                             ),
                                             Text(
-                                              "New",
+                                              _prefs!.getString(
+                                                        'atv_key_${item['host']}',
+                                                      ) !=
+                                                      null
+                                                  ? "Not Connected"
+                                                  : "New",
                                               textAlign: TextAlign.start,
                                               style: TextStyle(
                                                 color: const Color.fromARGB(
@@ -408,7 +434,12 @@ class _WelcomeModalState extends State<WelcomeModal> {
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 20.0),
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              data = [];
+                            });
+                            discoverDIALDevices();
+                          },
                           child: Wrap(
                             spacing: 15.0,
                             children: [

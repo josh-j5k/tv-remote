@@ -29,7 +29,7 @@ enum OuterMessage_Message {
   pairingConfiguration,
   pairingConfigurationAck,
   pairingSecret,
-  pairingAuthMessage,
+  pairingSecretAck,
   error,
   notSet
 }
@@ -46,7 +46,7 @@ class OuterMessage extends $pb.GeneratedMessage {
     PairingConfiguration? pairingConfiguration,
     PairingConfigurationAck? pairingConfigurationAck,
     PairingSecret? pairingSecret,
-    PairingAuthenticationMessage? pairingAuthMessage,
+    PairingSecretAck? pairingSecretAck,
     ErrorMessage? error,
   }) {
     final result = create();
@@ -62,8 +62,7 @@ class OuterMessage extends $pb.GeneratedMessage {
     if (pairingConfigurationAck != null)
       result.pairingConfigurationAck = pairingConfigurationAck;
     if (pairingSecret != null) result.pairingSecret = pairingSecret;
-    if (pairingAuthMessage != null)
-      result.pairingAuthMessage = pairingAuthMessage;
+    if (pairingSecretAck != null) result.pairingSecretAck = pairingSecretAck;
     if (error != null) result.error = error;
     return result;
   }
@@ -86,8 +85,8 @@ class OuterMessage extends $pb.GeneratedMessage {
     21: OuterMessage_Message.pairingOptionAck,
     30: OuterMessage_Message.pairingConfiguration,
     31: OuterMessage_Message.pairingConfigurationAck,
-    130: OuterMessage_Message.pairingSecret,
-    132: OuterMessage_Message.pairingAuthMessage,
+    40: OuterMessage_Message.pairingSecret,
+    41: OuterMessage_Message.pairingSecretAck,
     200: OuterMessage_Message.error,
     0: OuterMessage_Message.notSet
   };
@@ -95,7 +94,7 @@ class OuterMessage extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'OuterMessage',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
-    ..oo(0, [10, 11, 13, 20, 21, 30, 31, 130, 132, 200])
+    ..oo(0, [10, 11, 13, 20, 21, 30, 31, 40, 41, 200])
     ..aI(1, _omitFieldNames ? '' : 'protocolVersion',
         fieldType: $pb.PbFieldType.OU3)
     ..aI(2, _omitFieldNames ? '' : 'status', fieldType: $pb.PbFieldType.OU3)
@@ -115,11 +114,10 @@ class OuterMessage extends $pb.GeneratedMessage {
     ..aOM<PairingConfigurationAck>(
         31, _omitFieldNames ? '' : 'pairingConfigurationAck',
         subBuilder: PairingConfigurationAck.create)
-    ..aOM<PairingSecret>(130, _omitFieldNames ? '' : 'pairingSecret',
+    ..aOM<PairingSecret>(40, _omitFieldNames ? '' : 'pairingSecret',
         subBuilder: PairingSecret.create)
-    ..aOM<PairingAuthenticationMessage>(
-        132, _omitFieldNames ? '' : 'pairingAuthMessage',
-        subBuilder: PairingAuthenticationMessage.create)
+    ..aOM<PairingSecretAck>(41, _omitFieldNames ? '' : 'pairingSecretAck',
+        subBuilder: PairingSecretAck.create)
     ..aOM<ErrorMessage>(200, _omitFieldNames ? '' : 'error',
         subBuilder: ErrorMessage.create)
     ..hasRequiredFields = false;
@@ -152,8 +150,8 @@ class OuterMessage extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   @$pb.TagNumber(30)
   @$pb.TagNumber(31)
-  @$pb.TagNumber(130)
-  @$pb.TagNumber(132)
+  @$pb.TagNumber(40)
+  @$pb.TagNumber(41)
   @$pb.TagNumber(200)
   OuterMessage_Message whichMessage() =>
       _OuterMessage_MessageByTag[$_whichOneof(0)]!;
@@ -164,8 +162,8 @@ class OuterMessage extends $pb.GeneratedMessage {
   @$pb.TagNumber(21)
   @$pb.TagNumber(30)
   @$pb.TagNumber(31)
-  @$pb.TagNumber(130)
-  @$pb.TagNumber(132)
+  @$pb.TagNumber(40)
+  @$pb.TagNumber(41)
   @$pb.TagNumber(200)
   void clearMessage() => $_clearField($_whichOneof(0));
 
@@ -265,28 +263,27 @@ class OuterMessage extends $pb.GeneratedMessage {
   @$pb.TagNumber(31)
   PairingConfigurationAck ensurePairingConfigurationAck() => $_ensure(8);
 
-  @$pb.TagNumber(130)
+  @$pb.TagNumber(40)
   PairingSecret get pairingSecret => $_getN(9);
-  @$pb.TagNumber(130)
-  set pairingSecret(PairingSecret value) => $_setField(130, value);
-  @$pb.TagNumber(130)
+  @$pb.TagNumber(40)
+  set pairingSecret(PairingSecret value) => $_setField(40, value);
+  @$pb.TagNumber(40)
   $core.bool hasPairingSecret() => $_has(9);
-  @$pb.TagNumber(130)
-  void clearPairingSecret() => $_clearField(130);
-  @$pb.TagNumber(130)
+  @$pb.TagNumber(40)
+  void clearPairingSecret() => $_clearField(40);
+  @$pb.TagNumber(40)
   PairingSecret ensurePairingSecret() => $_ensure(9);
 
-  @$pb.TagNumber(132)
-  PairingAuthenticationMessage get pairingAuthMessage => $_getN(10);
-  @$pb.TagNumber(132)
-  set pairingAuthMessage(PairingAuthenticationMessage value) =>
-      $_setField(132, value);
-  @$pb.TagNumber(132)
-  $core.bool hasPairingAuthMessage() => $_has(10);
-  @$pb.TagNumber(132)
-  void clearPairingAuthMessage() => $_clearField(132);
-  @$pb.TagNumber(132)
-  PairingAuthenticationMessage ensurePairingAuthMessage() => $_ensure(10);
+  @$pb.TagNumber(41)
+  PairingSecretAck get pairingSecretAck => $_getN(10);
+  @$pb.TagNumber(41)
+  set pairingSecretAck(PairingSecretAck value) => $_setField(41, value);
+  @$pb.TagNumber(41)
+  $core.bool hasPairingSecretAck() => $_has(10);
+  @$pb.TagNumber(41)
+  void clearPairingSecretAck() => $_clearField(41);
+  @$pb.TagNumber(41)
+  PairingSecretAck ensurePairingSecretAck() => $_ensure(10);
 
   @$pb.TagNumber(200)
   ErrorMessage get error => $_getN(11);
@@ -795,8 +792,8 @@ class PairingConfigurationAck extends $pb.GeneratedMessage {
   static PairingConfigurationAck? _defaultInstance;
 }
 
-class PairingAuthenticationMessage extends $pb.GeneratedMessage {
-  factory PairingAuthenticationMessage({
+class PairingSecretAck extends $pb.GeneratedMessage {
+  factory PairingSecretAck({
     $core.List<$core.int>? secret,
   }) {
     final result = create();
@@ -804,17 +801,17 @@ class PairingAuthenticationMessage extends $pb.GeneratedMessage {
     return result;
   }
 
-  PairingAuthenticationMessage._();
+  PairingSecretAck._();
 
-  factory PairingAuthenticationMessage.fromBuffer($core.List<$core.int> data,
+  factory PairingSecretAck.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory PairingAuthenticationMessage.fromJson($core.String json,
+  factory PairingSecretAck.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'PairingAuthenticationMessage',
+      _omitMessageNames ? '' : 'PairingSecretAck',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'pairing'),
       createEmptyInstance: create)
     ..a<$core.List<$core.int>>(
@@ -822,28 +819,25 @@ class PairingAuthenticationMessage extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PairingAuthenticationMessage clone() => deepCopy();
+  PairingSecretAck clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PairingAuthenticationMessage copyWith(
-          void Function(PairingAuthenticationMessage) updates) =>
-      super.copyWith(
-              (message) => updates(message as PairingAuthenticationMessage))
-          as PairingAuthenticationMessage;
+  PairingSecretAck copyWith(void Function(PairingSecretAck) updates) =>
+      super.copyWith((message) => updates(message as PairingSecretAck))
+          as PairingSecretAck;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static PairingAuthenticationMessage create() =>
-      PairingAuthenticationMessage._();
+  static PairingSecretAck create() => PairingSecretAck._();
   @$core.override
-  PairingAuthenticationMessage createEmptyInstance() => create();
-  static $pb.PbList<PairingAuthenticationMessage> createRepeated() =>
-      $pb.PbList<PairingAuthenticationMessage>();
+  PairingSecretAck createEmptyInstance() => create();
+  static $pb.PbList<PairingSecretAck> createRepeated() =>
+      $pb.PbList<PairingSecretAck>();
   @$core.pragma('dart2js:noInline')
-  static PairingAuthenticationMessage getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<PairingAuthenticationMessage>(create);
-  static PairingAuthenticationMessage? _defaultInstance;
+  static PairingSecretAck getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PairingSecretAck>(create);
+  static PairingSecretAck? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.List<$core.int> get secret => $_getN(0);

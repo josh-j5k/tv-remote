@@ -129,7 +129,7 @@ const OuterMessage$json = {
     },
     {
       '1': 'pairing_secret',
-      '3': 130,
+      '3': 40,
       '4': 1,
       '5': 11,
       '6': '.pairing.PairingSecret',
@@ -137,13 +137,13 @@ const OuterMessage$json = {
       '10': 'pairingSecret'
     },
     {
-      '1': 'pairing_auth_message',
-      '3': 132,
+      '1': 'pairing_secret_ack',
+      '3': 41,
       '4': 1,
       '5': 11,
-      '6': '.pairing.PairingAuthenticationMessage',
+      '6': '.pairing.PairingSecretAck',
       '9': 0,
-      '10': 'pairingAuthMessage'
+      '10': 'pairingSecretAck'
     },
     {
       '1': 'error',
@@ -173,11 +173,10 @@ final $typed_data.Uint8List outerMessageDescriptor = $convert.base64Decode(
     'cGFpcmluZ19jb25maWd1cmF0aW9uGB4gASgLMh0ucGFpcmluZy5QYWlyaW5nQ29uZmlndXJhdG'
     'lvbkgAUhRwYWlyaW5nQ29uZmlndXJhdGlvbhJeChlwYWlyaW5nX2NvbmZpZ3VyYXRpb25fYWNr'
     'GB8gASgLMiAucGFpcmluZy5QYWlyaW5nQ29uZmlndXJhdGlvbkFja0gAUhdwYWlyaW5nQ29uZm'
-    'lndXJhdGlvbkFjaxJACg5wYWlyaW5nX3NlY3JldBiCASABKAsyFi5wYWlyaW5nLlBhaXJpbmdT'
-    'ZWNyZXRIAFINcGFpcmluZ1NlY3JldBJaChRwYWlyaW5nX2F1dGhfbWVzc2FnZRiEASABKAsyJS'
-    '5wYWlyaW5nLlBhaXJpbmdBdXRoZW50aWNhdGlvbk1lc3NhZ2VIAFIScGFpcmluZ0F1dGhNZXNz'
-    'YWdlEi4KBWVycm9yGMgBIAEoCzIVLnBhaXJpbmcuRXJyb3JNZXNzYWdlSABSBWVycm9yQgkKB2'
-    '1lc3NhZ2U=');
+    'lndXJhdGlvbkFjaxI/Cg5wYWlyaW5nX3NlY3JldBgoIAEoCzIWLnBhaXJpbmcuUGFpcmluZ1Nl'
+    'Y3JldEgAUg1wYWlyaW5nU2VjcmV0EkkKEnBhaXJpbmdfc2VjcmV0X2FjaxgpIAEoCzIZLnBhaX'
+    'JpbmcuUGFpcmluZ1NlY3JldEFja0gAUhBwYWlyaW5nU2VjcmV0QWNrEi4KBWVycm9yGMgBIAEo'
+    'CzIVLnBhaXJpbmcuRXJyb3JNZXNzYWdlSABSBWVycm9yQgkKB21lc3NhZ2U=');
 
 @$core.Deprecated('Use pairingRequestDescriptor instead')
 const PairingRequest$json = {
@@ -301,18 +300,17 @@ const PairingConfigurationAck$json = {
 final $typed_data.Uint8List pairingConfigurationAckDescriptor =
     $convert.base64Decode('ChdQYWlyaW5nQ29uZmlndXJhdGlvbkFjaw==');
 
-@$core.Deprecated('Use pairingAuthenticationMessageDescriptor instead')
-const PairingAuthenticationMessage$json = {
-  '1': 'PairingAuthenticationMessage',
+@$core.Deprecated('Use pairingSecretAckDescriptor instead')
+const PairingSecretAck$json = {
+  '1': 'PairingSecretAck',
   '2': [
     {'1': 'secret', '3': 1, '4': 1, '5': 12, '10': 'secret'},
   ],
 };
 
-/// Descriptor for `PairingAuthenticationMessage`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List pairingAuthenticationMessageDescriptor =
-    $convert.base64Decode(
-        'ChxQYWlyaW5nQXV0aGVudGljYXRpb25NZXNzYWdlEhYKBnNlY3JldBgBIAEoDFIGc2VjcmV0');
+/// Descriptor for `PairingSecretAck`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingSecretAckDescriptor = $convert
+    .base64Decode('ChBQYWlyaW5nU2VjcmV0QWNrEhYKBnNlY3JldBgBIAEoDFIGc2VjcmV0');
 
 @$core.Deprecated('Use encodingDescriptor instead')
 const Encoding$json = {

@@ -8,11 +8,9 @@ Future<void> discoverDIALDevices() async {
   disc.quickDiscoverClients().listen((client) async {
     try {
       final dev = await client.getDevice();
-      print('Found device: ${dev!.friendlyName}: ${dev.udn}');
-      print('Found device: ${dev.deviceType}: ${dev.urlBase}');
     } catch (e, stack) {
-      print('ERROR: $e - ${client.location}');
-      print(stack);
+      // print('ERROR: $e - ${client.location}');
+      // print(stack);
     }
   });
 }

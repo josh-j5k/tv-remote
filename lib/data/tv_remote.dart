@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 // import 'package:pointycastle/export.dart';
 import 'package:asn1lib/asn1lib.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:pointycastle/export.dart';
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
@@ -34,6 +36,7 @@ class TvRemoteClient {
   bool _isPaired = false;
   bool _isConnected = false;
   dynamic secret;
+  Timer? _keepAliveTimer;
   TvRemoteClient({required this.host, this.handleMessage});
 
   /// Initialize: Check for stored certificate or generate new one
@@ -298,59 +301,97 @@ class TvRemoteClient {
   Future<void> _processBuffer() async {
     while (_buffer.isNotEmpty) {
       try {
-        // Read varint length prefix
-        int messageLength = 0;
-        int shift = 0;
-        int varintBytes = 0;
-
-        // Parse the varint
-        for (int i = 0; i < _buffer.length && i < 5; i++) {
-          int byte = _buffer[i];
-          messageLength |= (byte & 0x7F) << shift;
-          varintBytes++;
-
-          if ((byte & 0x80) == 0) {
-            // Varint complete (bit 7 is not set)
-            break;
-          }
-          shift += 7;
-        }
-
-        // Check if we have enough bytes for the complete message
-        int totalBytesNeeded = varintBytes + messageLength;
-        if (_buffer.length < totalBytesNeeded) {
-          print(
-            '⏳ Waiting for more data. Have ${_buffer.length}, need $totalBytesNeeded bytes',
-          );
-          return; // Wait for more data
-        }
-
-        // Extract the message
-        final messageBytes = Uint8List.fromList(
-          _buffer.sublist(varintBytes, varintBytes + messageLength),
-        );
-
-        print(
-          '✂️ Extracted message: length=$messageLength, varintBytes=$varintBytes',
-        );
-
-        // Remove processed bytes from _buffer
-        _buffer = _buffer.sublist(totalBytesNeeded);
         if (_isPaired) {
-          final msg = RemoteMessage.fromBuffer(messageBytes);
-          _handleCommandMessage(msg);
+          int messageLength = 0;
+          int shift = 0;
+          int varintBytes = 0;
+
+          for (int i = 0; i < _buffer.length && i < 5; i++) {
+            int byte = _buffer[i];
+            messageLength |= (byte & 0x7F) << shift;
+            varintBytes++;
+
+            if ((byte & 0x80) == 0) {
+              break; // Varint complete
+            }
+            shift += 7;
+          }
+
+          int totalBytesNeeded = varintBytes + messageLength;
+          if (_buffer.length < totalBytesNeeded) {
+            print(
+              '⏳ Waiting for more data. Have ${_buffer.length}, need $totalBytesNeeded bytes',
+            );
+            return;
+          }
+
+          final messageBytes = Uint8List.fromList(
+            _buffer.sublist(varintBytes, varintBytes + messageLength),
+          );
+
+          print(
+            '✂️ Extracted command message: length=$messageLength, varintBytes=$varintBytes',
+          );
+          print(
+            '   First 50 bytes: ${messageBytes.take(50).map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+          );
+          try {
+            final msg = RemoteMessage.fromBuffer(messageBytes);
+            print('✅ Successfully parsed RemoteMessage');
+            _handleCommandMessage(msg);
+          } catch (e, stackTrace) {
+            print('❌ Failed to parse RemoteMessage: $e');
+            print('   Stack trace: $stackTrace');
+            // Print the problematic bytes for debugging
+            print(
+              '   Problematic message: ${messageBytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+            );
+          }
+
+          // Remove processed bytes
+          _buffer = _buffer.sublist(totalBytesNeeded);
+          return;
         } else {
+          // Port 6467: Has varint length prefix
+          int messageLength = 0;
+          int shift = 0;
+          int varintBytes = 0;
+
+          for (int i = 0; i < _buffer.length && i < 5; i++) {
+            int byte = _buffer[i];
+            messageLength |= (byte & 0x7F) << shift;
+            varintBytes++;
+
+            if ((byte & 0x80) == 0) {
+              break;
+            }
+            shift += 7;
+          }
+
+          int totalBytesNeeded = varintBytes + messageLength;
+          if (_buffer.length < totalBytesNeeded) {
+            print(
+              '⏳ Waiting for more data. Have ${_buffer.length}, need $totalBytesNeeded bytes',
+            );
+            return;
+          }
+
+          final messageBytes = Uint8List.fromList(
+            _buffer.sublist(varintBytes, varintBytes + messageLength),
+          );
+
+          print(
+            '✂️ Extracted pairing message: length=$messageLength, varintBytes=$varintBytes',
+          );
+
+          _buffer = _buffer.sublist(totalBytesNeeded);
+
           final msg = OuterMessage.fromBuffer(messageBytes);
           handleMessage!(msg);
         }
       } catch (e, stackTrace) {
-        print('⚠️ Error parsing message: $e');
-        print(
-          '   Buffer hex: ${_buffer.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
-        );
-        print(stackTrace);
-
-        // Clear _buffer on error to recover
+        print('⚠️ Error in buffer processing: $e');
+        print('Stack trace: $stackTrace');
         _buffer.clear();
         return;
       }
@@ -372,20 +413,23 @@ class TvRemoteClient {
 
     _pairingSocket?.close();
     _pairingSocket = null;
+    // await connect();
   }
 
   Future<void> _sendClientConfiguration() async {
     // First configuration message
+    final deviceInfo = RemoteDeviceInfo()
+      ..model = "Remote App"
+      ..vendor = "Dart Client"
+      ..unknown1 = 1
+      ..unknown2 = "1"
+      ..packageName = "androidtv-remote"
+      ..appVersion = "1.0.0";
+
     final configure = RemoteConfigure()
       ..code1 =
-          622 // 8, 238, 4 as varint
-      ..deviceInfo = (RemoteDeviceInfo()
-        ..model = 1
-        ..vendor = "1"
-        ..unknown1 = 1
-        ..unknown2 = "1"
-        ..packageName = "androidtv-remote"
-        ..appVersion = "1.0.0");
+          622 // This is the magic value (8, 238, 4 in bytes)
+      ..deviceInfo = deviceInfo;
 
     final message = RemoteMessage()..remoteConfigure = configure;
 
@@ -393,12 +437,11 @@ class TvRemoteClient {
     final lenPrefix = encodeVarint(payload.length);
 
     print('📤 Sending client configuration...');
+    print('   Payload length: ${payload.length}');
+
     _commandSocket!.add([...lenPrefix, ...payload]);
     await _commandSocket!.flush();
-
-    // Wait for response, then send second config
-    // await Future.delayed(Duration(milliseconds: 100));
-    // _sendSecondConfiguration();
+    print('✅ Sent client configuration');
   }
 
   Future<void> _sendSecondConfiguration() async {
@@ -423,36 +466,68 @@ class TvRemoteClient {
       onError: (e) {
         print('❌ Command error: $e');
         _isConnected = false;
+        _keepAliveTimer?.cancel();
       },
       onDone: () {
         print('🔌 Command connection closed');
+        _keepAliveTimer?.cancel();
+        _commandSocket = null;
         _isConnected = false;
       },
+      cancelOnError: false,
     );
+    _keepAliveTimer = Timer.periodic(Duration(seconds: 30), (timer) {
+      if (_commandSocket != null) {
+        _sendClientPing();
+      } else {
+        timer.cancel();
+      }
+    });
   }
 
+  int _lastPingVal1 = 0;
+  Int64 _lastPingVal2 = Int64(0);
   void _handleCommandMessage(RemoteMessage msg) {
-    // Handle different message types
     print('📥 Command message received');
 
-    // Handle different message types
     if (msg.hasRemoteConfigure()) {
-      print('   Type: RemoteConfigure (TV config info)');
-      print('   Model: ${msg.remoteConfigure.deviceInfo.model}');
-      print('   Vendor: ${msg.remoteConfigure.deviceInfo.vendor}');
-      print('   Package: ${msg.remoteConfigure.deviceInfo.packageName}');
-
-      // Send client configuration in response
+      print('   Type: RemoteConfigure');
+      print('   Code1: ${msg.remoteConfigure.code1}');
+      if (msg.remoteConfigure.hasDeviceInfo()) {
+        print('   Model: ${msg.remoteConfigure.deviceInfo.model}');
+        print('   Package: ${msg.remoteConfigure.deviceInfo.packageName}');
+      }
       _sendClientConfiguration();
     } else if (msg.hasRemotePingRequest()) {
-      print('   Type: RemotePingRequest (Keep-alive)');
+      print('   Type: RemotePingRequest');
+      _lastPingVal1 = msg.remotePingRequest.val1;
+      _lastPingVal2 = msg.remotePingRequest.val2;
+      print('   Val1: $_lastPingVal1');
+      print('   Val2: $_lastPingVal2');
       _sendPong();
     } else if (msg.hasRemoteSetActive()) {
       print('   Type: RemoteSetActive');
-      // Send second configuration
       _sendSecondConfiguration();
+    } else if (msg.hasRemotePingRequest()) {
+      print('   Type: RemotePingRequest');
+      print('   Val: ${msg.remotePingRequest.val1}');
+      _sendPong();
+    } else if (msg.hasRemoteSetActive()) {
+      print('   Type: RemoteSetActive');
+      _sendSecondConfiguration();
+    } else if (msg.hasRemotePowerStatus()) {
+      print('   Type: RemotePowerStatus');
+      print('   Powered on: ${msg.remotePowerStatus.isPoweredOn}');
+    } else if (msg.hasRemoteAppInfo()) {
+      print('   Type: RemoteAppInfo');
+      print('   App: ${msg.remoteAppInfo.appPackage}');
+    } else if (msg.hasRemoteError()) {
+      print('   Type: RemoteError');
+    } else {
+      print('   Unknown message type');
+      // Print raw bytes to debug
+      print('   Message fields: ${msg.toString()}');
     }
-    // Handle other messages...
   }
 
   Future<void> sendKeyCommand(RemoteKeyInject_RemoteKeyCode keyCode) async {
@@ -460,7 +535,7 @@ class TvRemoteClient {
       print('❌ Not connected to command port');
       return;
     }
-
+    print("connected, sending key command...");
     // Send key press
     final pressMessage = RemoteMessage()
       ..remoteKeyInject = (RemoteKeyInject()
@@ -493,12 +568,22 @@ class TvRemoteClient {
 
   Future<void> _sendPong() async {
     final pong = RemoteMessage()
-      ..remotePingResponse = (RemotePingResponse()..val1 = 25);
+      ..remotePingResponse = (RemotePingResponse()
+        ..val1 = _lastPingVal1
+        ..val2 = _lastPingVal2);
 
     final payload = pong.writeToBuffer();
-    // NO length prefix for pong
-    _commandSocket!.add(payload);
+    final lenPrefix = encodeVarint(payload.length);
+
+    print('📤 Sending pong...');
+    print('   Val1: $_lastPingVal1, Val2: $_lastPingVal2');
+    print(
+      '   Payload hex: ${payload.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}',
+    );
+
+    _commandSocket!.add([...lenPrefix, ...payload]);
     await _commandSocket!.flush();
+    print('✅ Pong sent');
   }
 
   // Launch an app (e.g., Netflix)
@@ -513,6 +598,20 @@ class TvRemoteClient {
     await _commandSocket!.flush();
 
     print('✅ Launched app: $deeplink');
+  }
+
+  Future<void> _sendClientPing() async {
+    if (_commandSocket == null) return;
+
+    final ping = RemoteMessage()
+      ..remotePingRequest = (RemotePingRequest()..val1 = 1);
+
+    final payload = ping.writeToBuffer();
+    final lenPrefix = encodeVarint(payload.length);
+
+    print('🏓 Sending keep-alive ping...');
+    _commandSocket!.add([...lenPrefix, ...payload]);
+    await _commandSocket!.flush();
   }
 
   Future<void> _generateClientCertificate() async {
@@ -556,17 +655,21 @@ class TvRemoteClient {
     print('🔑 Extracting keys from stored certificate...\n');
     try {
       // Extract private key from PEM
-      _clientPrivateKey = CryptoUtils.rsaPrivateKeyFromPem(keyPem);
+      _clientPrivateKey = _parsePrivateKeyFromPem(keyPem);
       print('✅ Extracted private key\n');
 
       // Extract public key from certificate
-      final x509Cert = X509Utils.x509CertificateFromPem(certPem);
-      final pubKeyData = x509Cert.tbsCertificate!.subjectPublicKeyInfo.bytes;
+      final parsed = X509Utils.x509CertificateFromPem(certPem);
 
-      _clientPublicKey = _parsePublicKey(pubKeyData!);
+      final pubKeyData = parsed.tbsCertificate!.subjectPublicKeyInfo; // type
+      final key = _parsePublicKey(pubKeyData.bytes!);
+
+      _clientPublicKey = key;
       print('✅ Extracted public key from certificate\n');
-    } catch (e) {
-      print('❌ Error extracting keys: $e\n');
+    } catch (e, st) {
+      print('❌ Error extracting keys: $e');
+      print('Stack trace: $st\n');
+
       rethrow;
     }
   }
@@ -777,57 +880,6 @@ class TvRemoteClient {
     return parser.parse(pem) as RSAPublicKey;
   }
 
-  // Future<List<int>> _encodeSecret(String pin) async {
-  //   if (pin.length != 6) {
-  //     throw Exception('PIN must be exactly 6 hex characters');
-  //   }
-
-  //   print('🔐 Encoding secret for PIN: $pin\n');
-
-  //   final digest = SHA256Digest();
-
-  //   final clientModulus = _removeLeadingZeros(
-  //     _bigIntToBytes(_clientPublicKey!.modulus!),
-  //   );
-  //   final clientExponent = _removeLeadingZeros(
-  //     _bigIntToBytes(_clientPublicKey!.exponent!),
-  //   );
-  //   final serverModulus = _removeLeadingZeros(
-  //     _bigIntToBytes(_serverPublicKey!.modulus!),
-  //   );
-  //   final serverExponent = _removeLeadingZeros(
-  //     _bigIntToBytes(_serverPublicKey!.exponent!),
-  //   );
-
-  //   digest.update(Uint8List.fromList(clientModulus), 0, clientModulus.length);
-  //   digest.update(Uint8List.fromList(clientExponent), 0, clientExponent.length);
-  //   digest.update(Uint8List.fromList(serverModulus), 0, serverModulus.length);
-  //   digest.update(Uint8List.fromList(serverExponent), 0, serverExponent.length);
-
-  //   // CRITICAL: Use LAST 4 hex characters (2 bytes) - substr($code, 2, 4) in PHP
-  //   final gamma = pin.substring(2); // "2DD950" -> "D950"
-  //   final gammaBytes = <int>[];
-  //   for (var i = 0; i < gamma.length; i += 2) {
-  //     gammaBytes.add(int.parse(gamma.substring(i, i + 2), radix: 16));
-  //   }
-
-  //   print('📌 Using last 4 chars of PIN: "$gamma"');
-  //   print(
-  //     '📌 Gamma bytes (2 bytes): ${gammaBytes.map((b) => '0x${b.toRadixString(16).padLeft(2, '0')}').join(' ')}\n',
-  //   );
-
-  //   digest.update(Uint8List.fromList(gammaBytes), 0, gammaBytes.length);
-
-  //   final hash = Uint8List(digest.digestSize);
-  //   digest.doFinal(hash, 0);
-
-  //   print(
-  //     '✅ Computed hash: ${hash.take(16).map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}\n',
-  //   );
-
-  //   return hash.toList();
-  // }
-
   Future<List<int>> _encodeSecret(String pin) async {
     print('🔐 Encoding secret for PIN: $pin\n');
 
@@ -884,53 +936,53 @@ class TvRemoteClient {
     } else {
       print('✅ Hash validation passed!\n');
     }
-
-    // Use OAEPEncoding which implements AsymmetricBlockCipher
-    final encryptor = OAEPEncoding(RSAEngine())
-      ..init(true, PublicKeyParameter<RSAPublicKey>(_serverPublicKey!));
-
-    try {
-      print('🔐 Encrypting hash with RSA...');
-
-      // Pass the encryptor (AsymmetricBlockCipher) and the hash (Uint8List)
-      final encryptedSecret = _processInBlocks(encryptor, hash);
-
-      print(
-        '📦 Encrypted Secret Length: ${encryptedSecret.length} bytes (Should be 256)',
-      );
-
-      return encryptedSecret.toList();
-    } catch (e) {
-      print('❌ Encryption failed: $e');
-      rethrow;
-    }
+    return hash.toList();
   }
 }
 
-/// Helper to process data with PointyCastle engines
-Uint8List _processInBlocks(AsymmetricBlockCipher engine, Uint8List input) {
-  final numBlocks = (input.length / engine.inputBlockSize).ceil();
-  final output = Uint8List(numBlocks * engine.outputBlockSize);
-  var inputOffset = 0;
-  var outputOffset = 0;
+RSAPrivateKey _parsePrivateKeyFromPem(String keyPem) {
+  // Remove PEM headers and decode base64
+  final keyContent = keyPem
+      .replaceAll('-----BEGIN RSA PRIVATE KEY-----', '')
+      .replaceAll('-----END RSA PRIVATE KEY-----', '')
+      .replaceAll('-----BEGIN PRIVATE KEY-----', '')
+      .replaceAll('-----END PRIVATE KEY-----', '')
+      .replaceAll('\n', '')
+      .replaceAll('\r', '')
+      .trim();
 
-  while (inputOffset < input.length) {
-    final chunkSize = (inputOffset + engine.inputBlockSize <= input.length)
-        ? engine.inputBlockSize
-        : input.length - inputOffset;
+  final keyBytes = base64.decode(keyContent);
 
-    outputOffset += engine.processBlock(
-      input,
-      inputOffset,
-      chunkSize,
-      output,
-      outputOffset,
-    );
+  // Parse ASN.1 structure
+  final asn1Parser = ASN1Parser(keyBytes);
+  final topLevelSeq = asn1Parser.nextObject() as ASN1Sequence;
 
-    inputOffset += chunkSize;
+  // PKCS#1 RSAPrivateKey has 9 elements
+  // PKCS#8 PrivateKeyInfo has 3 elements
+  if (topLevelSeq.elements.length == 9) {
+    // PKCS#1 format
+    return _parsePKCS1PrivateKey(topLevelSeq);
+  } else if (topLevelSeq.elements.length == 3) {
+    // PKCS#8 format - extract the inner PKCS#1 key
+    final privateKeyOctetString = topLevelSeq.elements[2] as ASN1OctetString;
+    final innerParser = ASN1Parser(privateKeyOctetString.octets);
+    final innerSeq = innerParser.nextObject() as ASN1Sequence;
+    return _parsePKCS1PrivateKey(innerSeq);
+  } else {
+    throw FormatException('Unknown private key format');
   }
+}
 
-  return output.sublist(0, outputOffset);
+RSAPrivateKey _parsePKCS1PrivateKey(ASN1Sequence sequence) {
+  // PKCS#1 RSAPrivateKey structure:
+  // version, modulus, publicExponent, privateExponent, prime1, prime2, exp1, exp2, coefficient
+  final modulus = (sequence.elements[1] as ASN1Integer).valueAsBigInteger;
+  final privateExponent =
+      (sequence.elements[3] as ASN1Integer).valueAsBigInteger;
+  final p = (sequence.elements[4] as ASN1Integer).valueAsBigInteger;
+  final q = (sequence.elements[5] as ASN1Integer).valueAsBigInteger;
+
+  return RSAPrivateKey(modulus, privateExponent, p, q);
 }
 
 Uint8List _bigIntToBytes(BigInt bigInt) {
@@ -945,27 +997,6 @@ Uint8List _bigIntToBytes(BigInt bigInt) {
       (i) => int.parse(hex.substring(i * 2, i * 2 + 2), radix: 16),
     ),
   );
-}
-// Uint8List _bigIntToBytes(BigInt number) {
-//   var bytes = <int>[];
-//   var temp = number;
-
-//   while (temp > BigInt.zero) {
-//     bytes.insert(0, (temp & BigInt.from(0xff)).toInt());
-//     temp = temp >> 8;
-//   }
-
-//   return Uint8List.fromList(bytes.isEmpty ? [0] : bytes);
-// }
-
-Uint8List _removeLeadingZeros(Uint8List bytes) {
-  // For RSA modulus, remove ALL leading zeros
-  // The modulus should be exactly the byte length of the key size
-  int start = 0;
-  while (start < bytes.length && bytes[start] == 0) {
-    start++;
-  }
-  return bytes.sublist(start);
 }
 
 List<int> _hexToBytes(String hex) {

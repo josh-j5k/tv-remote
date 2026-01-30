@@ -14,8 +14,8 @@ message OuterMessage {
     PairingOptionsAck pairing_option_ack = 21;     // Tag 170,1 = field 21
     PairingConfiguration pairing_configuration = 30; // Tag 242,1 = field 30
     PairingConfigurationAck pairing_configuration_ack = 31; // Tag 250,1 = field 31
-    PairingSecret pairing_secret = 130;            // Tag 194,2 = field 130  
-     PairingAuthenticationMessage pairing_auth_message = 132;
+    PairingSecret pairing_secret = 40; 
+    PairingSecretAck pairing_secret_ack = 41;
     ErrorMessage error = 200;
   }
 }
@@ -65,7 +65,7 @@ message PairingConfiguration {
 
 message PairingConfigurationAck {}
 
-message PairingAuthenticationMessage {
+message PairingSecretAck {
   bytes secret = 1;  // The encoded secret from pairing
 }
 message Encoding {

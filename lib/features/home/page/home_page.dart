@@ -1,6 +1,8 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:remote_app/data/tv_remote.dart';
 import 'package:remote_app/features/home/logic/notifier.dart';
+import 'package:remote_app/features/home/page/custom_clipper.dart';
 import 'package:remote_app/features/welcome/page/welcome_page.dart';
 import 'package:remote_app/features/home/logic/observer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +22,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
   ModalRoute? _route;
   TvRemoteClient? _remoteClient;
   SharedPreferences? _prefs;
-  final data = appDataNotifier.value;
   bool _isMuted = false;
   @override
   void initState() {
@@ -48,12 +49,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Future<void> initializeRemoteClient() async {
-    if (data['host'] != null) {
-      _remoteClient = TvRemoteClient(host: data['host']);
+    if (appDataNotifier.value['host'] != null) {
+      _remoteClient = TvRemoteClient(host: appDataNotifier.value['host']);
       final alreadyPaired = await _remoteClient!.initialize();
       if (!alreadyPaired) {
         return;
       }
+      print('Connecting to TV...');
       _remoteClient!.connect();
     }
   }
@@ -153,7 +155,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
                             onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
+                              await _remoteClient!.sendKeyCommand(
                                 RemoteKeyInject_RemoteKeyCode.KEYCODE_POWER,
                               );
                             },
@@ -170,12 +172,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
                             onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_SETTINGS,
+                              await _remoteClient!.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_TV_INPUT,
                               );
                             },
                             child: Icon(
-                              Icons.settings,
+                              Icons.input,
                               size: 30,
                               color: btnTextColor,
                             ),
@@ -211,7 +213,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                   ),
 
                                   onPressed: () async {
-                                    await _remoteClient?.sendKeyCommand(
+                                    await _remoteClient!.sendKeyCommand(
                                       RemoteKeyInject_RemoteKeyCode
                                           .KEYCODE_CHANNEL_UP,
                                     );
@@ -256,7 +258,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                   ),
 
                                   onPressed: () async {
-                                    await _remoteClient?.sendKeyCommand(
+                                    await _remoteClient!.sendKeyCommand(
                                       RemoteKeyInject_RemoteKeyCode
                                           .KEYCODE_CHANNEL_DOWN,
                                     );
@@ -295,7 +297,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                         ),
                                       ),
                                       onPressed: () async {
-                                        await _remoteClient?.sendKeyCommand(
+                                        await _remoteClient!.sendKeyCommand(
                                           RemoteKeyInject_RemoteKeyCode
                                               .KEYCODE_TV_SATELLITE,
                                         );
@@ -324,7 +326,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                       ),
                                       onPressed: () async {
                                         if (_isMuted) {
-                                          await _remoteClient?.sendKeyCommand(
+                                          await _remoteClient!.sendKeyCommand(
                                             RemoteKeyInject_RemoteKeyCode
                                                 .KEYCODE_VOLUME_UP,
                                           );
@@ -332,7 +334,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                             _isMuted = false;
                                           });
                                         } else {
-                                          await _remoteClient?.sendKeyCommand(
+                                          await _remoteClient!.sendKeyCommand(
                                             RemoteKeyInject_RemoteKeyCode
                                                 .KEYCODE_MUTE,
                                           );
@@ -412,7 +414,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                   ),
 
                                   onPressed: () async {
-                                    await _remoteClient?.sendKeyCommand(
+                                    await _remoteClient!.sendKeyCommand(
                                       RemoteKeyInject_RemoteKeyCode
                                           .KEYCODE_VOLUME_UP,
                                     );
@@ -482,6 +484,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
                       padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -490,14 +493,46 @@ class _HomePageState extends State<HomePage> with RouteAware {
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
                             onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_MENU,
+                              await _remoteClient!.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_SETTINGS,
                               );
                             },
                             child: Icon(
-                              Icons.menu,
+                              Icons.settings,
                               size: 30,
                               color: btnTextColor,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 50.0, 0, 0.0),
+                            child: SizedBox(
+                              width: 80.0,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: btnBgColor,
+
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                ),
+                                onPressed: () async {
+                                  await _remoteClient!.sendKeyCommand(
+                                    RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_DPAD_UP,
+                                  );
+                                },
+                                child: Transform.rotate(
+                                  angle: -pi / 2,
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                    size: 30,
+                                    color: btnTextColor,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                           ElevatedButton(
@@ -507,7 +542,167 @@ class _HomePageState extends State<HomePage> with RouteAware {
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
                             onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
+                              await _remoteClient!.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_HOME,
+                              );
+                            },
+                            child: Icon(
+                              Icons.home,
+                              size: 30,
+                              color: btnTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 10.0, 0, 0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 10.0,
+                        children: [
+                          SizedBox(
+                            width: 80.0,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: btnBgColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                ),
+                                minimumSize: Size(40.0, 40.0),
+                                padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
+                              ),
+                              onPressed: () async {
+                                await _remoteClient!.sendKeyCommand(
+                                  RemoteKeyInject_RemoteKeyCode
+                                      .KEYCODE_DPAD_LEFT,
+                                );
+                              },
+                              child: Transform.rotate(
+                                angle: -pi / 1,
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  size: 30,
+                                  color: btnTextColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: btnBgColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(50.0),
+                                ),
+                              ),
+                              // minimumSize: Size(30.0, 30.0),
+                              padding: EdgeInsets.all(25.5),
+                            ),
+                            onPressed: () async {
+                              await _remoteClient!.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode
+                                    .KEYCODE_DPAD_CENTER,
+                              );
+                            },
+                            child: Text("OK", style: TextStyle(fontSize: 20.0)),
+                          ),
+                          SizedBox(
+                            width: 80.0,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: btnBgColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                ),
+                                // minimumSize: Size(40.0, 40.0),
+                                padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
+                              ),
+                              onPressed: () async {
+                                await _remoteClient!.sendKeyCommand(
+                                  RemoteKeyInject_RemoteKeyCode
+                                      .KEYCODE_DPAD_RIGHT,
+                                );
+                              },
+                              child: Icon(
+                                Icons.play_arrow,
+                                size: 30,
+                                color: btnTextColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 10.0, 0, 0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: btnBgColor,
+                              minimumSize: Size(40.0, 40.0),
+                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
+                            ),
+                            onPressed: () async {
+                              await _remoteClient!.sendKeyCommand(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_MENU,
+                              );
+                            },
+                            child: Icon(
+                              Icons.menu,
+                              size: 30,
+                              color: btnTextColor,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 50.0),
+                            child: SizedBox(
+                              width: 80.0,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: btnBgColor,
+
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                                ),
+                                onPressed: () async {
+                                  await _remoteClient!.sendKeyCommand(
+                                    RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_DPAD_DOWN,
+                                  );
+                                },
+                                child: Transform.rotate(
+                                  angle: pi / 2,
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                    size: 30,
+                                    color: btnTextColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color.fromARGB(255, 18, 18, 18),
+                              minimumSize: Size(40, 40),
+                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
+                            ),
+                            onPressed: () async {
+                              await _remoteClient!.sendKeyCommand(
                                 RemoteKeyInject_RemoteKeyCode.KEYCODE_BACK,
                               );
                             },
@@ -520,159 +715,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         ],
                       ),
                     ),
+
                     Padding(
-                      padding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                      child: Container(
-                        clipBehavior: Clip.hardEdge,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(66, 150, 131, 131),
-                          // borderRadius: BorderRadius.circular(50.0),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Column(
-                          children: [
-                            Center(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: btnBgColor,
-                                  minimumSize: Size(40.0, 40.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(),
-                                  ),
-                                  padding: EdgeInsets.fromLTRB(
-                                    100,
-                                    22,
-                                    100,
-                                    22,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  await _remoteClient?.sendKeyCommand(
-                                    RemoteKeyInject_RemoteKeyCode
-                                        .KEYCODE_DPAD_UP,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.keyboard_arrow_up,
-                                  size: 30,
-                                  color: btnTextColor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0.0, 0, 0.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: btnBgColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(),
-                                      ),
-                                      minimumSize: Size(40.0, 40.0),
-                                      padding: EdgeInsets.fromLTRB(
-                                        35,
-                                        30,
-                                        27,
-                                        30,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      await _remoteClient?.sendKeyCommand(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_DPAD_LEFT,
-                                      );
-                                    },
-                                    child: Icon(
-                                      Icons.keyboard_arrow_left,
-                                      size: 30,
-                                      color: btnTextColor,
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: btnBgColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(),
-                                      ),
-                                      minimumSize: Size(40.0, 40.0),
-                                      padding: EdgeInsets.all(30.5),
-                                    ),
-                                    onPressed: () async {
-                                      await _remoteClient?.sendKeyCommand(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_DPAD_CENTER,
-                                      );
-                                    },
-                                    child: Text(
-                                      "OK",
-                                      style: TextStyle(fontSize: 20.0),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: btnBgColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(),
-                                      ),
-                                      minimumSize: Size(40.0, 40.0),
-                                      padding: EdgeInsets.fromLTRB(
-                                        35,
-                                        30,
-                                        27,
-                                        30,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      await _remoteClient?.sendKeyCommand(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_DPAD_RIGHT,
-                                      );
-                                    },
-                                    child: Icon(
-                                      Icons.keyboard_arrow_right,
-                                      size: 30,
-                                      color: btnTextColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Center(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: btnBgColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(),
-                                  ),
-                                  minimumSize: Size(40.0, 40.0),
-                                  padding: EdgeInsets.fromLTRB(
-                                    100,
-                                    22,
-                                    100,
-                                    22,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  await _remoteClient?.sendKeyCommand(
-                                    RemoteKeyInject_RemoteKeyCode
-                                        .KEYCODE_DPAD_DOWN,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.keyboard_arrow_down,
-                                  size: 30,
-                                  color: btnTextColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 30.0, 0, 30.0),
+                      padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0.0),
                       child: Container(
                         // padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
                         decoration: BoxDecoration(
@@ -680,38 +725,16 @@ class _HomePageState extends State<HomePage> with RouteAware {
                           color: btnBgColor,
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: btnBgColor,
-                                minimumSize: Size(40, 40),
+                                // minimumSize: Size(40, 40),
                                 padding: EdgeInsets.fromLTRB(
                                   25.0,
                                   12.0,
-                                  25.0,
-                                  12.0,
-                                ),
-                              ),
-                              onPressed: () async {
-                                await _remoteClient?.sendKeyCommand(
-                                  RemoteKeyInject_RemoteKeyCode.KEYCODE_HOME,
-                                );
-                              },
-                              child: Icon(
-                                Icons.home,
-                                size: 30,
-                                color: btnTextColor,
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: btnBgColor,
-                                minimumSize: Size(40, 40),
-                                padding: EdgeInsets.fromLTRB(
-                                  25.0,
-                                  12.0,
-                                  25.0,
+                                  15.0,
                                   12.0,
                                 ),
                               ),
@@ -722,14 +745,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
                                 color: btnTextColor,
                               ),
                             ),
+
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: btnBgColor,
-                                minimumSize: Size(40, 40),
+                                // minimumSize: Size(40, 40),
                                 padding: EdgeInsets.fromLTRB(
-                                  25.0,
+                                  10.0,
                                   12.0,
-                                  25.0,
+                                  10.0,
                                   12.0,
                                 ),
                               ),
@@ -745,19 +769,48 @@ class _HomePageState extends State<HomePage> with RouteAware {
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: btnBgColor,
-                                minimumSize: Size(40.0, 40.0),
+                                minimumSize: Size(40, 40),
                                 padding: EdgeInsets.fromLTRB(
-                                  25.0,
+                                  14.0,
                                   12.0,
-                                  25.0,
+                                  14.0,
                                   12.0,
                                 ),
                               ),
-                              onPressed: () async {},
+                              onPressed: () async {
+                                await _remoteClient!.launchApp(
+                                  "https://www.netflix.com/title",
+                                );
+                              },
                               child: Text(
-                                "Exit",
+                                "NETFLIX",
                                 style: TextStyle(
-                                  fontSize: 22.0,
+                                  fontSize: 20.0,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                                minimumSize: Size(40.0, 40.0),
+                                padding: EdgeInsets.fromLTRB(
+                                  15.0,
+                                  12.0,
+                                  15.0,
+                                  12.0,
+                                ),
+                              ),
+                              onPressed: () async {
+                                await _remoteClient!.launchApp(
+                                  "https://www.youtube.com",
+                                );
+                              },
+                              child: Text(
+                                "YouTube",
+                                style: TextStyle(
+                                  fontSize: 20.0,
                                   color: btnTextColor,
                                 ),
                               ),
@@ -766,18 +819,26 @@ class _HomePageState extends State<HomePage> with RouteAware {
                         ),
                       ),
                     ),
-                    Center(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 18, 18, 18),
-                          minimumSize: Size(40, 40),
-                          padding: EdgeInsets.fromLTRB(25.0, 12.0, 25.0, 12.0),
-                        ),
-                        onPressed: () {},
-                        child: Icon(
-                          Icons.settings_remote,
-                          size: 30,
-                          color: btnTextColor,
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0.0),
+                      child: Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 18, 18, 18),
+                            minimumSize: Size(40, 40),
+                            padding: EdgeInsets.fromLTRB(
+                              25.0,
+                              12.0,
+                              25.0,
+                              12.0,
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Icon(
+                            Icons.settings_remote,
+                            size: 30,
+                            color: btnTextColor,
+                          ),
                         ),
                       ),
                     ),
