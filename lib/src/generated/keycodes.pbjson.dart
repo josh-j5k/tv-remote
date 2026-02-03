@@ -68,6 +68,15 @@ const RemoteMessage$json = {
       '10': 'remoteSetActive'
     },
     {
+      '1': 'remote_error',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteError',
+      '9': 0,
+      '10': 'remoteError'
+    },
+    {
       '1': 'remote_ping_request',
       '3': 8,
       '4': 1,
@@ -96,30 +105,12 @@ const RemoteMessage$json = {
     },
     {
       '1': 'remote_ime_key_inject',
-      '3': 11,
+      '3': 20,
       '4': 1,
       '5': 11,
       '6': '.remote.RemoteImeKeyInject',
       '9': 0,
       '10': 'remoteImeKeyInject'
-    },
-    {
-      '1': 'remote_error',
-      '3': 15,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteError',
-      '9': 0,
-      '10': 'remoteError'
-    },
-    {
-      '1': 'remote_app_info',
-      '3': 20,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteAppInfo',
-      '9': 0,
-      '10': 'remoteAppInfo'
     },
     {
       '1': 'remote_ime_batch_edit',
@@ -131,8 +122,62 @@ const RemoteMessage$json = {
       '10': 'remoteImeBatchEdit'
     },
     {
+      '1': 'remote_ime_show_request',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteImeShowRequest',
+      '9': 0,
+      '10': 'remoteImeShowRequest'
+    },
+    {
+      '1': 'remote_voice_begin',
+      '3': 30,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteVoiceBegin',
+      '9': 0,
+      '10': 'remoteVoiceBegin'
+    },
+    {
+      '1': 'remote_voice_payload',
+      '3': 31,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteVoicePayload',
+      '9': 0,
+      '10': 'remoteVoicePayload'
+    },
+    {
+      '1': 'remote_voice_end',
+      '3': 32,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteVoiceEnd',
+      '9': 0,
+      '10': 'remoteVoiceEnd'
+    },
+    {
+      '1': 'remote_start',
+      '3': 40,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteStart',
+      '9': 0,
+      '10': 'remoteStart'
+    },
+    {
+      '1': 'remote_set_volume_level',
+      '3': 50,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteSetVolumeLevel',
+      '9': 0,
+      '10': 'remoteSetVolumeLevel'
+    },
+    {
       '1': 'remote_adjust_volume_level',
-      '3': 25,
+      '3': 51,
       '4': 1,
       '5': 11,
       '6': '.remote.RemoteAdjustVolumeLevel',
@@ -141,7 +186,7 @@ const RemoteMessage$json = {
     },
     {
       '1': 'remote_set_preferred_audio_device',
-      '3': 31,
+      '3': 60,
       '4': 1,
       '5': 11,
       '6': '.remote.RemoteSetPreferredAudioDevice',
@@ -150,7 +195,7 @@ const RemoteMessage$json = {
     },
     {
       '1': 'remote_reset_preferred_audio_device',
-      '3': 32,
+      '3': 61,
       '4': 1,
       '5': 11,
       '6': '.remote.RemoteResetPreferredAudioDevice',
@@ -158,49 +203,13 @@ const RemoteMessage$json = {
       '10': 'remoteResetPreferredAudioDevice'
     },
     {
-      '1': 'remote_power_status',
-      '3': 35,
+      '1': 'remote_app_link_launch_request',
+      '3': 90,
       '4': 1,
       '5': 11,
-      '6': '.remote.RemotePowerStatus',
+      '6': '.remote.RemoteAppLinkLaunchRequest',
       '9': 0,
-      '10': 'remotePowerStatus'
-    },
-    {
-      '1': 'remote_get_power_status',
-      '3': 36,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteGetPowerStatus',
-      '9': 0,
-      '10': 'remoteGetPowerStatus'
-    },
-    {
-      '1': 'remote_power_info',
-      '3': 40,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemotePowerInfo',
-      '9': 0,
-      '10': 'remotePowerInfo'
-    },
-    {
-      '1': 'remote_volume_info',
-      '3': 50,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteVolumeInfo',
-      '9': 0,
-      '10': 'remoteVolumeInfo'
-    },
-    {
-      '1': 'remote_start_app',
-      '3': 330,
-      '4': 1,
-      '5': 11,
-      '6': '.remote.RemoteStartApp',
-      '9': 0,
-      '10': 'remoteStartApp'
+      '10': 'remoteAppLinkLaunchRequest'
     },
   ],
   '8': [
@@ -212,30 +221,32 @@ const RemoteMessage$json = {
 final $typed_data.Uint8List remoteMessageDescriptor = $convert.base64Decode(
     'Cg1SZW1vdGVNZXNzYWdlEkQKEHJlbW90ZV9jb25maWd1cmUYASABKAsyFy5yZW1vdGUuUmVtb3'
     'RlQ29uZmlndXJlSABSD3JlbW90ZUNvbmZpZ3VyZRJFChFyZW1vdGVfc2V0X2FjdGl2ZRgCIAEo'
-    'CzIXLnJlbW90ZS5SZW1vdGVTZXRBY3RpdmVIAFIPcmVtb3RlU2V0QWN0aXZlEksKE3JlbW90ZV'
-    '9waW5nX3JlcXVlc3QYCCABKAsyGS5yZW1vdGUuUmVtb3RlUGluZ1JlcXVlc3RIAFIRcmVtb3Rl'
-    'UGluZ1JlcXVlc3QSTgoUcmVtb3RlX3BpbmdfcmVzcG9uc2UYCSABKAsyGi5yZW1vdGUuUmVtb3'
-    'RlUGluZ1Jlc3BvbnNlSABSEnJlbW90ZVBpbmdSZXNwb25zZRJFChFyZW1vdGVfa2V5X2luamVj'
-    'dBgKIAEoCzIXLnJlbW90ZS5SZW1vdGVLZXlJbmplY3RIAFIPcmVtb3RlS2V5SW5qZWN0Ek8KFX'
-    'JlbW90ZV9pbWVfa2V5X2luamVjdBgLIAEoCzIaLnJlbW90ZS5SZW1vdGVJbWVLZXlJbmplY3RI'
-    'AFIScmVtb3RlSW1lS2V5SW5qZWN0EjgKDHJlbW90ZV9lcnJvchgPIAEoCzITLnJlbW90ZS5SZW'
-    '1vdGVFcnJvckgAUgtyZW1vdGVFcnJvchI/Cg9yZW1vdGVfYXBwX2luZm8YFCABKAsyFS5yZW1v'
-    'dGUuUmVtb3RlQXBwSW5mb0gAUg1yZW1vdGVBcHBJbmZvEk8KFXJlbW90ZV9pbWVfYmF0Y2hfZW'
-    'RpdBgVIAEoCzIaLnJlbW90ZS5SZW1vdGVJbWVCYXRjaEVkaXRIAFIScmVtb3RlSW1lQmF0Y2hF'
-    'ZGl0El4KGnJlbW90ZV9hZGp1c3Rfdm9sdW1lX2xldmVsGBkgASgLMh8ucmVtb3RlLlJlbW90ZU'
-    'FkanVzdFZvbHVtZUxldmVsSABSF3JlbW90ZUFkanVzdFZvbHVtZUxldmVsEnEKIXJlbW90ZV9z'
-    'ZXRfcHJlZmVycmVkX2F1ZGlvX2RldmljZRgfIAEoCzIlLnJlbW90ZS5SZW1vdGVTZXRQcmVmZX'
-    'JyZWRBdWRpb0RldmljZUgAUh1yZW1vdGVTZXRQcmVmZXJyZWRBdWRpb0RldmljZRJ3CiNyZW1v'
-    'dGVfcmVzZXRfcHJlZmVycmVkX2F1ZGlvX2RldmljZRggIAEoCzInLnJlbW90ZS5SZW1vdGVSZX'
-    'NldFByZWZlcnJlZEF1ZGlvRGV2aWNlSABSH3JlbW90ZVJlc2V0UHJlZmVycmVkQXVkaW9EZXZp'
-    'Y2USSwoTcmVtb3RlX3Bvd2VyX3N0YXR1cxgjIAEoCzIZLnJlbW90ZS5SZW1vdGVQb3dlclN0YX'
-    'R1c0gAUhFyZW1vdGVQb3dlclN0YXR1cxJVChdyZW1vdGVfZ2V0X3Bvd2VyX3N0YXR1cxgkIAEo'
-    'CzIcLnJlbW90ZS5SZW1vdGVHZXRQb3dlclN0YXR1c0gAUhRyZW1vdGVHZXRQb3dlclN0YXR1cx'
-    'JFChFyZW1vdGVfcG93ZXJfaW5mbxgoIAEoCzIXLnJlbW90ZS5SZW1vdGVQb3dlckluZm9IAFIP'
-    'cmVtb3RlUG93ZXJJbmZvEkgKEnJlbW90ZV92b2x1bWVfaW5mbxgyIAEoCzIYLnJlbW90ZS5SZW'
-    '1vdGVWb2x1bWVJbmZvSABSEHJlbW90ZVZvbHVtZUluZm8SQwoQcmVtb3RlX3N0YXJ0X2FwcBjK'
-    'AiABKAsyFi5yZW1vdGUuUmVtb3RlU3RhcnRBcHBIAFIOcmVtb3RlU3RhcnRBcHBCCQoHbWVzc2'
-    'FnZQ==');
+    'CzIXLnJlbW90ZS5SZW1vdGVTZXRBY3RpdmVIAFIPcmVtb3RlU2V0QWN0aXZlEjgKDHJlbW90ZV'
+    '9lcnJvchgDIAEoCzITLnJlbW90ZS5SZW1vdGVFcnJvckgAUgtyZW1vdGVFcnJvchJLChNyZW1v'
+    'dGVfcGluZ19yZXF1ZXN0GAggASgLMhkucmVtb3RlLlJlbW90ZVBpbmdSZXF1ZXN0SABSEXJlbW'
+    '90ZVBpbmdSZXF1ZXN0Ek4KFHJlbW90ZV9waW5nX3Jlc3BvbnNlGAkgASgLMhoucmVtb3RlLlJl'
+    'bW90ZVBpbmdSZXNwb25zZUgAUhJyZW1vdGVQaW5nUmVzcG9uc2USRQoRcmVtb3RlX2tleV9pbm'
+    'plY3QYCiABKAsyFy5yZW1vdGUuUmVtb3RlS2V5SW5qZWN0SABSD3JlbW90ZUtleUluamVjdBJP'
+    'ChVyZW1vdGVfaW1lX2tleV9pbmplY3QYFCABKAsyGi5yZW1vdGUuUmVtb3RlSW1lS2V5SW5qZW'
+    'N0SABSEnJlbW90ZUltZUtleUluamVjdBJPChVyZW1vdGVfaW1lX2JhdGNoX2VkaXQYFSABKAsy'
+    'Gi5yZW1vdGUuUmVtb3RlSW1lQmF0Y2hFZGl0SABSEnJlbW90ZUltZUJhdGNoRWRpdBJVChdyZW'
+    '1vdGVfaW1lX3Nob3dfcmVxdWVzdBgWIAEoCzIcLnJlbW90ZS5SZW1vdGVJbWVTaG93UmVxdWVz'
+    'dEgAUhRyZW1vdGVJbWVTaG93UmVxdWVzdBJIChJyZW1vdGVfdm9pY2VfYmVnaW4YHiABKAsyGC'
+    '5yZW1vdGUuUmVtb3RlVm9pY2VCZWdpbkgAUhByZW1vdGVWb2ljZUJlZ2luEk4KFHJlbW90ZV92'
+    'b2ljZV9wYXlsb2FkGB8gASgLMhoucmVtb3RlLlJlbW90ZVZvaWNlUGF5bG9hZEgAUhJyZW1vdG'
+    'VWb2ljZVBheWxvYWQSQgoQcmVtb3RlX3ZvaWNlX2VuZBggIAEoCzIWLnJlbW90ZS5SZW1vdGVW'
+    'b2ljZUVuZEgAUg5yZW1vdGVWb2ljZUVuZBI4CgxyZW1vdGVfc3RhcnQYKCABKAsyEy5yZW1vdG'
+    'UuUmVtb3RlU3RhcnRIAFILcmVtb3RlU3RhcnQSVQoXcmVtb3RlX3NldF92b2x1bWVfbGV2ZWwY'
+    'MiABKAsyHC5yZW1vdGUuUmVtb3RlU2V0Vm9sdW1lTGV2ZWxIAFIUcmVtb3RlU2V0Vm9sdW1lTG'
+    'V2ZWwSXgoacmVtb3RlX2FkanVzdF92b2x1bWVfbGV2ZWwYMyABKAsyHy5yZW1vdGUuUmVtb3Rl'
+    'QWRqdXN0Vm9sdW1lTGV2ZWxIAFIXcmVtb3RlQWRqdXN0Vm9sdW1lTGV2ZWwScQohcmVtb3RlX3'
+    'NldF9wcmVmZXJyZWRfYXVkaW9fZGV2aWNlGDwgASgLMiUucmVtb3RlLlJlbW90ZVNldFByZWZl'
+    'cnJlZEF1ZGlvRGV2aWNlSABSHXJlbW90ZVNldFByZWZlcnJlZEF1ZGlvRGV2aWNlEncKI3JlbW'
+    '90ZV9yZXNldF9wcmVmZXJyZWRfYXVkaW9fZGV2aWNlGD0gASgLMicucmVtb3RlLlJlbW90ZVJl'
+    'c2V0UHJlZmVycmVkQXVkaW9EZXZpY2VIAFIfcmVtb3RlUmVzZXRQcmVmZXJyZWRBdWRpb0Rldm'
+    'ljZRJoCh5yZW1vdGVfYXBwX2xpbmtfbGF1bmNoX3JlcXVlc3QYWiABKAsyIi5yZW1vdGUuUmVt'
+    'b3RlQXBwTGlua0xhdW5jaFJlcXVlc3RIAFIacmVtb3RlQXBwTGlua0xhdW5jaFJlcXVlc3RCCQ'
+    'oHbWVzc2FnZQ==');
 
 @$core.Deprecated('Use remoteKeyInjectDescriptor instead')
 const RemoteKeyInject$json = {
@@ -286,6 +297,7 @@ const RemoteKeyInject_RemoteKeyCode$json = {
     {'1': 'KEYCODE_MEDIA_REWIND', '2': 89},
     {'1': 'KEYCODE_MEDIA_FAST_FORWARD', '2': 90},
     {'1': 'KEYCODE_MEDIA_RECORD', '2': 130},
+    {'1': 'KEYCODE_SEARCH', '2': 84},
     {'1': 'KEYCODE_VOLUME_UP', '2': 24},
     {'1': 'KEYCODE_VOLUME_DOWN', '2': 25},
     {'1': 'KEYCODE_MUTE', '2': 91},
@@ -306,6 +318,12 @@ const RemoteKeyInject_RemoteKeyCode$json = {
     {'1': 'KEYCODE_APP_SWITCH', '2': 187},
     {'1': 'KEYCODE_ASSIST', '2': 219},
     {'1': 'KEYCODE_VOICE_ASSIST', '2': 231},
+    {'1': 'KEYCODE_TV_INPUT_HDMI_1', '2': 243},
+    {'1': 'KEYCODE_TV_INPUT_HDMI_2', '2': 244},
+    {'1': 'KEYCODE_TV_INPUT_HDMI_3', '2': 245},
+    {'1': 'KEYCODE_TV_INPUT_HDMI_4', '2': 246},
+    {'1': 'KEYCODE_TV_INPUT_COMPONENT_1', '2': 249},
+    {'1': 'KEYCODE_TV_INPUT_COMPOSITE_1', '2': 247},
     {'1': 'KEYCODE_0', '2': 7},
     {'1': 'KEYCODE_1', '2': 8},
     {'1': 'KEYCODE_2', '2': 9},
@@ -332,7 +350,7 @@ const RemoteKeyInject_RemoteKeyCode$json = {
 final $typed_data.Uint8List remoteKeyInjectDescriptor = $convert.base64Decode(
     'Cg9SZW1vdGVLZXlJbmplY3QSQAoIa2V5X2NvZGUYASABKA4yJS5yZW1vdGUuUmVtb3RlS2V5SW'
     '5qZWN0LlJlbW90ZUtleUNvZGVSB2tleUNvZGUSNQoJZGlyZWN0aW9uGAIgASgOMhcucmVtb3Rl'
-    'LlJlbW90ZURpcmVjdGlvblIJZGlyZWN0aW9uIrsKCg1SZW1vdGVLZXlDb2RlEhMKD0tFWUNPRE'
+    'LlJlbW90ZURpcmVjdGlvblIJZGlyZWN0aW9uIo0MCg1SZW1vdGVLZXlDb2RlEhMKD0tFWUNPRE'
     'VfVU5LTk9XThAAEhMKD0tFWUNPREVfRFBBRF9VUBATEhUKEUtFWUNPREVfRFBBRF9ET1dOEBQS'
     'FQoRS0VZQ09ERV9EUEFEX0xFRlQQFRIWChJLRVlDT0RFX0RQQURfUklHSFQQFhIXChNLRVlDT0'
     'RFX0RQQURfQ0VOVEVSEBcSEAoMS0VZQ09ERV9CQUNLEAQSEAoMS0VZQ09ERV9IT01FEAMSEAoM'
@@ -341,22 +359,80 @@ final $typed_data.Uint8List remoteKeyInjectDescriptor = $convert.base64Decode(
     'X01FRElBX1BBVVNFEH8SHAoYS0VZQ09ERV9NRURJQV9QTEFZX1BBVVNFEFUSFgoSS0VZQ09ERV'
     '9NRURJQV9TVE9QEFYSFgoSS0VZQ09ERV9NRURJQV9ORVhUEFcSGgoWS0VZQ09ERV9NRURJQV9Q'
     'UkVWSU9VUxBYEhgKFEtFWUNPREVfTUVESUFfUkVXSU5EEFkSHgoaS0VZQ09ERV9NRURJQV9GQV'
-    'NUX0ZPUldBUkQQWhIZChRLRVlDT0RFX01FRElBX1JFQ09SRBCCARIVChFLRVlDT0RFX1ZPTFVN'
-    'RV9VUBAYEhcKE0tFWUNPREVfVk9MVU1FX0RPV04QGRIQCgxLRVlDT0RFX01VVEUQWxIPCgpLRV'
-    'lDT0RFX1RWEKoBEhUKEEtFWUNPREVfVFZfUE9XRVIQsQESFQoQS0VZQ09ERV9UVl9JTlBVVBCy'
-    'ARIXChJLRVlDT0RFX0NIQU5ORUxfVVAQpgESGQoUS0VZQ09ERV9DSEFOTkVMX0RPV04QpwESHQ'
-    'oYS0VZQ09ERV9UVl9SQURJT19TRVJWSUNFEOgBEhwKF0tFWUNPREVfVFZfREFUQV9TRVJWSUNF'
-    'EOYBEhgKE0tFWUNPREVfVFZfVEVMRVRFWFQQ6QESFwoSS0VZQ09ERV9UVl9ORVRXT1JLEPEBEh'
-    'kKFEtFWUNPREVfVFZfU0FURUxMSVRFEO0BEh0KGEtFWUNPREVfVFZfQU5URU5OQV9DQUJMRRDu'
-    'ARIRCg1LRVlDT0RFX1BPV0VSEBoSEgoNS0VZQ09ERV9TTEVFUBDfARITCg5LRVlDT0RFX1dBS0'
-    'VVUBDgARIXChJLRVlDT0RFX0FQUF9TV0lUQ0gQuwESEwoOS0VZQ09ERV9BU1NJU1QQ2wESGQoU'
-    'S0VZQ09ERV9WT0lDRV9BU1NJU1QQ5wESDQoJS0VZQ09ERV8wEAcSDQoJS0VZQ09ERV8xEAgSDQ'
-    'oJS0VZQ09ERV8yEAkSDQoJS0VZQ09ERV8zEAoSDQoJS0VZQ09ERV80EAsSDQoJS0VZQ09ERV81'
-    'EAwSDQoJS0VZQ09ERV82EA0SDQoJS0VZQ09ERV83EA4SDQoJS0VZQ09ERV84EA8SDQoJS0VZQ0'
-    '9ERV85EBASEQoNS0VZQ09ERV9FTlRFUhBCEg8KC0tFWUNPREVfREVMEEMSEQoNS0VZQ09ERV9T'
-    'UEFDRRA+EhMKD0tFWUNPREVfUEFHRV9VUBBcEhUKEUtFWUNPREVfUEFHRV9ET1dOEF0SFQoQS0'
-    'VZQ09ERV9QUk9HX1JFRBC3ARIXChJLRVlDT0RFX1BST0dfR1JFRU4QuAESGAoTS0VZQ09ERV9Q'
-    'Uk9HX1lFTExPVxC5ARIWChFLRVlDT0RFX1BST0dfQkxVRRC6AQ==');
+    'NUX0ZPUldBUkQQWhIZChRLRVlDT0RFX01FRElBX1JFQ09SRBCCARISCg5LRVlDT0RFX1NFQVJD'
+    'SBBUEhUKEUtFWUNPREVfVk9MVU1FX1VQEBgSFwoTS0VZQ09ERV9WT0xVTUVfRE9XThAZEhAKDE'
+    'tFWUNPREVfTVVURRBbEg8KCktFWUNPREVfVFYQqgESFQoQS0VZQ09ERV9UVl9QT1dFUhCxARIV'
+    'ChBLRVlDT0RFX1RWX0lOUFVUELIBEhcKEktFWUNPREVfQ0hBTk5FTF9VUBCmARIZChRLRVlDT0'
+    'RFX0NIQU5ORUxfRE9XThCnARIdChhLRVlDT0RFX1RWX1JBRElPX1NFUlZJQ0UQ6AESHAoXS0VZ'
+    'Q09ERV9UVl9EQVRBX1NFUlZJQ0UQ5gESGAoTS0VZQ09ERV9UVl9URUxFVEVYVBDpARIXChJLRV'
+    'lDT0RFX1RWX05FVFdPUksQ8QESGQoUS0VZQ09ERV9UVl9TQVRFTExJVEUQ7QESHQoYS0VZQ09E'
+    'RV9UVl9BTlRFTk5BX0NBQkxFEO4BEhEKDUtFWUNPREVfUE9XRVIQGhISCg1LRVlDT0RFX1NMRU'
+    'VQEN8BEhMKDktFWUNPREVfV0FLRVVQEOABEhcKEktFWUNPREVfQVBQX1NXSVRDSBC7ARITCg5L'
+    'RVlDT0RFX0FTU0lTVBDbARIZChRLRVlDT0RFX1ZPSUNFX0FTU0lTVBDnARIcChdLRVlDT0RFX1'
+    'RWX0lOUFVUX0hETUlfMRDzARIcChdLRVlDT0RFX1RWX0lOUFVUX0hETUlfMhD0ARIcChdLRVlD'
+    'T0RFX1RWX0lOUFVUX0hETUlfMxD1ARIcChdLRVlDT0RFX1RWX0lOUFVUX0hETUlfNBD2ARIhCh'
+    'xLRVlDT0RFX1RWX0lOUFVUX0NPTVBPTkVOVF8xEPkBEiEKHEtFWUNPREVfVFZfSU5QVVRfQ09N'
+    'UE9TSVRFXzEQ9wESDQoJS0VZQ09ERV8wEAcSDQoJS0VZQ09ERV8xEAgSDQoJS0VZQ09ERV8yEA'
+    'kSDQoJS0VZQ09ERV8zEAoSDQoJS0VZQ09ERV80EAsSDQoJS0VZQ09ERV81EAwSDQoJS0VZQ09E'
+    'RV82EA0SDQoJS0VZQ09ERV83EA4SDQoJS0VZQ09ERV84EA8SDQoJS0VZQ09ERV85EBASEQoNS0'
+    'VZQ09ERV9FTlRFUhBCEg8KC0tFWUNPREVfREVMEEMSEQoNS0VZQ09ERV9TUEFDRRA+EhMKD0tF'
+    'WUNPREVfUEFHRV9VUBBcEhUKEUtFWUNPREVfUEFHRV9ET1dOEF0SFQoQS0VZQ09ERV9QUk9HX1'
+    'JFRBC3ARIXChJLRVlDT0RFX1BST0dfR1JFRU4QuAESGAoTS0VZQ09ERV9QUk9HX1lFTExPVxC5'
+    'ARIWChFLRVlDT0RFX1BST0dfQkxVRRC6AQ==');
+
+@$core.Deprecated('Use remoteAppLinkLaunchRequestDescriptor instead')
+const RemoteAppLinkLaunchRequest$json = {
+  '1': 'RemoteAppLinkLaunchRequest',
+  '2': [
+    {'1': 'app_link', '3': 1, '4': 1, '5': 9, '10': 'appLink'},
+  ],
+};
+
+/// Descriptor for `RemoteAppLinkLaunchRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteAppLinkLaunchRequestDescriptor =
+    $convert.base64Decode(
+        'ChpSZW1vdGVBcHBMaW5rTGF1bmNoUmVxdWVzdBIZCghhcHBfbGluaxgBIAEoCVIHYXBwTGluaw'
+        '==');
+
+@$core.Deprecated('Use remoteVoicePayloadDescriptor instead')
+const RemoteVoicePayload$json = {
+  '1': 'RemoteVoicePayload',
+  '2': [
+    {'1': 'session_id', '3': 1, '4': 1, '5': 5, '10': 'sessionId'},
+    {'1': 'samples', '3': 2, '4': 1, '5': 12, '10': 'samples'},
+  ],
+};
+
+/// Descriptor for `RemoteVoicePayload`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteVoicePayloadDescriptor = $convert.base64Decode(
+    'ChJSZW1vdGVWb2ljZVBheWxvYWQSHQoKc2Vzc2lvbl9pZBgBIAEoBVIJc2Vzc2lvbklkEhgKB3'
+    'NhbXBsZXMYAiABKAxSB3NhbXBsZXM=');
+
+@$core.Deprecated('Use remoteVoiceBeginDescriptor instead')
+const RemoteVoiceBegin$json = {
+  '1': 'RemoteVoiceBegin',
+  '2': [
+    {'1': 'session_id', '3': 1, '4': 1, '5': 5, '10': 'sessionId'},
+    {'1': 'package_name', '3': 2, '4': 1, '5': 9, '10': 'packageName'},
+  ],
+};
+
+/// Descriptor for `RemoteVoiceBegin`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteVoiceBeginDescriptor = $convert.base64Decode(
+    'ChBSZW1vdGVWb2ljZUJlZ2luEh0KCnNlc3Npb25faWQYASABKAVSCXNlc3Npb25JZBIhCgxwYW'
+    'NrYWdlX25hbWUYAiABKAlSC3BhY2thZ2VOYW1l');
+
+@$core.Deprecated('Use remoteVoiceEndDescriptor instead')
+const RemoteVoiceEnd$json = {
+  '1': 'RemoteVoiceEnd',
+  '2': [
+    {'1': 'session_id', '3': 1, '4': 1, '5': 5, '10': 'sessionId'},
+  ],
+};
+
+/// Descriptor for `RemoteVoiceEnd`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteVoiceEndDescriptor = $convert.base64Decode(
+    'Cg5SZW1vdGVWb2ljZUVuZBIdCgpzZXNzaW9uX2lkGAEgASgFUglzZXNzaW9uSWQ=');
 
 @$core.Deprecated('Use remoteConfigureDescriptor instead')
 const RemoteConfigure$json = {
@@ -378,6 +454,18 @@ const RemoteConfigure$json = {
 final $typed_data.Uint8List remoteConfigureDescriptor = $convert.base64Decode(
     'Cg9SZW1vdGVDb25maWd1cmUSFAoFY29kZTEYASABKA1SBWNvZGUxEjkKC2RldmljZV9pbmZvGA'
     'IgASgLMhgucmVtb3RlLlJlbW90ZURldmljZUluZm9SCmRldmljZUluZm8=');
+
+@$core.Deprecated('Use remoteStartDescriptor instead')
+const RemoteStart$json = {
+  '1': 'RemoteStart',
+  '2': [
+    {'1': 'started', '3': 1, '4': 1, '5': 8, '10': 'started'},
+  ],
+};
+
+/// Descriptor for `RemoteStart`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteStartDescriptor = $convert
+    .base64Decode('CgtSZW1vdGVTdGFydBIYCgdzdGFydGVkGAEgASgIUgdzdGFydGVk');
 
 @$core.Deprecated('Use remoteDeviceInfoDescriptor instead')
 const RemoteDeviceInfo$json = {
@@ -423,6 +511,26 @@ final $typed_data.Uint8List remoteVolumeInfoDescriptor = $convert.base64Decode(
     'GgoIdW5rbm93bjEYByABKAVSCHVua25vd24xEhoKCHVua25vd24yGAggASgIUgh1bmtub3duMg'
     '==');
 
+@$core.Deprecated('Use remoteImeShowRequestDescriptor instead')
+const RemoteImeShowRequest$json = {
+  '1': 'RemoteImeShowRequest',
+  '2': [
+    {
+      '1': 'remote_text_field_status',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.remote.RemoteTextFieldStatus',
+      '10': 'remoteTextFieldStatus'
+    },
+  ],
+};
+
+/// Descriptor for `RemoteImeShowRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteImeShowRequestDescriptor = $convert.base64Decode(
+    'ChRSZW1vdGVJbWVTaG93UmVxdWVzdBJWChhyZW1vdGVfdGV4dF9maWVsZF9zdGF0dXMYAiABKA'
+    'syHS5yZW1vdGUuUmVtb3RlVGV4dEZpZWxkU3RhdHVzUhVyZW1vdGVUZXh0RmllbGRTdGF0dXM=');
+
 @$core.Deprecated('Use remotePowerInfoDescriptor instead')
 const RemotePowerInfo$json = {
   '1': 'RemotePowerInfo',
@@ -446,6 +554,25 @@ const RemoteSetActive$json = {
 /// Descriptor for `RemoteSetActive`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List remoteSetActiveDescriptor = $convert
     .base64Decode('Cg9SZW1vdGVTZXRBY3RpdmUSFgoGYWN0aXZlGAEgASgNUgZhY3RpdmU=');
+
+@$core.Deprecated('Use remoteTextFieldStatusDescriptor instead')
+const RemoteTextFieldStatus$json = {
+  '1': 'RemoteTextFieldStatus',
+  '2': [
+    {'1': 'counter_field', '3': 1, '4': 1, '5': 5, '10': 'counterField'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+    {'1': 'start', '3': 3, '4': 1, '5': 5, '10': 'start'},
+    {'1': 'end', '3': 4, '4': 1, '5': 5, '10': 'end'},
+    {'1': 'int5', '3': 5, '4': 1, '5': 5, '10': 'int5'},
+    {'1': 'label', '3': 6, '4': 1, '5': 9, '10': 'label'},
+  ],
+};
+
+/// Descriptor for `RemoteTextFieldStatus`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteTextFieldStatusDescriptor = $convert.base64Decode(
+    'ChVSZW1vdGVUZXh0RmllbGRTdGF0dXMSIwoNY291bnRlcl9maWVsZBgBIAEoBVIMY291bnRlck'
+    'ZpZWxkEhQKBXZhbHVlGAIgASgJUgV2YWx1ZRIUCgVzdGFydBgDIAEoBVIFc3RhcnQSEAoDZW5k'
+    'GAQgASgFUgNlbmQSEgoEaW50NRgFIAEoBVIEaW50NRIUCgVsYWJlbBgGIAEoCVIFbGFiZWw=');
 
 @$core.Deprecated('Use remoteImeKeyInjectDescriptor instead')
 const RemoteImeKeyInject$json = {
@@ -474,14 +601,14 @@ final $typed_data.Uint8List remoteImeKeyInjectDescriptor = $convert.base64Decode
 const RemoteImeBatchEdit$json = {
   '1': 'RemoteImeBatchEdit',
   '2': [
-    {'1': 'ime_counter', '3': 1, '4': 1, '5': 13, '10': 'imeCounter'},
-    {'1': 'field_counter', '3': 2, '4': 1, '5': 13, '10': 'fieldCounter'},
+    {'1': 'ime_counter', '3': 1, '4': 1, '5': 5, '10': 'imeCounter'},
+    {'1': 'field_counter', '3': 2, '4': 1, '5': 5, '10': 'fieldCounter'},
     {
       '1': 'edit_info',
       '3': 3,
-      '4': 1,
+      '4': 3,
       '5': 11,
-      '6': '.remote.RemoteImeEditInfo',
+      '6': '.remote.RemoteEditInfo',
       '10': 'editInfo'
     },
   ],
@@ -489,13 +616,13 @@ const RemoteImeBatchEdit$json = {
 
 /// Descriptor for `RemoteImeBatchEdit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List remoteImeBatchEditDescriptor = $convert.base64Decode(
-    'ChJSZW1vdGVJbWVCYXRjaEVkaXQSHwoLaW1lX2NvdW50ZXIYASABKA1SCmltZUNvdW50ZXISIw'
-    'oNZmllbGRfY291bnRlchgCIAEoDVIMZmllbGRDb3VudGVyEjYKCWVkaXRfaW5mbxgDIAEoCzIZ'
-    'LnJlbW90ZS5SZW1vdGVJbWVFZGl0SW5mb1IIZWRpdEluZm8=');
+    'ChJSZW1vdGVJbWVCYXRjaEVkaXQSHwoLaW1lX2NvdW50ZXIYASABKAVSCmltZUNvdW50ZXISIw'
+    'oNZmllbGRfY291bnRlchgCIAEoBVIMZmllbGRDb3VudGVyEjMKCWVkaXRfaW5mbxgDIAMoCzIW'
+    'LnJlbW90ZS5SZW1vdGVFZGl0SW5mb1IIZWRpdEluZm8=');
 
-@$core.Deprecated('Use remoteImeEditInfoDescriptor instead')
-const RemoteImeEditInfo$json = {
-  '1': 'RemoteImeEditInfo',
+@$core.Deprecated('Use remoteEditInfoDescriptor instead')
+const RemoteEditInfo$json = {
+  '1': 'RemoteEditInfo',
   '2': [
     {'1': 'insert', '3': 1, '4': 1, '5': 13, '10': 'insert'},
     {
@@ -503,71 +630,67 @@ const RemoteImeEditInfo$json = {
       '3': 2,
       '4': 1,
       '5': 11,
-      '6': '.remote.RemoteTextFieldStatus',
+      '6': '.remote.RemoteImeObject',
       '10': 'textFieldStatus'
     },
   ],
 };
 
-/// Descriptor for `RemoteImeEditInfo`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List remoteImeEditInfoDescriptor = $convert.base64Decode(
-    'ChFSZW1vdGVJbWVFZGl0SW5mbxIWCgZpbnNlcnQYASABKA1SBmluc2VydBJJChF0ZXh0X2ZpZW'
-    'xkX3N0YXR1cxgCIAEoCzIdLnJlbW90ZS5SZW1vdGVUZXh0RmllbGRTdGF0dXNSD3RleHRGaWVs'
-    'ZFN0YXR1cw==');
+/// Descriptor for `RemoteEditInfo`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteEditInfoDescriptor = $convert.base64Decode(
+    'Cg5SZW1vdGVFZGl0SW5mbxIWCgZpbnNlcnQYASABKA1SBmluc2VydBJDChF0ZXh0X2ZpZWxkX3'
+    'N0YXR1cxgCIAEoCzIXLnJlbW90ZS5SZW1vdGVJbWVPYmplY3RSD3RleHRGaWVsZFN0YXR1cw==');
 
-@$core.Deprecated('Use remoteTextFieldStatusDescriptor instead')
-const RemoteTextFieldStatus$json = {
-  '1': 'RemoteTextFieldStatus',
+@$core.Deprecated('Use remoteImeObjectDescriptor instead')
+const RemoteImeObject$json = {
+  '1': 'RemoteImeObject',
   '2': [
-    {'1': 'start', '3': 1, '4': 1, '5': 13, '10': 'start'},
-    {'1': 'end', '3': 2, '4': 1, '5': 13, '10': 'end'},
+    {'1': 'start', '3': 1, '4': 1, '5': 5, '10': 'start'},
+    {'1': 'end', '3': 2, '4': 1, '5': 5, '10': 'end'},
     {'1': 'value', '3': 3, '4': 1, '5': 9, '10': 'value'},
   ],
 };
 
-/// Descriptor for `RemoteTextFieldStatus`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List remoteTextFieldStatusDescriptor = $convert.base64Decode(
-    'ChVSZW1vdGVUZXh0RmllbGRTdGF0dXMSFAoFc3RhcnQYASABKA1SBXN0YXJ0EhAKA2VuZBgCIA'
-    'EoDVIDZW5kEhQKBXZhbHVlGAMgASgJUgV2YWx1ZQ==');
-
-@$core.Deprecated('Use remoteStartAppDescriptor instead')
-const RemoteStartApp$json = {
-  '1': 'RemoteStartApp',
-  '2': [
-    {'1': 'intent_uri', '3': 1, '4': 1, '5': 9, '10': 'intentUri'},
-  ],
-};
-
-/// Descriptor for `RemoteStartApp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List remoteStartAppDescriptor = $convert.base64Decode(
-    'Cg5SZW1vdGVTdGFydEFwcBIdCgppbnRlbnRfdXJpGAEgASgJUglpbnRlbnRVcmk=');
+/// Descriptor for `RemoteImeObject`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List remoteImeObjectDescriptor = $convert.base64Decode(
+    'Cg9SZW1vdGVJbWVPYmplY3QSFAoFc3RhcnQYASABKAVSBXN0YXJ0EhAKA2VuZBgCIAEoBVIDZW'
+    '5kEhQKBXZhbHVlGAMgASgJUgV2YWx1ZQ==');
 
 @$core.Deprecated('Use remoteAppInfoDescriptor instead')
 const RemoteAppInfo$json = {
   '1': 'RemoteAppInfo',
   '2': [
-    {'1': 'app_name', '3': 1, '4': 1, '5': 9, '10': 'appName'},
-    {'1': 'app_package', '3': 2, '4': 1, '5': 9, '10': 'appPackage'},
+    {'1': 'counter', '3': 1, '4': 1, '5': 5, '10': 'counter'},
+    {'1': 'int2', '3': 2, '4': 1, '5': 5, '10': 'int2'},
+    {'1': 'int3', '3': 3, '4': 1, '5': 5, '10': 'int3'},
+    {'1': 'int4', '3': 4, '4': 1, '5': 9, '10': 'int4'},
+    {'1': 'int7', '3': 7, '4': 1, '5': 5, '10': 'int7'},
+    {'1': 'int8', '3': 8, '4': 1, '5': 5, '10': 'int8'},
+    {'1': 'label', '3': 10, '4': 1, '5': 9, '10': 'label'},
+    {'1': 'app_package', '3': 12, '4': 1, '5': 9, '10': 'appPackage'},
+    {'1': 'int13', '3': 13, '4': 1, '5': 5, '10': 'int13'},
   ],
 };
 
 /// Descriptor for `RemoteAppInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List remoteAppInfoDescriptor = $convert.base64Decode(
-    'Cg1SZW1vdGVBcHBJbmZvEhkKCGFwcF9uYW1lGAEgASgJUgdhcHBOYW1lEh8KC2FwcF9wYWNrYW'
-    'dlGAIgASgJUgphcHBQYWNrYWdl');
+    'Cg1SZW1vdGVBcHBJbmZvEhgKB2NvdW50ZXIYASABKAVSB2NvdW50ZXISEgoEaW50MhgCIAEoBV'
+    'IEaW50MhISCgRpbnQzGAMgASgFUgRpbnQzEhIKBGludDQYBCABKAlSBGludDQSEgoEaW50NxgH'
+    'IAEoBVIEaW50NxISCgRpbnQ4GAggASgFUgRpbnQ4EhQKBWxhYmVsGAogASgJUgVsYWJlbBIfCg'
+    'thcHBfcGFja2FnZRgMIAEoCVIKYXBwUGFja2FnZRIUCgVpbnQxMxgNIAEoBVIFaW50MTM=');
 
 @$core.Deprecated('Use remotePingRequestDescriptor instead')
 const RemotePingRequest$json = {
   '1': 'RemotePingRequest',
   '2': [
     {'1': 'val1', '3': 1, '4': 1, '5': 5, '10': 'val1'},
-    {'1': 'val2', '3': 2, '4': 1, '5': 3, '10': 'val2'},
+    {'1': 'val2', '3': 2, '4': 1, '5': 5, '10': 'val2'},
   ],
 };
 
 /// Descriptor for `RemotePingRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List remotePingRequestDescriptor = $convert.base64Decode(
-    'ChFSZW1vdGVQaW5nUmVxdWVzdBISCgR2YWwxGAEgASgFUgR2YWwxEhIKBHZhbDIYAiABKANSBH'
+    'ChFSZW1vdGVQaW5nUmVxdWVzdBISCgR2YWwxGAEgASgFUgR2YWwxEhIKBHZhbDIYAiABKAVSBH'
     'ZhbDI=');
 
 @$core.Deprecated('Use remotePingResponseDescriptor instead')
@@ -575,13 +698,13 @@ const RemotePingResponse$json = {
   '1': 'RemotePingResponse',
   '2': [
     {'1': 'val1', '3': 1, '4': 1, '5': 5, '10': 'val1'},
-    {'1': 'val2', '3': 2, '4': 1, '5': 3, '10': 'val2'},
+    {'1': 'val2', '3': 2, '4': 1, '5': 5, '10': 'val2'},
   ],
 };
 
 /// Descriptor for `RemotePingResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List remotePingResponseDescriptor = $convert.base64Decode(
-    'ChJSZW1vdGVQaW5nUmVzcG9uc2USEgoEdmFsMRgBIAEoBVIEdmFsMRISCgR2YWwyGAIgASgDUg'
+    'ChJSZW1vdGVQaW5nUmVzcG9uc2USEgoEdmFsMRgBIAEoBVIEdmFsMRISCgR2YWwyGAIgASgFUg'
     'R2YWwy');
 
 @$core.Deprecated('Use remoteGetPowerStatusDescriptor instead')
@@ -610,20 +733,24 @@ final $typed_data.Uint8List remotePowerStatusDescriptor = $convert.base64Decode(
 const RemoteSetVolumeLevel$json = {
   '1': 'RemoteSetVolumeLevel',
   '2': [
-    {'1': 'volume_level', '3': 1, '4': 1, '5': 13, '10': 'volumeLevel'},
-    {'1': 'volume_max', '3': 2, '4': 1, '5': 13, '10': 'volumeMax'},
-    {'1': 'is_muted', '3': 3, '4': 1, '5': 8, '10': 'isMuted'},
-    {'1': 'device_name', '3': 4, '4': 1, '5': 9, '10': 'deviceName'},
-    {'1': 'unknown', '3': 5, '4': 1, '5': 13, '10': 'unknown'},
+    {'1': 'unknown1', '3': 1, '4': 1, '5': 13, '10': 'unknown1'},
+    {'1': 'unknown2', '3': 2, '4': 1, '5': 13, '10': 'unknown2'},
+    {'1': 'player_model', '3': 3, '4': 1, '5': 9, '10': 'playerModel'},
+    {'1': 'unknown4', '3': 4, '4': 1, '5': 13, '10': 'unknown4'},
+    {'1': 'unknown5', '3': 5, '4': 1, '5': 13, '10': 'unknown5'},
+    {'1': 'volume_max', '3': 6, '4': 1, '5': 13, '10': 'volumeMax'},
+    {'1': 'volume_level', '3': 7, '4': 1, '5': 13, '10': 'volumeLevel'},
+    {'1': 'volume_muted', '3': 8, '4': 1, '5': 8, '10': 'volumeMuted'},
   ],
 };
 
 /// Descriptor for `RemoteSetVolumeLevel`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List remoteSetVolumeLevelDescriptor = $convert.base64Decode(
-    'ChRSZW1vdGVTZXRWb2x1bWVMZXZlbBIhCgx2b2x1bWVfbGV2ZWwYASABKA1SC3ZvbHVtZUxldm'
-    'VsEh0KCnZvbHVtZV9tYXgYAiABKA1SCXZvbHVtZU1heBIZCghpc19tdXRlZBgDIAEoCFIHaXNN'
-    'dXRlZBIfCgtkZXZpY2VfbmFtZRgEIAEoCVIKZGV2aWNlTmFtZRIYCgd1bmtub3duGAUgASgNUg'
-    'd1bmtub3du');
+    'ChRSZW1vdGVTZXRWb2x1bWVMZXZlbBIaCgh1bmtub3duMRgBIAEoDVIIdW5rbm93bjESGgoIdW'
+    '5rbm93bjIYAiABKA1SCHVua25vd24yEiEKDHBsYXllcl9tb2RlbBgDIAEoCVILcGxheWVyTW9k'
+    'ZWwSGgoIdW5rbm93bjQYBCABKA1SCHVua25vd240EhoKCHVua25vd241GAUgASgNUgh1bmtub3'
+    'duNRIdCgp2b2x1bWVfbWF4GAYgASgNUgl2b2x1bWVNYXgSIQoMdm9sdW1lX2xldmVsGAcgASgN'
+    'Ugt2b2x1bWVMZXZlbBIhCgx2b2x1bWVfbXV0ZWQYCCABKAhSC3ZvbHVtZU11dGVk');
 
 @$core.Deprecated('Use remoteAdjustVolumeLevelDescriptor instead')
 const RemoteAdjustVolumeLevel$json = {

@@ -1,19 +1,10 @@
 // import 'dart:io';
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'dart:typed_data';
-
-import 'package:remote_app/data/constants/constants.dart';
-// import 'package:remote_app/data/test_pairing.dart';
 import 'package:remote_app/data/tv_remote.dart';
 import 'package:remote_app/features/home/logic/notifier.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:remote_app/features/welcome/page/opt_fun.dart';
-import 'package:remote_app/features/welcome/page/otp_input.dart';
-// import 'package:remote_app/core/utils/discover_device.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:remote_app/src/generated/auth.pb.dart';
 
@@ -115,9 +106,9 @@ class _WelcomeModalState extends State<WelcomeModal> {
     }
   }
 
-  Future<void> showPinDialog() async {
+  Future<void> showPinDialog(context) async {
     showOtpDialog(
-      context: _scaffoldKey.currentContext!,
+      context: context,
       title: 'Enter TV PIN',
       subtitle: 'Enter the pin shown on the TV',
       length: 6,
@@ -125,7 +116,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
     );
   }
 
-  void handleMessage(OuterMessage msg) {
+  void handleMessage(OuterMessage msg) async {
     print('whichMessage  =====> ${msg.whichMessage()}');
     print('msg status  =====> ${msg.status}');
 
@@ -139,7 +130,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
         print('✅ PairingRequest ack acknowledged');
         break;
       case OuterMessage_Message.pairingConfigurationAck:
-        showPinDialog();
+        showPinDialog(context);
         break;
 
       case OuterMessage_Message.pairingOption:
@@ -166,15 +157,11 @@ class _WelcomeModalState extends State<WelcomeModal> {
         print('✅ PairingOptions acknowledged');
         print('📺 TV should display PIN now!');
         break;
-
-      case OuterMessage_Message.pairingSecret:
-        if (msg.status == 200 && msg.pairingSecret.secret.isNotEmpty) {
-          _tvRemoteClient!.onPairingComplete();
-        }
-        break;
       case OuterMessage_Message.pairingSecretAck:
         if (msg.status == 200 && msg.pairingSecretAck.secret.isNotEmpty) {
-          _tvRemoteClient!.onPairingComplete();
+          await _tvRemoteClient!.onPairingComplete();
+          if (!mounted) return;
+          Navigator.of(context).pop();
         }
         break;
 
@@ -191,8 +178,32 @@ class _WelcomeModalState extends State<WelcomeModal> {
     }
   }
 
-  void getPin(String value) {
-    _tvRemoteClient!.sendPairingSecret(value);
+  void getPin(String value) async {
+    final pin = value.trim().toUpperCase().replaceAll(RegExp(r'[^0-9A-F]'), '');
+
+    if (pin.length != 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'PIN must be exactly 6 characters. You entered: "$value"',
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (!RegExp(r'^[0-9A-F]{6}$').hasMatch(pin)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'PIN must only contain 0-9 and A-F. You entered: "$value"',
+          ),
+        ),
+      );
+      return;
+    }
+    Navigator.of(context).pop();
+    await _tvRemoteClient!.sendPairingSecret(value);
   }
 
   // ignore: unused_local_variable
@@ -220,8 +231,6 @@ class _WelcomeModalState extends State<WelcomeModal> {
     if (!alreadyPaired) {
       await _tvRemoteClient!.startPairing();
     }
-
-    Navigator.of(context).pop();
   }
 
   List<Map<String, dynamic>> data = [];

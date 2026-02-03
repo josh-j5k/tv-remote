@@ -128,6 +128,9 @@ class RemoteKeyInject_RemoteKeyCode extends $pb.ProtobufEnum {
   static const RemoteKeyInject_RemoteKeyCode KEYCODE_MEDIA_RECORD =
       RemoteKeyInject_RemoteKeyCode._(
           130, _omitEnumNames ? '' : 'KEYCODE_MEDIA_RECORD');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_SEARCH =
+      RemoteKeyInject_RemoteKeyCode._(
+          84, _omitEnumNames ? '' : 'KEYCODE_SEARCH');
 
   /// volume
   static const RemoteKeyInject_RemoteKeyCode KEYCODE_VOLUME_UP =
@@ -192,6 +195,24 @@ class RemoteKeyInject_RemoteKeyCode extends $pb.ProtobufEnum {
   static const RemoteKeyInject_RemoteKeyCode KEYCODE_VOICE_ASSIST =
       RemoteKeyInject_RemoteKeyCode._(
           231, _omitEnumNames ? '' : 'KEYCODE_VOICE_ASSIST');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_INPUT_HDMI_1 =
+      RemoteKeyInject_RemoteKeyCode._(
+          243, _omitEnumNames ? '' : 'KEYCODE_TV_INPUT_HDMI_1');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_INPUT_HDMI_2 =
+      RemoteKeyInject_RemoteKeyCode._(
+          244, _omitEnumNames ? '' : 'KEYCODE_TV_INPUT_HDMI_2');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_INPUT_HDMI_3 =
+      RemoteKeyInject_RemoteKeyCode._(
+          245, _omitEnumNames ? '' : 'KEYCODE_TV_INPUT_HDMI_3');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_INPUT_HDMI_4 =
+      RemoteKeyInject_RemoteKeyCode._(
+          246, _omitEnumNames ? '' : 'KEYCODE_TV_INPUT_HDMI_4');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_INPUT_COMPONENT_1 =
+      RemoteKeyInject_RemoteKeyCode._(
+          249, _omitEnumNames ? '' : 'KEYCODE_TV_INPUT_COMPONENT_1');
+  static const RemoteKeyInject_RemoteKeyCode KEYCODE_TV_INPUT_COMPOSITE_1 =
+      RemoteKeyInject_RemoteKeyCode._(
+          247, _omitEnumNames ? '' : 'KEYCODE_TV_INPUT_COMPOSITE_1');
 
   /// numeric
   static const RemoteKeyInject_RemoteKeyCode KEYCODE_0 =
@@ -266,6 +287,7 @@ class RemoteKeyInject_RemoteKeyCode extends $pb.ProtobufEnum {
     KEYCODE_MEDIA_REWIND,
     KEYCODE_MEDIA_FAST_FORWARD,
     KEYCODE_MEDIA_RECORD,
+    KEYCODE_SEARCH,
     KEYCODE_VOLUME_UP,
     KEYCODE_VOLUME_DOWN,
     KEYCODE_MUTE,
@@ -286,6 +308,12 @@ class RemoteKeyInject_RemoteKeyCode extends $pb.ProtobufEnum {
     KEYCODE_APP_SWITCH,
     KEYCODE_ASSIST,
     KEYCODE_VOICE_ASSIST,
+    KEYCODE_TV_INPUT_HDMI_1,
+    KEYCODE_TV_INPUT_HDMI_2,
+    KEYCODE_TV_INPUT_HDMI_3,
+    KEYCODE_TV_INPUT_HDMI_4,
+    KEYCODE_TV_INPUT_COMPONENT_1,
+    KEYCODE_TV_INPUT_COMPOSITE_1,
     KEYCODE_0,
     KEYCODE_1,
     KEYCODE_2,

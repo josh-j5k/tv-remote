@@ -6,21 +6,23 @@ message RemoteMessage {
   oneof message {
     RemoteConfigure remote_configure = 1;
     RemoteSetActive remote_set_active = 2;
+    RemoteError remote_error = 3;
     RemotePingRequest remote_ping_request = 8;
     RemotePingResponse remote_ping_response = 9;
     RemoteKeyInject remote_key_inject = 10;
-    RemoteImeKeyInject remote_ime_key_inject = 11;
-    RemoteError remote_error = 15;
-    RemoteAppInfo remote_app_info = 20;
+    RemoteImeKeyInject remote_ime_key_inject = 20;
     RemoteImeBatchEdit remote_ime_batch_edit = 21;
-    RemoteAdjustVolumeLevel remote_adjust_volume_level = 25;
-    RemoteSetPreferredAudioDevice remote_set_preferred_audio_device = 31;
-    RemoteResetPreferredAudioDevice remote_reset_preferred_audio_device = 32;
-    RemotePowerStatus remote_power_status = 35;
-    RemoteGetPowerStatus remote_get_power_status = 36;
-    RemotePowerInfo remote_power_info = 40;
-    RemoteVolumeInfo remote_volume_info = 50;
-    RemoteStartApp remote_start_app = 330;
+    RemoteImeShowRequest remote_ime_show_request = 22;
+    RemoteVoiceBegin remote_voice_begin = 30;
+    RemoteVoicePayload remote_voice_payload = 31;
+    RemoteVoiceEnd remote_voice_end = 32;
+    RemoteStart remote_start = 40;
+    RemoteSetVolumeLevel remote_set_volume_level = 50;
+    RemoteAdjustVolumeLevel remote_adjust_volume_level = 51;
+    RemoteSetPreferredAudioDevice remote_set_preferred_audio_device = 60;
+    RemoteResetPreferredAudioDevice remote_reset_preferred_audio_device = 61;
+    RemoteAppLinkLaunchRequest remote_app_link_launch_request = 90;
+
   }
 }
 message RemoteKeyInject {
@@ -50,7 +52,7 @@ message RemoteKeyInject {
     KEYCODE_MEDIA_REWIND = 89;
     KEYCODE_MEDIA_FAST_FORWARD = 90;
     KEYCODE_MEDIA_RECORD = 130;
-
+    KEYCODE_SEARCH          = 84;
   // volume
     KEYCODE_VOLUME_UP = 24;
     KEYCODE_VOLUME_DOWN = 25;
@@ -76,6 +78,12 @@ message RemoteKeyInject {
     KEYCODE_APP_SWITCH = 187;
     KEYCODE_ASSIST = 219;
     KEYCODE_VOICE_ASSIST = 231;
+    KEYCODE_TV_INPUT_HDMI_1 = 243;
+    KEYCODE_TV_INPUT_HDMI_2 = 244;
+    KEYCODE_TV_INPUT_HDMI_3 = 245;
+    KEYCODE_TV_INPUT_HDMI_4 = 246;
+    KEYCODE_TV_INPUT_COMPONENT_1 = 249;
+    KEYCODE_TV_INPUT_COMPOSITE_1 = 247;
 
   // numeric
     KEYCODE_0 = 7;
@@ -104,13 +112,30 @@ message RemoteKeyInject {
   RemoteKeyCode key_code = 1;
   RemoteDirection direction = 2;
 }
+message RemoteAppLinkLaunchRequest {
+  string app_link = 1;
+}
+message RemoteVoicePayload {
+  int32 session_id = 1;
+  bytes samples = 2;
+}
 
+message RemoteVoiceBegin {
+  int32 session_id = 1;
+  // Package name is sent from the Android device as a response to sending KEYCODE_SEARCH and not required when sending audio.
+  string package_name = 2;
+}
+message RemoteVoiceEnd {
+  int32 session_id = 1;
+}
 // Configuration messages
 message RemoteConfigure {
   uint32 code1 = 1;  // Usually 622 (which is varint for: 8, 238, 4)
   RemoteDeviceInfo device_info = 2;
 }
-
+message RemoteStart {
+  bool started = 1;
+}
 message RemoteDeviceInfo {
   string model = 1;
   string vendor = 2;
@@ -129,12 +154,22 @@ message RemoteVolumeInfo {
   int32 unknown1 = 7;
   bool unknown2 = 8;
 }
-
+message RemoteImeShowRequest {
+  RemoteTextFieldStatus remote_text_field_status = 2;
+}
 message RemotePowerInfo {
   bool is_on = 1;
 }
 message RemoteSetActive {
   uint32 active = 1;  // Usually 622
+}
+message RemoteTextFieldStatus {
+  int32 counter_field = 1;
+  string value = 2;
+  int32 start = 3;
+  int32 end = 4;
+  int32 int5 = 5;
+  string label = 6;
 }
 
 message RemoteImeKeyInject {
@@ -150,42 +185,45 @@ enum RemoteDirection {
   SHORT_PRESS = 3;      // Complete press and release
 }
 
-// IME (text input)
+
 message RemoteImeBatchEdit {
-  uint32 ime_counter = 1;
-  uint32 field_counter = 2;
-  RemoteImeEditInfo edit_info = 3;
+  int32 ime_counter = 1;
+  int32 field_counter = 2;
+  repeated RemoteEditInfo edit_info = 3;
 }
 
-message RemoteImeEditInfo {
+message RemoteEditInfo {
   uint32 insert = 1;
-  RemoteTextFieldStatus text_field_status = 2;
+  RemoteImeObject text_field_status = 2;
 }
 
-message RemoteTextFieldStatus {
-  uint32 start = 1;
-  uint32 end = 2;
+
+message RemoteImeObject {
+  int32 start = 1;
+  int32 end = 2;
   string value = 3;
 }
 
-// App launching
-message RemoteStartApp {
-  string intent_uri = 1;  // Tag 10 - deeplink URL
-}
-
 message RemoteAppInfo {
-  string app_name = 1;
-  string app_package = 2;
+  int32 counter = 1;
+  int32 int2 = 2;
+  int32 int3 = 3;
+  string int4 = 4;
+  int32 int7 = 7;
+  int32 int8 = 8;
+  string label = 10;
+  string app_package = 12;
+  int32 int13 = 13;
 }
 
 message RemotePingRequest {
   int32 val1 = 1;
-  int64 val2 = 2;
+  int32 val2 = 2;
 }
 
 message RemotePingResponse {
   int32 val1 = 1;
-  int64 val2 = 2;  // Add this field!
+  int32 val2 = 2;
 }
 
 // Power status
@@ -197,11 +235,14 @@ message RemotePowerStatus {
 
 // Volume control
 message RemoteSetVolumeLevel {
-  uint32 volume_level = 1;
-  uint32 volume_max = 2;
-  bool is_muted = 3;
-  string device_name = 4;
-  uint32 unknown = 5;
+   uint32 unknown1 = 1;
+  uint32 unknown2 = 2;
+  string player_model = 3;
+  uint32 unknown4 = 4;
+  uint32 unknown5 = 5;
+  uint32 volume_max = 6;
+  uint32 volume_level = 7;
+  bool volume_muted = 8;
 }
 
 message RemoteAdjustVolumeLevel {
