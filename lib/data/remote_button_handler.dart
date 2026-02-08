@@ -4,54 +4,85 @@ import 'package:remote_app/src/generated/keycodes.pb.dart';
 
 class RemoteButtonHandler {
   TvRemoteClient? remoteService;
+  Timer? _longPressTimer;
   Timer? _repeatTimer;
   bool _isRepeating = false;
-
+  RemoteKeyInject_RemoteKeyCode? _currentKey;
   RemoteButtonHandler(this.remoteService);
 
   /// For D-Pad and other buttons - uses RemoteKeyInject
   Future<void> onKeyButtonDown(
     RemoteKeyInject_RemoteKeyCode keyCode, {
-    Duration longPressThreshold = const Duration(milliseconds: 400),
+    Duration longPressThreshold = const Duration(milliseconds: 1000),
     Duration repeatInterval = const Duration(milliseconds: 150),
     bool enableRepeat = true,
   }) async {
     if (remoteService == null) return;
-    await remoteService!.sendKeyPress(keyCode);
-    // Start repeat timer for long press
-    _repeatTimer = Timer(longPressThreshold, () {
-      _isRepeating = true;
-      print('🔁 Key repeat started for ${keyCode.name}');
 
-      if (enableRepeat) {
-        // Repeat using SHORT_PRESS
-        _repeatTimer = Timer.periodic(repeatInterval, (timer) async {
-          await remoteService!.sendKeyShortPress(keyCode);
+    // Cancel any existing timers first
+    _cancelAllTimers();
+
+    _currentKey = keyCode;
+    _isRepeating = false;
+
+    // Send initial press (don't await)
+    remoteService!.sendKeyPress(keyCode);
+
+    // Start long press timer
+    _longPressTimer = Timer(longPressThreshold, () {
+      if (enableRepeat && _currentKey == keyCode) {
+        _isRepeating = true;
+        // Start repeat timer
+        _repeatTimer = Timer.periodic(repeatInterval, (timer) {
+          if (remoteService != null && _currentKey == keyCode) {
+            remoteService!.sendKeyShortPress(keyCode);
+          }
         });
       }
     });
   }
 
-  /// Call when button released
-  Future<void> onButtonUp() async {
-    _repeatTimer?.cancel();
+  Future<void> onButtonUp(RemoteKeyInject_RemoteKeyCode keyCode) async {
+    _cancelAllTimers();
 
-    if (_isRepeating) {
-      print('✅ Repeat ended');
+    // if (_isRepeating) {
+    //   print('✅ Repeat ended for ${keyCode.name}');
+    // } else {
+    //   print('🔼 Key released (short press): ${keyCode.name}');
+    // }
+
+    // Send release event (don't await)
+    if (remoteService != null) {
+      remoteService!.sendKeyRelease(keyCode);
     }
 
     // Reset state
     _isRepeating = false;
-    _repeatTimer = null;
+    _currentKey = null;
   }
 
-  void onButtonCancel() {
-    _repeatTimer?.cancel();
+  void onButtonCancel(RemoteKeyInject_RemoteKeyCode keyCode) {
+    _cancelAllTimers();
+
+    print('❌ Key cancelled: ${keyCode.name}');
+
+    // Send release event (don't await)
+    if (remoteService != null) {
+      remoteService!.sendKeyRelease(keyCode);
+    }
+
     _isRepeating = false;
+    _currentKey = null;
+  }
+
+  void _cancelAllTimers() {
+    _longPressTimer?.cancel();
+    _longPressTimer = null;
+    _repeatTimer?.cancel();
     _repeatTimer = null;
   }
 
   void dispose() {
-    _repeatTimer?.cancel();
+    _cancelAllTimers();
   }
 }

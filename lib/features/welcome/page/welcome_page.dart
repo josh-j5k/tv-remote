@@ -397,7 +397,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
                                               ),
                                             ),
                                             Text(
-                                              _prefs!.getString(
+                                              _prefs?.getString(
                                                         'atv_key_${item['host']}',
                                                       ) !=
                                                       null

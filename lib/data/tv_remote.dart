@@ -12,11 +12,12 @@ import 'package:remote_app/src/rsa_key_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:uuid/uuid.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class TvRemoteClient {
   final String host;
   final void Function(OuterMessage)? handleMessage;
-
+  String? _deviceId;
   String? _certPath;
   String? _keyPath;
   RSAPublicKey? _clientPublicKey;
@@ -31,7 +32,6 @@ class TvRemoteClient {
   /// Initialize: Check for stored certificate or generate new one
   Future<bool> initialize() async {
     print('🔧 Initializing Android TV Remote...\n');
-
     final prefs = await SharedPreferences.getInstance();
 
     // Check if we have stored certificate
@@ -99,6 +99,23 @@ class TvRemoteClient {
     }
   }
 
+  Future<String> _getDeviceIdentifier() async {
+    if (_deviceId != null) return _deviceId!;
+
+    final deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      _deviceId = androidInfo.id; // Unique Android ID
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      _deviceId = iosInfo.identifierForVendor ?? 'ios-device';
+    } else {
+      _deviceId = 'emulator-device';
+    }
+    return _deviceId!;
+  }
+
   Future<void> startPairing() async {
     if (_isPaired) {
       print('⚠️  Already paired. Use connect() to authenticate.\n');
@@ -110,7 +127,7 @@ class TvRemoteClient {
     }
 
     print('🔐 Starting pairing on $host:6467...\n');
-
+    await _getDeviceIdentifier();
     final context = SecurityContext(withTrustedRoots: false)
       ..useCertificateChain(_certPath!)
       ..usePrivateKey(_keyPath!);
@@ -153,7 +170,7 @@ class TvRemoteClient {
     final String serviceUuid = uuid.replaceAll('-', '');
     final pairingRequest = PairingRequest()
       ..clientId = "$clientId:${uuid.replaceAll('-', '')}"
-      ..clientName = clientName
+      ..clientName = "$clientName-$_deviceId"
       ..serviceName = serviceName
       ..serviceUuid = serviceUuid;
 
@@ -467,7 +484,7 @@ class TvRemoteClient {
   }
 
   int _lastPingVal1 = 0;
-  int _lastPingVal2 = 0;
+  // int _lastPingVal2 = 0;
   int _imeCounter = 0;
   int _imeFieldCounter = 0;
   void _handleCommandMessage(RemoteMessage msg) {
@@ -477,7 +494,7 @@ class TvRemoteClient {
     } else if (msg.hasRemotePingRequest()) {
       print('   Type: RemotePingRequest');
       _lastPingVal1 = msg.remotePingRequest.val1;
-      _lastPingVal2 = msg.remotePingRequest.val2;
+      // _lastPingVal2 = msg.remotePingRequest.val2;
 
       _sendPong();
     } else if (msg.hasRemoteSetActive()) {
@@ -709,7 +726,7 @@ class TvRemoteClient {
     tbsCertificate.add(signatureAlgorithm);
 
     // Issuer (CN=atvremote)
-    final issuer = _buildDistinguishedName('atvremote');
+    final issuer = _buildDistinguishedName('atvremote-$_deviceId');
     tbsCertificate.add(issuer);
 
     // Validity

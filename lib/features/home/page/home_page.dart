@@ -52,6 +52,23 @@ class _HomePageState extends State<HomePage>
     }
   }
 
+  void tapDown(RemoteKeyInject_RemoteKeyCode keyCode) async {
+    await _buttonHandler?.onKeyButtonDown(
+      keyCode,
+      longPressThreshold: Duration(milliseconds: 1000),
+      repeatInterval: Duration(milliseconds: 150),
+      enableRepeat: true,
+    );
+  }
+
+  void tapUp(RemoteKeyInject_RemoteKeyCode keyCode) async {
+    await _buttonHandler?.onButtonUp(keyCode);
+  }
+
+  void tapCancel(RemoteKeyInject_RemoteKeyCode keyCode) {
+    _buttonHandler?.onButtonCancel(keyCode);
+  }
+
   void _refreshData() {
     if (appDataNotifier.value['isConnected'] == true) {
       showReconnectingDialog(context);
@@ -318,7 +335,7 @@ class _HomePageState extends State<HomePage>
     return Container(
       width: double.maxFinite,
       height: double.maxFinite,
-      color: Color.fromARGB(249, 0, 3, 9),
+      color: Color.fromARGB(248, 0, 3, 4),
       child: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -446,34 +463,25 @@ class _HomePageState extends State<HomePage>
                                 Expanded(
                                   child: GestureDetector(
                                     onTapDown: (_) async {
-                                      // if(_buttonHandler == )return;
-                                      await _buttonHandler?.onKeyButtonDown(
+                                      tapDown(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_CHANNEL_UP,
-                                        longPressThreshold: Duration(
-                                          milliseconds: 400,
-                                        ),
-                                        repeatInterval: Duration(
-                                          milliseconds: 150,
-                                        ),
-                                        enableRepeat: true,
                                       );
                                     },
+                                    // Pass the keyCode
                                     onTapUp: (_) async {
-                                      await _buttonHandler?.onButtonUp();
-                                      if (_remoteClient == null) return;
-                                      await _remoteClient!.sendKeyRelease(
+                                      tapUp(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_CHANNEL_UP,
                                       );
                                     },
                                     onTapCancel: () {
-                                      _buttonHandler?.onButtonCancel();
-                                      _remoteClient!.sendKeyRelease(
+                                      tapCancel(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_CHANNEL_UP,
                                       );
                                     },
+
                                     child: Padding(
                                       padding: EdgeInsets.all(0),
                                       child: Container(
@@ -515,28 +523,19 @@ class _HomePageState extends State<HomePage>
                                 Expanded(
                                   child: GestureDetector(
                                     onTapDown: (_) async {
-                                      await _buttonHandler?.onKeyButtonDown(
+                                      tapDown(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_CHANNEL_DOWN,
-                                        longPressThreshold: Duration(
-                                          milliseconds: 400,
-                                        ),
-                                        repeatInterval: Duration(
-                                          milliseconds: 150,
-                                        ),
-                                        enableRepeat: true,
                                       );
                                     },
                                     onTapUp: (_) async {
-                                      await _buttonHandler?.onButtonUp();
-                                      await _remoteClient?.sendKeyRelease(
+                                      tapUp(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_CHANNEL_DOWN,
                                       );
                                     },
                                     onTapCancel: () {
-                                      _buttonHandler?.onButtonCancel();
-                                      _remoteClient?.sendKeyRelease(
+                                      tapCancel(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_CHANNEL_DOWN,
                                       );
@@ -707,28 +706,19 @@ class _HomePageState extends State<HomePage>
                                 Expanded(
                                   child: GestureDetector(
                                     onTapDown: (_) async {
-                                      await _buttonHandler?.onKeyButtonDown(
+                                      tapDown(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_VOLUME_UP,
-                                        longPressThreshold: Duration(
-                                          milliseconds: 400,
-                                        ),
-                                        repeatInterval: Duration(
-                                          milliseconds: 150,
-                                        ),
-                                        enableRepeat: true,
                                       );
                                     },
                                     onTapUp: (_) async {
-                                      await _buttonHandler?.onButtonUp();
-                                      await _remoteClient?.sendKeyRelease(
+                                      tapUp(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_VOLUME_UP,
                                       );
                                     },
                                     onTapCancel: () {
-                                      _buttonHandler?.onButtonCancel();
-                                      _remoteClient?.sendKeyRelease(
+                                      tapCancel(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_VOLUME_UP,
                                       );
@@ -774,28 +764,19 @@ class _HomePageState extends State<HomePage>
                                 Expanded(
                                   child: GestureDetector(
                                     onTapDown: (_) async {
-                                      await _buttonHandler?.onKeyButtonDown(
+                                      tapDown(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_VOLUME_DOWN,
-                                        longPressThreshold: Duration(
-                                          milliseconds: 400,
-                                        ),
-                                        repeatInterval: Duration(
-                                          milliseconds: 150,
-                                        ),
-                                        enableRepeat: true,
                                       );
                                     },
                                     onTapUp: (_) async {
-                                      await _buttonHandler?.onButtonUp();
-                                      await _remoteClient?.sendKeyRelease(
+                                      tapUp(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_VOLUME_DOWN,
                                       );
                                     },
                                     onTapCancel: () {
-                                      _buttonHandler?.onButtonCancel();
-                                      _remoteClient?.sendKeyRelease(
+                                      tapCancel(
                                         RemoteKeyInject_RemoteKeyCode
                                             .KEYCODE_VOLUME_DOWN,
                                       );
@@ -862,26 +843,19 @@ class _HomePageState extends State<HomePage>
                               width: 80.0,
                               child: GestureDetector(
                                 onTapDown: (_) async {
-                                  await _buttonHandler?.onKeyButtonDown(
+                                  tapDown(
                                     RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_DPAD_UP,
-                                    longPressThreshold: Duration(
-                                      milliseconds: 400,
-                                    ),
-                                    repeatInterval: Duration(milliseconds: 150),
-                                    enableRepeat: true,
                                   );
                                 },
                                 onTapUp: (_) async {
-                                  await _buttonHandler?.onButtonUp();
-                                  await _remoteClient?.sendKeyRelease(
+                                  tapUp(
                                     RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_DPAD_UP,
                                   );
                                 },
                                 onTapCancel: () {
-                                  _buttonHandler?.onButtonCancel();
-                                  _remoteClient?.sendKeyRelease(
+                                  tapCancel(
                                     RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_DPAD_UP,
                                   );
@@ -937,26 +911,19 @@ class _HomePageState extends State<HomePage>
                             width: 80.0,
                             child: GestureDetector(
                               onTapDown: (_) async {
-                                await _buttonHandler?.onKeyButtonDown(
+                                tapDown(
                                   RemoteKeyInject_RemoteKeyCode
                                       .KEYCODE_DPAD_LEFT,
-                                  longPressThreshold: Duration(
-                                    milliseconds: 400,
-                                  ),
-                                  repeatInterval: Duration(milliseconds: 150),
-                                  enableRepeat: true,
                                 );
                               },
                               onTapUp: (_) async {
-                                await _buttonHandler?.onButtonUp();
-                                await _remoteClient?.sendKeyRelease(
+                                tapUp(
                                   RemoteKeyInject_RemoteKeyCode
                                       .KEYCODE_DPAD_LEFT,
                                 );
                               },
                               onTapCancel: () {
-                                _buttonHandler?.onButtonCancel();
-                                _remoteClient?.sendKeyRelease(
+                                tapCancel(
                                   RemoteKeyInject_RemoteKeyCode
                                       .KEYCODE_DPAD_LEFT,
                                 );
@@ -1003,26 +970,19 @@ class _HomePageState extends State<HomePage>
                             width: 80.0,
                             child: GestureDetector(
                               onTapDown: (_) async {
-                                await _buttonHandler?.onKeyButtonDown(
+                                tapDown(
                                   RemoteKeyInject_RemoteKeyCode
                                       .KEYCODE_DPAD_RIGHT,
-                                  longPressThreshold: Duration(
-                                    milliseconds: 400,
-                                  ),
-                                  repeatInterval: Duration(milliseconds: 150),
-                                  enableRepeat: true,
                                 );
                               },
                               onTapUp: (_) async {
-                                await _buttonHandler?.onButtonUp();
-                                await _remoteClient?.sendKeyRelease(
+                                tapUp(
                                   RemoteKeyInject_RemoteKeyCode
                                       .KEYCODE_DPAD_RIGHT,
                                 );
                               },
                               onTapCancel: () {
-                                _buttonHandler?.onButtonCancel();
-                                _remoteClient?.sendKeyRelease(
+                                tapCancel(
                                   RemoteKeyInject_RemoteKeyCode
                                       .KEYCODE_DPAD_RIGHT,
                                 );
@@ -1081,26 +1041,19 @@ class _HomePageState extends State<HomePage>
                               width: 80.0,
                               child: GestureDetector(
                                 onTapDown: (_) async {
-                                  await _buttonHandler?.onKeyButtonDown(
+                                  tapDown(
                                     RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_DPAD_DOWN,
-                                    longPressThreshold: Duration(
-                                      milliseconds: 400,
-                                    ),
-                                    repeatInterval: Duration(milliseconds: 150),
-                                    enableRepeat: true,
                                   );
                                 },
                                 onTapUp: (_) async {
-                                  await _buttonHandler?.onButtonUp();
-                                  await _remoteClient?.sendKeyRelease(
+                                  tapUp(
                                     RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_DPAD_DOWN,
                                   );
                                 },
                                 onTapCancel: () {
-                                  _buttonHandler?.onButtonCancel();
-                                  _remoteClient?.sendKeyRelease(
+                                  tapCancel(
                                     RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_DPAD_DOWN,
                                   );
