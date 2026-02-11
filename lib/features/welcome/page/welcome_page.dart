@@ -1,17 +1,11 @@
-// import 'dart:io';
-
+import 'package:android_tv_remote/core/services/models/discovered_tv_list.dart';
+import 'package:android_tv_remote/core/services/tv_remote_client.dart';
+import 'package:android_tv_remote/core/utils/discover_device.dart';
 import 'package:flutter/material.dart';
-import 'package:remote_app/data/tv_remote.dart';
-import 'package:remote_app/features/home/logic/notifier.dart';
-import 'package:multicast_dns/multicast_dns.dart';
-import 'package:remote_app/features/welcome/page/opt_fun.dart';
+import 'package:android_tv_remote/features/home/logic/notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:remote_app/src/generated/auth.pb.dart';
-
-import 'package:upnp2/upnp.dart' hide Icon; // <<< SWITCHED to upnp2
 import 'dart:async';
 
-// import 'dart:core' as $core;
 const port = 6466;
 
 class WelcomeModal extends StatefulWidget {
@@ -22,272 +16,53 @@ class WelcomeModal extends StatefulWidget {
 
 class _WelcomeModalState extends State<WelcomeModal> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  SharedPreferences? _prefs;
+  List<DiscoveredTvList> data = [];
+
   @override
   void initState() {
     super.initState();
     _loadPreferences();
-    // discoverAndroidTVs();
-    // showPinDialog();
-    discoverDIALDevices();
+    _loadData();
   }
 
-  SharedPreferences? _prefs;
-  TvRemoteClient? _tvRemoteClient;
-
-  Future<void> discoverAndroidTVs() async {
-    final client = MDnsClient();
-    await client.start();
-
-    try {
-      await for (final PtrResourceRecord ptr
-          in client
-              .lookup<PtrResourceRecord>(
-                ResourceRecordQuery.serverPointer(
-                  '_androidtvremote2._tcp.local',
-                ),
-              )
-              .timeout(Duration(seconds: 10))) {
-        print('\n═══════════════════════════════════');
-        print('📺 Found PTR: ${ptr.domainName}');
-
-        // Resolve SRV
-        await for (final SrvResourceRecord srv
-            in client
-                .lookup<SrvResourceRecord>(
-                  ResourceRecordQuery.service(ptr.domainName),
-                )
-                .timeout(Duration(seconds: 5))) {
-          // Get TXT records (might contain important info)
-          await for (final TxtResourceRecord txt
-              in client
-                  .lookup<TxtResourceRecord>(
-                    ResourceRecordQuery.text(ptr.domainName),
-                  )
-                  .timeout(Duration(seconds: 5))) {
-            print('📝 TXT Records:');
-            // for (var entry in txt.texts) {
-            //   print('   $entry');
-            // }
-          }
-
-          // Get IPv4
-          await for (final IPAddressResourceRecord ip
-              in client
-                  .lookup<IPAddressResourceRecord>(
-                    ResourceRecordQuery.addressIPv4(srv.target),
-                  )
-                  .timeout(Duration(seconds: 5))) {
-            // await testPortConnection(ip.address.address, srv.port);
-            // await connectViaTCP(ip.address.address, srv.port);
-
-            print('🌐 IPv4: ${ip.address.address}');
-          }
-
-          // Try IPv6 too
-          try {
-            await for (final IPAddressResourceRecord ip
-                in client
-                    .lookup<IPAddressResourceRecord>(
-                      ResourceRecordQuery.addressIPv6(srv.target),
-                    )
-                    .timeout(Duration(seconds: 2))) {
-              print('🌐 IPv6: ${ip.address.address}');
-            }
-          } catch (e) {
-            print('⚠️  No IPv6');
-          }
-          print('═══════════════════════════════════\n');
-        }
-      }
-    } catch (e) {
-      print('❌ Error: $e');
-    } finally {
-      client.stop();
-    }
+  Future<void> _loadData() async {
+    final discovered = await discoverDIALDevices();
+    setState(() {
+      data = discovered;
+    });
   }
 
-  Future<void> showPinDialog(context) async {
-    showOtpDialog(
-      context: context,
-      title: 'Enter TV PIN',
-      subtitle: 'Enter the pin shown on the TV',
-      length: 6,
-      onCompleted: getPin,
+  Future<void> setTVData(DiscoveredTvList item) async {
+    final newValue = DiscoveredTvList(
+      friendlyName: item.friendlyName,
+      host: item.host,
+      isConnected: true,
+      port: item.port,
+      scheme: item.scheme,
     );
-  }
 
-  void handleMessage(OuterMessage msg) async {
-    print('whichMessage  =====> ${msg.whichMessage()}');
-    print('msg status  =====> ${msg.status}');
-
-    switch (msg.whichMessage()) {
-      case OuterMessage_Message.pairingResponse:
-        print('🔐 Received PairingResponse');
-        _tvRemoteClient!.sendPairingOption();
-        break;
-
-      case OuterMessage_Message.pairingRequestAck:
-        print('✅ PairingRequest ack acknowledged');
-        break;
-      case OuterMessage_Message.pairingConfigurationAck:
-        showPinDialog(context);
-        break;
-
-      case OuterMessage_Message.pairingOption:
-        print('✅ TV confirmed encoding settings');
-        if (msg.pairingOption.outputEncodings.isNotEmpty) {
-          final encoding = msg.pairingOption.outputEncodings.first;
-
-          print(
-            '   Encoding: ${encoding.type}, Length: ${encoding.symbolLength}',
-          );
-        }
-        print('   Role: ${msg.pairingOption.preferredRole}');
-
-        // Check the role the TV selected
-        if (msg.pairingOption.preferredRole == RoleType.ROLE_TYPE_OUTPUT ||
-            msg.pairingOption.preferredRole == RoleType.ROLE_TYPE_INPUT) {
-          print('📺 PIN should be displayed on TV screen NOW!');
-        }
-
-        _tvRemoteClient!.sendPairingConfiguration();
-        break;
-
-      case OuterMessage_Message.pairingOptionAck:
-        print('✅ PairingOptions acknowledged');
-        print('📺 TV should display PIN now!');
-        break;
-      case OuterMessage_Message.pairingSecretAck:
-        if (msg.status == 200 && msg.pairingSecretAck.secret.isNotEmpty) {
-          await _tvRemoteClient!.onPairingComplete();
-          if (!mounted) return;
-          Navigator.of(context).pop();
-        }
-        break;
-
-      case OuterMessage_Message.notSet:
-        if (msg.status == 400) {
-          print('❌ Error 400 - Bad request');
-        } else if (msg.status == 200) {
-          print('✅ Empty 200 acknowledgment');
-        }
-        break;
-
-      default:
-        print('⚠️ Unknown message: ${msg.whichMessage()}');
-    }
-  }
-
-  void getPin(String value) async {
-    final pin = value.trim().toUpperCase().replaceAll(RegExp(r'[^0-9A-F]'), '');
-
-    if (pin.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'PIN must be exactly 6 characters. You entered: "$value"',
-          ),
-        ),
-      );
-      return;
-    }
-
-    if (!RegExp(r'^[0-9A-F]{6}$').hasMatch(pin)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'PIN must only contain 0-9 and A-F. You entered: "$value"',
-          ),
-        ),
-      );
-      return;
-    }
-    Navigator.of(context).pop();
-    await _tvRemoteClient!.sendPairingSecret(value);
-  }
-
-  // ignore: unused_local_variable
-  Future<void> setTVData(item) async {
-    final newValue = Map<String, dynamic>.from(appDataNotifier.value)
-      ..['isConnected'] = true
-      ..['friendlyName'] = item['friendlyName']
-      ..['port'] = item['port']
-      ..['host'] = item['host']
-      ..['scheme'] = item['scheme'];
     appDataNotifier.value = newValue;
 
     //  host: '192.168.1.185',
-    final host = item['host'];
+    final host = item.host;
+    // print(host);
     final prefHost = _prefs!.getString('atv_key_$host');
     if (prefHost != null) {
       Navigator.of(context).pop();
       return;
     }
-    _tvRemoteClient = TvRemoteClient(
-      host: item['host'],
-      handleMessage: handleMessage,
-    );
-    final alreadyPaired = await _tvRemoteClient!.initialize();
+
+    final tvRemoteClient = TvRemoteClient(host: item.host!);
+    final alreadyPaired = await tvRemoteClient.initialize();
     if (!alreadyPaired) {
-      await _tvRemoteClient!.startPairing();
+      if (!mounted) return;
+      await tvRemoteClient.authenticate(context, mounted);
     }
-  }
-
-  List<Map<String, dynamic>> data = [];
-  Future<void> discoverDIALDevices() async {
-    final disc = DeviceDiscoverer();
-    // setState(() {
-    //   data.add({
-    //     "friendlyName": "star_tv",
-    //     "scheme": 'http',
-    //     "port": "8008",
-    //     'host': "192.168.1.185",
-    //     'isConnected': false,
-    //   });
-    // });
-    await disc.start(ipv6: false);
-    disc.quickDiscoverClients().listen(
-      (client) async {
-        // Check if this might be a DIAL device before fetching
-        // final usn = client.usn?.toLowerCase() ?? '';
-        // final server = client.server?.toLowerCase() ?? '';
-        // bool isLikelyAndroidTV =
-        //     usn.contains('android') ||
-        //     usn.contains('nfandroid') ||
-        //     server.contains('chromecast');
-
-        bool isValidLocation =
-            client.location != null && client.location!.contains(".xml");
-
-        if (isValidLocation) {
-          final dev = await client.getDevice();
-          if (dev != null &&
-              dev.deviceType == 'urn:dial-multiscreen-org:device:dial:1') {
-            final uri = Uri.parse(dev.url!);
-            setState(() {
-              data.add({
-                "friendlyName": dev.friendlyName,
-                "scheme": uri.scheme,
-                "port": uri.port,
-                'host': uri.host,
-                'isConnected': appDataNotifier.value['host'] == uri.host,
-              });
-            });
-          }
-        }
-        // super.initState();
-      },
-      onError: (error) {
-        // Catch stream-level errors
-        print("Stream error: $error");
-        // Stream continues
-      },
-    );
   }
 
   Future<void> _loadPreferences() async {
     _prefs = await SharedPreferences.getInstance();
-    // super.initState();
   }
 
   @override
@@ -389,7 +164,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              item['friendlyName']!,
+                                              item.friendlyName!,
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
@@ -398,7 +173,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
                                             ),
                                             Text(
                                               _prefs?.getString(
-                                                        'atv_key_${item['host']}',
+                                                        'atv_key_${item.host}',
                                                       ) !=
                                                       null
                                                   ? "Not Connected"
@@ -447,7 +222,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
                             setState(() {
                               data = [];
                             });
-                            discoverDIALDevices();
+                            _loadData();
                           },
                           child: Wrap(
                             spacing: 15.0,

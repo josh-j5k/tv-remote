@@ -1,13 +1,15 @@
 import 'dart:math';
+import 'package:android_tv_remote/core/services/tv_command_processor.dart';
 import 'package:flutter/material.dart';
-import 'package:remote_app/data/remote_button_handler.dart';
-import 'package:remote_app/data/tv_remote.dart';
-import 'package:remote_app/features/home/logic/notifier.dart';
-import 'package:remote_app/features/home/page/apps_page.dart';
-import 'package:remote_app/features/home/page/reconnecting_widget.dart';
-import 'package:remote_app/features/welcome/page/welcome_page.dart';
-import 'package:remote_app/features/home/logic/observer.dart';
-import 'package:remote_app/src/generated/keycodes.pb.dart';
+import 'package:android_tv_remote/core/services/tv_remote_button_handler.dart';
+import 'package:android_tv_remote/core/services/tv_remote_client.dart';
+import 'package:android_tv_remote/features/home/logic/notifier.dart';
+import 'package:android_tv_remote/features/home/page/widgets/apps_modal.dart';
+import 'package:android_tv_remote/features/home/page/widgets/reconnecting_widget.dart';
+import 'package:android_tv_remote/features/welcome/page/welcome_page.dart';
+import 'package:android_tv_remote/src/generated/keycodes.pb.dart';
+import 'package:flutter/services.dart';
+import 'package:android_tv_remote/core/observers/app_route_observer.dart';
 
 final btnBgColor = Color.fromARGB(255, 18, 18, 18);
 final btnTextColor = Color.fromARGB(255, 215, 215, 215);
@@ -25,6 +27,7 @@ class _HomePageState extends State<HomePage>
   TvRemoteClient? _remoteClient;
   bool _isMuted = false;
   RemoteButtonHandler? _buttonHandler;
+  TvCommandProcessor? _commandProcessor;
   @override
   void initState() {
     super.initState();
@@ -53,12 +56,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void tapDown(RemoteKeyInject_RemoteKeyCode keyCode) async {
-    await _buttonHandler?.onKeyButtonDown(
-      keyCode,
-      longPressThreshold: Duration(milliseconds: 1000),
-      repeatInterval: Duration(milliseconds: 150),
-      enableRepeat: true,
-    );
+    await _buttonHandler?.onKeyButtonDown(keyCode, enableRepeat: true);
   }
 
   void tapUp(RemoteKeyInject_RemoteKeyCode keyCode) async {
@@ -70,7 +68,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void _refreshData() {
-    if (appDataNotifier.value['isConnected'] == true) {
+    if (appDataNotifier.value.isConnected == true) {
       showReconnectingDialog(context);
       initializeRemoteClient().then((_) {
         if (!mounted) return;
@@ -95,12 +93,12 @@ class _HomePageState extends State<HomePage>
             keyboardType: TextInputType.text,
             decoration: InputDecoration(hintText: 'Type your text here'),
             onChanged: (value) async {
-              await _remoteClient?.sendText(value);
+              await _commandProcessor?.sendText(value);
             },
-            onSubmitted: (String value) async {
-              await _remoteClient?.sendText(value);
-              Navigator.of(context).pop();
-            },
+            // onSubmitted: (String value) async {
+            //   await _remoteClient?.sendText(value);
+            //   Navigator.of(context).pop();
+            // },
           ),
         );
       },
@@ -287,14 +285,15 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> initializeRemoteClient() async {
-    if (appDataNotifier.value['host'] != null) {
-      _remoteClient = TvRemoteClient(host: appDataNotifier.value['host']);
+    print(appDataNotifier.value.host);
+    if (appDataNotifier.value.host != null) {
+      _remoteClient = TvRemoteClient(host: appDataNotifier.value.host!);
       final alreadyPaired = await _remoteClient!.initialize();
       if (!alreadyPaired) {
         return;
       }
-      await _remoteClient?.connect();
-      _buttonHandler = RemoteButtonHandler(_remoteClient);
+      _commandProcessor = await _remoteClient?.connect();
+      _buttonHandler = RemoteButtonHandler(_commandProcessor);
     }
   }
 
@@ -316,8 +315,7 @@ class _HomePageState extends State<HomePage>
     ];
 
     for (var code in keycodes) {
-      print('Trying keycode: $code');
-      await _remoteClient?.sendKeyCommand(
+      await _commandProcessor?.sendKeyCommand(
         RemoteKeyInject_RemoteKeyCode.valueOf(code) ??
             RemoteKeyInject_RemoteKeyCode.KEYCODE_UNKNOWN,
       );
@@ -329,7 +327,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    final double divider = height * 0.03;
+    final double divider = height * 0.029;
     final double paddingInline = width * 0.07;
     final double centerSpacing = 35.0;
     return Container(
@@ -358,7 +356,7 @@ class _HomePageState extends State<HomePage>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    appData["friendlyName"] ??
+                                    appData.friendlyName ??
                                         'Universal Remote Control',
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 224, 224, 224),
@@ -366,7 +364,7 @@ class _HomePageState extends State<HomePage>
                                     ),
                                   ),
                                   Text(
-                                    appData['isConnected']
+                                    appData.isConnected
                                         ? 'Connected'
                                         : 'TV is not connected',
                                     style: TextStyle(
@@ -376,7 +374,7 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ],
                               ),
-                              !appData['isConnected']
+                              !appData.isConnected
                                   ? ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: btnBgColor,
@@ -419,11 +417,9 @@ class _HomePageState extends State<HomePage>
                               minimumSize: Size(40.0, 40.0),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_POWER,
-                              );
-                            },
+                            onPressed: () => _buttonHandler?.onShortPress(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_POWER,
+                            ),
                             child: Icon(
                               Icons.power_settings_new,
                               size: 30,
@@ -436,11 +432,9 @@ class _HomePageState extends State<HomePage>
                               minimumSize: Size(40, 40),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () async {
-                              _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_TV_INPUT,
-                              );
-                            },
+                            onPressed: () => _buttonHandler?.onShortPress(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_TV_INPUT,
+                            ),
                             child: Icon(
                               Icons.input,
                               size: 30,
@@ -589,12 +583,11 @@ class _HomePageState extends State<HomePage>
                                           12,
                                         ),
                                       ),
-                                      onPressed: () async {
-                                        await _remoteClient?.sendKeyCommand(
-                                          RemoteKeyInject_RemoteKeyCode
-                                              .KEYCODE_SEARCH,
-                                        );
-                                      },
+                                      onPressed: () =>
+                                          _buttonHandler?.onShortPress(
+                                            RemoteKeyInject_RemoteKeyCode
+                                                .KEYCODE_SEARCH,
+                                          ),
                                       child: Icon(
                                         Icons.search,
                                         size: 30,
@@ -619,7 +612,7 @@ class _HomePageState extends State<HomePage>
                                       ),
                                       onPressed: () async {
                                         if (_isMuted) {
-                                          await _remoteClient?.sendKeyCommand(
+                                          _buttonHandler?.onShortPress(
                                             RemoteKeyInject_RemoteKeyCode
                                                 .KEYCODE_VOLUME_UP,
                                           );
@@ -627,7 +620,7 @@ class _HomePageState extends State<HomePage>
                                             _isMuted = false;
                                           });
                                         } else {
-                                          await _remoteClient?.sendKeyCommand(
+                                          _buttonHandler?.onShortPress(
                                             RemoteKeyInject_RemoteKeyCode
                                                 .KEYCODE_MUTE,
                                           );
@@ -669,9 +662,9 @@ class _HomePageState extends State<HomePage>
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return AppsPage(
-                                            launchApp: _remoteClient != null
+                                            launchApp: _commandProcessor != null
                                                 ? (String deepLink) async {
-                                                    await _remoteClient!
+                                                    await _commandProcessor!
                                                         .launchApp(deepLink);
                                                   }
                                                 : null,
@@ -821,11 +814,9 @@ class _HomePageState extends State<HomePage>
                               minimumSize: Size(40.0, 40.0),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_SETTINGS,
-                              );
-                            },
+                            onPressed: () => _buttonHandler?.onShortPress(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_SETTINGS,
+                            ),
                             child: Icon(
                               Icons.settings,
                               size: 30,
@@ -886,11 +877,9 @@ class _HomePageState extends State<HomePage>
                               minimumSize: Size(40, 40),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_HOME,
-                              );
-                            },
+                            onPressed: () => _buttonHandler?.onShortPress(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_HOME,
+                            ),
                             child: Icon(
                               Icons.home,
                               size: 30,
@@ -958,12 +947,9 @@ class _HomePageState extends State<HomePage>
                               // minimumSize: Size(30.0, 30.0),
                               padding: EdgeInsets.all(25.5),
                             ),
-                            onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode
-                                    .KEYCODE_DPAD_CENTER,
-                              );
-                            },
+                            onPressed: () => _buttonHandler?.onShortPress(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_CENTER,
+                            ),
                             child: Text("OK", style: TextStyle(fontSize: 20.0)),
                           ),
                           SizedBox(
@@ -1019,11 +1005,9 @@ class _HomePageState extends State<HomePage>
                               minimumSize: Size(40.0, 40.0),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_MENU,
-                              );
-                            },
+                            onPressed: () => _buttonHandler?.onShortPress(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_MENU,
+                            ),
                             child: Icon(
                               Icons.menu,
                               size: 30,
@@ -1085,11 +1069,9 @@ class _HomePageState extends State<HomePage>
                               minimumSize: Size(40, 40),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
-                            onPressed: () async {
-                              await _remoteClient?.sendKeyCommand(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_BACK,
-                              );
-                            },
+                            onPressed: () => _buttonHandler?.onShortPress(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_BACK,
+                            ),
                             child: Icon(
                               Icons.arrow_back,
                               size: 30,
@@ -1122,7 +1104,10 @@ class _HomePageState extends State<HomePage>
                                   12.0,
                                 ),
                               ),
-                              onPressed: () => showKeyboardDialog(),
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                showKeyboardDialog();
+                              },
                               child: Icon(
                                 Icons.keyboard,
                                 size: 30,
@@ -1141,7 +1126,10 @@ class _HomePageState extends State<HomePage>
                                   12.0,
                                 ),
                               ),
-                              onPressed: () => showNumbersKeyboard(),
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                showNumbersKeyboard();
+                              },
                               child: Text(
                                 "123",
                                 style: TextStyle(
@@ -1162,7 +1150,8 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                               onPressed: () async {
-                                await _remoteClient?.launchApp(
+                                HapticFeedback.lightImpact();
+                                await _commandProcessor?.launchApp(
                                   "com.netflix.ninja",
                                 );
                               },
@@ -1201,7 +1190,8 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                               onPressed: () async {
-                                await _remoteClient?.launchApp(
+                                HapticFeedback.lightImpact();
+                                await _commandProcessor?.launchApp(
                                   "https://www.youtube.com",
                                 );
                               },

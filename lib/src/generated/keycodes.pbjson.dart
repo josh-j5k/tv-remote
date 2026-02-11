@@ -203,7 +203,7 @@ const RemoteMessage$json = {
       '10': 'remoteResetPreferredAudioDevice'
     },
     {
-      '1': 'remote_app_link_launch_request',
+      '1': 'android_tv_remote_link_launch_request',
       '3': 90,
       '4': 1,
       '5': 11,

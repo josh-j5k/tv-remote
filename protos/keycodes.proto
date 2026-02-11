@@ -21,7 +21,7 @@ message RemoteMessage {
     RemoteAdjustVolumeLevel remote_adjust_volume_level = 51;
     RemoteSetPreferredAudioDevice remote_set_preferred_audio_device = 60;
     RemoteResetPreferredAudioDevice remote_reset_preferred_audio_device = 61;
-    RemoteAppLinkLaunchRequest remote_app_link_launch_request = 90;
+    RemoteAppLinkLaunchRequest android_tv_remote_link_launch_request = 90;
 
   }
 }

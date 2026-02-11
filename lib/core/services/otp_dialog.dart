@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "package:remote_app/features/welcome/page/otp_input.dart";
+import "package:android_tv_remote/core/services/otp_input.dart";
 
 class OtpDialog extends StatefulWidget {
   final String title;
@@ -8,12 +8,12 @@ class OtpDialog extends StatefulWidget {
   final ValueChanged<String>? onCompleted;
 
   const OtpDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     required this.length,
     required this.onCompleted,
-  }) : super(key: key);
+  });
 
   @override
   State<OtpDialog> createState() => _OtpDialogState();

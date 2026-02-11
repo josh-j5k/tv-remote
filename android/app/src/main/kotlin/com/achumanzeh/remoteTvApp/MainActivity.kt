@@ -1,4 +1,4 @@
-package com.example.remote_app
+package com.achumanzeh.remoteTvApp
 
 import io.flutter.embedding.android.FlutterActivity
 

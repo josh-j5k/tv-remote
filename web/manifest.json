@@ -1,6 +1,6 @@
 {
-    "name": "remote_app",
-    "short_name": "remote_app",
+    "name": "android_tv_remote",
+    "short_name": "android_tv_remote",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,15 +1,12 @@
+import 'package:android_tv_remote/core/services/models/discovered_tv_list.dart';
 import 'package:flutter/material.dart';
 
-ValueNotifier<Map<String, dynamic>> appDataNotifier =
-    ValueNotifier<Map<String, dynamic>>({
-      "friendlyName": null,
-      'isConnected': false,
-      'secret': null,
-      'host': null,
-      'scheme': null,
-      'wsPairingPort': null,
-      'wsCommandPort': null,
-      'port': null,
-    });
-// ValueNotifier<bool> isConnectedNotifier = ValueNotifier<bool>(false);
-// ValueNotifier<String?> tvUrlBaseNotifier = ValueNotifier<String?>(null);
+ValueNotifier<DiscoveredTvList> appDataNotifier = ValueNotifier(
+  DiscoveredTvList(
+    friendlyName: null,
+    host: null,
+    isConnected: false,
+    scheme: null,
+    port: null,
+  ),
+);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "package:remote_app/features/welcome/page/otp_dialog.dart";
+import "package:android_tv_remote/core/services/otp_dialog.dart";
 
 Future<String?> showOtpDialog({
   required BuildContext context,

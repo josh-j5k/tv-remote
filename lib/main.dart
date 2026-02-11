@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:remote_app/widgets/widget_tree.dart';
-import 'package:remote_app/features/home/logic/observer.dart';
+import 'package:android_tv_remote/widgets/widget_tree.dart';
+import 'core/observers/app_route_observer.dart';
 
 void main() {
   runApp(const MyApp());

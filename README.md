@@ -1,4 +1,4 @@
-# remote_app
+# android_tv_remote
 
 A new Flutter project.
 
