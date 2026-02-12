@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import "../../data/tv_apps.dart";
+import "../home/data/tv_apps.dart";
 
-class AppsPage extends StatelessWidget {
+class TvAppsPage extends StatelessWidget {
   final Future<void> Function(String deepLink)? launchApp;
-  const AppsPage({super.key, required this.launchApp});
+  const TvAppsPage({super.key, required this.launchApp});
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;

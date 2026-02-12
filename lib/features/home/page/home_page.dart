@@ -1,18 +1,21 @@
 import 'dart:math';
 import 'package:android_tv_remote/core/services/tv_command_processor.dart';
+import 'package:android_tv_remote/core/themes/app_colors.dart';
+import 'package:android_tv_remote/core/themes/app_spacing.dart';
+import 'package:android_tv_remote/features/home/page/dialogs/show_keyboard_dialog.dart';
+import 'package:android_tv_remote/features/home/page/dialogs/show_numbers_keyboard.dart';
+import 'package:android_tv_remote/features/home/page/widgets/controls_widget.dart';
+import 'package:android_tv_remote/features/home/page/widgets/d_pad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:android_tv_remote/core/services/tv_remote_button_handler.dart';
 import 'package:android_tv_remote/core/services/tv_remote_client.dart';
 import 'package:android_tv_remote/features/home/logic/notifier.dart';
-import 'package:android_tv_remote/features/home/page/widgets/apps_modal.dart';
-import 'package:android_tv_remote/features/home/page/widgets/reconnecting_widget.dart';
+import 'package:android_tv_remote/features/tv_apps/tv_apps_page.dart';
+import 'package:android_tv_remote/features/home/page/dialogs/reconnecting_dialog.dart';
 import 'package:android_tv_remote/features/welcome/page/welcome_page.dart';
 import 'package:android_tv_remote/src/generated/keycodes.pb.dart';
 import 'package:flutter/services.dart';
 import 'package:android_tv_remote/core/observers/app_route_observer.dart';
-
-final btnBgColor = Color.fromARGB(255, 18, 18, 18);
-final btnTextColor = Color.fromARGB(255, 215, 215, 215);
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,18 +58,6 @@ class _HomePageState extends State<HomePage>
     }
   }
 
-  void tapDown(RemoteKeyInject_RemoteKeyCode keyCode) async {
-    await _buttonHandler?.onKeyButtonDown(keyCode, enableRepeat: true);
-  }
-
-  void tapUp(RemoteKeyInject_RemoteKeyCode keyCode) async {
-    await _buttonHandler?.onButtonUp(keyCode);
-  }
-
-  void tapCancel(RemoteKeyInject_RemoteKeyCode keyCode) {
-    _buttonHandler?.onButtonCancel(keyCode);
-  }
-
   void _refreshData() {
     if (appDataNotifier.value.isConnected == true) {
       showReconnectingDialog(context);
@@ -82,210 +73,7 @@ class _HomePageState extends State<HomePage>
     initializeRemoteClient();
   }
 
-  void showKeyboardDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Keyboard Input'),
-          content: TextField(
-            autofocus: true,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(hintText: 'Type your text here'),
-            onChanged: (value) async {
-              await _commandProcessor?.sendText(value);
-            },
-            // onSubmitted: (String value) async {
-            //   await _remoteClient?.sendText(value);
-            //   Navigator.of(context).pop();
-            // },
-          ),
-        );
-      },
-    );
-  }
-
-  void showNumbersKeyboard() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 15, 15, 49),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      spacing: 20,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "1",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "2",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "3",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      spacing: 20,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "4",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "5",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "6",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      spacing: 20,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "7",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "8",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                            minimumSize: Size(60.0, 60.0),
-                            padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            shape: CircleBorder(),
-                          ),
-                          child: Text(
-                            "9",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(250, 0, 0, 9),
-                          minimumSize: Size(60.0, 60.0),
-                          padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                          shape: CircleBorder(),
-                        ),
-                        child: Text(
-                          "0",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Future<void> initializeRemoteClient() async {
-    print(appDataNotifier.value.host);
     if (appDataNotifier.value.host != null) {
       _remoteClient = TvRemoteClient(host: appDataNotifier.value.host!);
       final alreadyPaired = await _remoteClient!.initialize();
@@ -297,50 +85,24 @@ class _HomePageState extends State<HomePage>
     }
   }
 
-  Future<void> tryAllInputKeycodes() async {
-    final keycodes = [
-      178, // KEYCODE_TV_INPUT (standard)
-      243, // KEYCODE_TV_INPUT_HDMI_1
-      244, // KEYCODE_TV_INPUT_HDMI_2
-      245, // KEYCODE_TV_INPUT_HDMI_3
-      246, // KEYCODE_TV_INPUT_HDMI_4
-      247, // KEYCODE_TV_INPUT_COMPOSITE_1
-      249, // KEYCODE_TV_INPUT_COMPONENT_1
-      242, // KEYCODE_TV_ANTENNA_CABLE
-      170, // KEYCODE_TV (might open TV menu)
-      176, // KEYCODE_SETTINGS
-      241, // KEYCODE_TV_NETWORK
-      222, // KEYCODE_MEDIA_AUDIO_TRACK (some TVs use this)
-      240, // KEYCODE_STB_INPUT (set-top box input)
-    ];
-
-    for (var code in keycodes) {
-      await _commandProcessor?.sendKeyCommand(
-        RemoteKeyInject_RemoteKeyCode.valueOf(code) ??
-            RemoteKeyInject_RemoteKeyCode.KEYCODE_UNKNOWN,
-      );
-      await Future.delayed(Duration(milliseconds: 1500));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    final double divider = height * 0.029;
-    final double paddingInline = width * 0.07;
-    final double centerSpacing = 35.0;
+    AppSpacing spacing = AppSpacing(
+      screenHeight: MediaQuery.of(context).size.height,
+      screenWidth: MediaQuery.of(context).size.width,
+    );
+
     return Container(
       width: double.maxFinite,
       height: double.maxFinite,
-      color: Color.fromARGB(248, 0, 3, 4),
+      color: AppColors.primary,
       child: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsetsGeometry.all(paddingInline),
+                padding: EdgeInsetsGeometry.all(spacing.paddingInline()),
                 child: Column(
                   children: [
                     SizedBox(
@@ -377,7 +139,7 @@ class _HomePageState extends State<HomePage>
                               !appData.isConnected
                                   ? ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: btnBgColor,
+                                        backgroundColor: AppColors.button,
                                         minimumSize: Size(40.0, 40.0),
                                         padding: EdgeInsets.fromLTRB(
                                           25,
@@ -397,7 +159,7 @@ class _HomePageState extends State<HomePage>
                                       child: Icon(
                                         Icons.public,
                                         size: 30,
-                                        color: btnTextColor,
+                                        color: AppColors.text,
                                       ),
                                     )
                                   : SizedBox.shrink(),
@@ -407,13 +169,18 @@ class _HomePageState extends State<HomePage>
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0.0, divider, 0.0, 0.0),
+                      padding: EdgeInsets.fromLTRB(
+                        0.0,
+                        spacing.mdDivider(),
+                        0.0,
+                        0.0,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: btnBgColor,
+                              backgroundColor: AppColors.button,
                               minimumSize: Size(40.0, 40.0),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
@@ -438,75 +205,44 @@ class _HomePageState extends State<HomePage>
                             child: Icon(
                               Icons.input,
                               size: 30,
-                              color: btnTextColor,
+                              color: AppColors.text,
                             ),
                           ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, divider, 0, .0),
+                      padding: EdgeInsets.fromLTRB(
+                        0,
+                        spacing.mdDivider(),
+                        0,
+                        .0,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                         children: [
                           SizedBox(
-                            height: height * 0.145,
+                            height: spacing.lgDivider(),
                             child: Column(
                               children: [
                                 Expanded(
-                                  child: GestureDetector(
-                                    onTapDown: (_) async {
-                                      tapDown(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_CHANNEL_UP,
-                                      );
-                                    },
-                                    // Pass the keyCode
-                                    onTapUp: (_) async {
-                                      tapUp(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_CHANNEL_UP,
-                                      );
-                                    },
-                                    onTapCancel: () {
-                                      tapCancel(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_CHANNEL_UP,
-                                      );
-                                    },
-
-                                    child: Padding(
-                                      padding: EdgeInsets.all(0),
-                                      child: Container(
-                                        //  minimumSize: Size(75.0, 48.0),
-                                        width: 75,
-                                        decoration: BoxDecoration(
-                                          color: btnBgColor,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(30.0),
-                                            topRight: Radius.circular(30.0),
-                                          ),
-                                        ),
-
-                                        child: Icon(
-                                          Icons.keyboard_arrow_up,
-                                          color: btnTextColor,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ),
+                                  child: controls(
+                                    _buttonHandler,
+                                    RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_CHANNEL_UP,
+                                    "top",
                                   ),
                                 ),
 
                                 Container(
-                                  color: btnBgColor,
+                                  color: AppColors.button,
                                   width: 75.0,
                                   child: Center(
                                     child: Text(
                                       "Ch",
                                       style: TextStyle(
-                                        backgroundColor: btnBgColor,
+                                        backgroundColor: AppColors.button,
                                         color: Colors.grey,
                                         height: 1.0,
                                         fontSize: 18,
@@ -515,45 +251,11 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ),
                                 Expanded(
-                                  child: GestureDetector(
-                                    onTapDown: (_) async {
-                                      tapDown(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_CHANNEL_DOWN,
-                                      );
-                                    },
-                                    onTapUp: (_) async {
-                                      tapUp(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_CHANNEL_DOWN,
-                                      );
-                                    },
-                                    onTapCancel: () {
-                                      tapCancel(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_CHANNEL_DOWN,
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(0),
-                                      child: Container(
-                                        //  minimumSize: Size(75.0, 48.0),
-                                        width: 75,
-                                        decoration: BoxDecoration(
-                                          color: btnBgColor,
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(30.0),
-                                            bottomRight: Radius.circular(30.0),
-                                          ),
-                                        ),
-
-                                        child: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: btnTextColor,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ),
+                                  child: controls(
+                                    _buttonHandler,
+                                    RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_CHANNEL_DOWN,
+                                    "bottom",
                                   ),
                                 ),
                               ],
@@ -591,7 +293,7 @@ class _HomePageState extends State<HomePage>
                                       child: Icon(
                                         Icons.search,
                                         size: 30,
-                                        color: btnTextColor,
+                                        color: AppColors.text,
                                       ),
                                     ),
                                     ElevatedButton(
@@ -634,7 +336,7 @@ class _HomePageState extends State<HomePage>
                                             ? Icons.volume_up
                                             : Icons.volume_off,
                                         size: 30,
-                                        color: btnTextColor,
+                                        color: AppColors.text,
                                       ),
                                     ),
                                   ],
@@ -661,7 +363,7 @@ class _HomePageState extends State<HomePage>
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return AppsPage(
+                                          return TvAppsPage(
                                             launchApp: _commandProcessor != null
                                                 ? (String deepLink) async {
                                                     await _commandProcessor!
@@ -678,11 +380,13 @@ class _HomePageState extends State<HomePage>
                                         Icon(
                                           Icons.apps,
                                           size: 30,
-                                          color: btnTextColor,
+                                          color: AppColors.text,
                                         ),
                                         Text(
                                           "Apps",
-                                          style: TextStyle(color: btnTextColor),
+                                          style: TextStyle(
+                                            color: AppColors.text,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -692,61 +396,27 @@ class _HomePageState extends State<HomePage>
                             ),
                           ),
                           SizedBox(
-                            height: height * 0.145,
+                            height: spacing.lgDivider(),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Expanded(
-                                  child: GestureDetector(
-                                    onTapDown: (_) async {
-                                      tapDown(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_VOLUME_UP,
-                                      );
-                                    },
-                                    onTapUp: (_) async {
-                                      tapUp(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_VOLUME_UP,
-                                      );
-                                    },
-                                    onTapCancel: () {
-                                      tapCancel(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_VOLUME_UP,
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(0),
-                                      child: Container(
-                                        //  minimumSize: Size(75.0, 48.0),
-                                        width: 75,
-                                        decoration: BoxDecoration(
-                                          color: btnBgColor,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(30.0),
-                                            topRight: Radius.circular(30.0),
-                                          ),
-                                        ),
-
-                                        child: Icon(
-                                          Icons.add,
-                                          color: btnTextColor,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ),
+                                  child: controls(
+                                    _buttonHandler,
+                                    RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_VOLUME_UP,
+                                    "top",
                                   ),
                                 ),
 
                                 Container(
-                                  color: btnBgColor,
+                                  color: AppColors.button,
                                   width: 75.0,
                                   child: Center(
                                     child: Text(
                                       "Vol",
                                       style: TextStyle(
-                                        backgroundColor: btnBgColor,
+                                        backgroundColor: AppColors.button,
                                         color: Colors.grey,
                                         height: 1.0,
                                         fontSize: 18,
@@ -755,45 +425,11 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ),
                                 Expanded(
-                                  child: GestureDetector(
-                                    onTapDown: (_) async {
-                                      tapDown(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_VOLUME_DOWN,
-                                      );
-                                    },
-                                    onTapUp: (_) async {
-                                      tapUp(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_VOLUME_DOWN,
-                                      );
-                                    },
-                                    onTapCancel: () {
-                                      tapCancel(
-                                        RemoteKeyInject_RemoteKeyCode
-                                            .KEYCODE_VOLUME_DOWN,
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.all(0),
-                                      child: Container(
-                                        //  minimumSize: Size(75.0, 48.0),
-                                        width: 75,
-                                        decoration: BoxDecoration(
-                                          color: btnBgColor,
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(30.0),
-                                            bottomRight: Radius.circular(30.0),
-                                          ),
-                                        ),
-
-                                        child: Icon(
-                                          Icons.remove,
-                                          color: btnTextColor,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ),
+                                  child: controls(
+                                    _buttonHandler,
+                                    RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_VOLUME_DOWN,
+                                    "bottom",
                                   ),
                                 ),
                               ],
@@ -803,14 +439,19 @@ class _HomePageState extends State<HomePage>
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, divider, 0, 0.0),
+                      padding: EdgeInsets.fromLTRB(
+                        0,
+                        spacing.mdDivider(),
+                        0,
+                        0.0,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: btnBgColor,
+                              backgroundColor: AppColors.button,
                               minimumSize: Size(40.0, 40.0),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
@@ -820,54 +461,22 @@ class _HomePageState extends State<HomePage>
                             child: Icon(
                               Icons.settings,
                               size: 30,
-                              color: btnTextColor,
+                              color: AppColors.text,
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(
                               0,
-                              centerSpacing,
+                              spacing.centerSpacing(),
                               0,
                               0.0,
                             ),
                             child: SizedBox(
                               width: 80.0,
-                              child: GestureDetector(
-                                onTapDown: (_) async {
-                                  tapDown(
-                                    RemoteKeyInject_RemoteKeyCode
-                                        .KEYCODE_DPAD_UP,
-                                  );
-                                },
-                                onTapUp: (_) async {
-                                  tapUp(
-                                    RemoteKeyInject_RemoteKeyCode
-                                        .KEYCODE_DPAD_UP,
-                                  );
-                                },
-                                onTapCancel: () {
-                                  tapCancel(
-                                    RemoteKeyInject_RemoteKeyCode
-                                        .KEYCODE_DPAD_UP,
-                                  );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                  decoration: BoxDecoration(
-                                    color: btnBgColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                  child: Transform.rotate(
-                                    angle: -pi / 2,
-                                    child: Icon(
-                                      Icons.play_arrow,
-                                      size: 30,
-                                      color: btnTextColor,
-                                    ),
-                                  ),
-                                ),
+                              child: dPad(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_UP,
+                                _buttonHandler,
+                                -pi / 2,
                               ),
                             ),
                           ),
@@ -883,7 +492,7 @@ class _HomePageState extends State<HomePage>
                             child: Icon(
                               Icons.home,
                               size: 30,
-                              color: btnTextColor,
+                              color: AppColors.text,
                             ),
                           ),
                         ],
@@ -898,47 +507,15 @@ class _HomePageState extends State<HomePage>
                         children: [
                           SizedBox(
                             width: 80.0,
-                            child: GestureDetector(
-                              onTapDown: (_) async {
-                                tapDown(
-                                  RemoteKeyInject_RemoteKeyCode
-                                      .KEYCODE_DPAD_LEFT,
-                                );
-                              },
-                              onTapUp: (_) async {
-                                tapUp(
-                                  RemoteKeyInject_RemoteKeyCode
-                                      .KEYCODE_DPAD_LEFT,
-                                );
-                              },
-                              onTapCancel: () {
-                                tapCancel(
-                                  RemoteKeyInject_RemoteKeyCode
-                                      .KEYCODE_DPAD_LEFT,
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
-                                decoration: BoxDecoration(
-                                  color: btnBgColor,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                ),
-                                child: Transform.rotate(
-                                  angle: -pi / 1,
-                                  child: Icon(
-                                    Icons.play_arrow,
-                                    size: 30,
-                                    color: btnTextColor,
-                                  ),
-                                ),
-                              ),
+                            child: dPad(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_LEFT,
+                              _buttonHandler,
+                              -pi / 1,
                             ),
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: btnBgColor,
+                              backgroundColor: AppColors.button,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(50.0),
@@ -954,39 +531,10 @@ class _HomePageState extends State<HomePage>
                           ),
                           SizedBox(
                             width: 80.0,
-                            child: GestureDetector(
-                              onTapDown: (_) async {
-                                tapDown(
-                                  RemoteKeyInject_RemoteKeyCode
-                                      .KEYCODE_DPAD_RIGHT,
-                                );
-                              },
-                              onTapUp: (_) async {
-                                tapUp(
-                                  RemoteKeyInject_RemoteKeyCode
-                                      .KEYCODE_DPAD_RIGHT,
-                                );
-                              },
-                              onTapCancel: () {
-                                tapCancel(
-                                  RemoteKeyInject_RemoteKeyCode
-                                      .KEYCODE_DPAD_RIGHT,
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: btnBgColor,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                ),
-                                padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
-                                child: Icon(
-                                  Icons.play_arrow,
-                                  size: 30,
-                                  color: btnTextColor,
-                                ),
-                              ),
+                            child: dPad(
+                              RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_RIGHT,
+                              _buttonHandler,
+                              null,
                             ),
                           ),
                         ],
@@ -1001,7 +549,7 @@ class _HomePageState extends State<HomePage>
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: btnBgColor,
+                              backgroundColor: AppColors.button,
                               minimumSize: Size(40.0, 40.0),
                               padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
                             ),
@@ -1011,7 +559,7 @@ class _HomePageState extends State<HomePage>
                             child: Icon(
                               Icons.menu,
                               size: 30,
-                              color: btnTextColor,
+                              color: AppColors.text,
                             ),
                           ),
                           Padding(
@@ -1019,47 +567,14 @@ class _HomePageState extends State<HomePage>
                               0,
                               0,
                               0,
-                              centerSpacing,
+                              spacing.centerSpacing(),
                             ),
                             child: SizedBox(
                               width: 80.0,
-                              child: GestureDetector(
-                                onTapDown: (_) async {
-                                  tapDown(
-                                    RemoteKeyInject_RemoteKeyCode
-                                        .KEYCODE_DPAD_DOWN,
-                                  );
-                                },
-                                onTapUp: (_) async {
-                                  tapUp(
-                                    RemoteKeyInject_RemoteKeyCode
-                                        .KEYCODE_DPAD_DOWN,
-                                  );
-                                },
-                                onTapCancel: () {
-                                  tapCancel(
-                                    RemoteKeyInject_RemoteKeyCode
-                                        .KEYCODE_DPAD_DOWN,
-                                  );
-                                },
-
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: btnBgColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                                  child: Transform.rotate(
-                                    angle: pi / 2,
-                                    child: Icon(
-                                      Icons.play_arrow,
-                                      size: 30,
-                                      color: btnTextColor,
-                                    ),
-                                  ),
-                                ),
+                              child: dPad(
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_DOWN,
+                                _buttonHandler,
+                                pi / 2,
                               ),
                             ),
                           ),
@@ -1075,7 +590,7 @@ class _HomePageState extends State<HomePage>
                             child: Icon(
                               Icons.arrow_back,
                               size: 30,
-                              color: btnTextColor,
+                              color: AppColors.text,
                             ),
                           ),
                         ],
@@ -1083,19 +598,24 @@ class _HomePageState extends State<HomePage>
                     ),
 
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, divider, 0, 0.0),
+                      padding: EdgeInsets.fromLTRB(
+                        0,
+                        spacing.mdDivider(),
+                        0,
+                        0.0,
+                      ),
                       child: Container(
                         // padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30.0),
-                          color: btnBgColor,
+                          color: AppColors.button,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: btnBgColor,
+                                backgroundColor: AppColors.button,
                                 // minimumSize: Size(40, 40),
                                 padding: EdgeInsets.fromLTRB(
                                   25.0,
@@ -1106,18 +626,18 @@ class _HomePageState extends State<HomePage>
                               ),
                               onPressed: () {
                                 HapticFeedback.lightImpact();
-                                showKeyboardDialog();
+                                showKeyboardDialog(context, _commandProcessor);
                               },
                               child: Icon(
                                 Icons.keyboard,
                                 size: 30,
-                                color: btnTextColor,
+                                color: AppColors.text,
                               ),
                             ),
 
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: btnBgColor,
+                                backgroundColor: AppColors.button,
                                 // minimumSize: Size(40, 40),
                                 padding: EdgeInsets.fromLTRB(
                                   10.0,
@@ -1128,19 +648,19 @@ class _HomePageState extends State<HomePage>
                               ),
                               onPressed: () {
                                 HapticFeedback.lightImpact();
-                                showNumbersKeyboard();
+                                showNumbersKeyboard(context, _buttonHandler);
                               },
                               child: Text(
                                 "123",
                                 style: TextStyle(
                                   fontSize: 22.0,
-                                  color: btnTextColor,
+                                  color: AppColors.text,
                                 ),
                               ),
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: btnBgColor,
+                                backgroundColor: AppColors.button,
                                 minimumSize: Size(40, 40),
                                 padding: EdgeInsets.fromLTRB(
                                   14.0,
@@ -1199,7 +719,7 @@ class _HomePageState extends State<HomePage>
                                 "YouTube",
                                 style: TextStyle(
                                   fontSize: 20.0,
-                                  color: btnTextColor,
+                                  color: AppColors.text,
                                 ),
                               ),
                             ),
@@ -1208,7 +728,12 @@ class _HomePageState extends State<HomePage>
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, divider, 0, 0.0),
+                      padding: EdgeInsets.fromLTRB(
+                        0,
+                        spacing.mdDivider(),
+                        0,
+                        0.0,
+                      ),
                       child: Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -1225,7 +750,7 @@ class _HomePageState extends State<HomePage>
                           child: Icon(
                             Icons.settings_remote,
                             size: 30,
-                            color: btnTextColor,
+                            color: AppColors.text,
                           ),
                         ),
                       ),
