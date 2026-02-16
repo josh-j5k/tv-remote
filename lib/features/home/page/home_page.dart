@@ -2,10 +2,12 @@ import 'dart:math';
 import 'package:android_tv_remote/core/services/tv_command_processor.dart';
 import 'package:android_tv_remote/core/themes/app_colors.dart';
 import 'package:android_tv_remote/core/themes/app_spacing.dart';
+import 'package:android_tv_remote/core/themes/app_text_styles.dart';
 import 'package:android_tv_remote/features/home/page/dialogs/show_keyboard_dialog.dart';
 import 'package:android_tv_remote/features/home/page/dialogs/show_numbers_keyboard.dart';
 import 'package:android_tv_remote/features/home/page/widgets/controls_widget.dart';
 import 'package:android_tv_remote/features/home/page/widgets/d_pad_widget.dart';
+import 'package:android_tv_remote/features/home/page/widgets/default_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:android_tv_remote/core/services/tv_remote_button_handler.dart';
 import 'package:android_tv_remote/core/services/tv_remote_client.dart';
@@ -59,9 +61,11 @@ class _HomePageState extends State<HomePage>
   }
 
   void _refreshData() {
+    print("refreshing");
+    print(_remoteClient == null);
     if (appDataNotifier.value.isConnected == true) {
       showReconnectingDialog(context);
-      initializeRemoteClient().then((_) {
+      reconnectRemoteClient().then((_) {
         if (!mounted) return;
         Navigator.of(context).pop();
       });
@@ -74,24 +78,51 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> initializeRemoteClient() async {
-    if (appDataNotifier.value.host != null) {
-      _remoteClient = TvRemoteClient(host: appDataNotifier.value.host!);
-      final alreadyPaired = await _remoteClient!.initialize();
-      if (!alreadyPaired) {
-        return;
-      }
-      _commandProcessor = await _remoteClient?.connect();
-      _buttonHandler = RemoteButtonHandler(_commandProcessor);
+    if (appDataNotifier.value.host == null) {
+      return;
     }
+    if (_remoteClient != null) {
+      return;
+    }
+    _remoteClient = TvRemoteClient(host: appDataNotifier.value.host!);
+    final alreadyPaired = await _remoteClient!.initialize();
+    if (!alreadyPaired) {
+      return;
+    }
+    _commandProcessor = await _remoteClient?.connect();
+    final buttonHandler = RemoteButtonHandler(
+      commandProcessor: _commandProcessor,
+    );
+    setState(() {
+      _buttonHandler = buttonHandler;
+    });
+  }
+
+  Future<void> reconnectRemoteClient() async {
+    _remoteClient = TvRemoteClient(host: appDataNotifier.value.host!);
+    final alreadyPaired = await _remoteClient!.initialize();
+    if (!alreadyPaired) {
+      return;
+    }
+    _commandProcessor = await _remoteClient?.connect();
+    final buttonHandler = RemoteButtonHandler(
+      commandProcessor: _commandProcessor,
+    );
+    setState(() {
+      _buttonHandler = buttonHandler;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    AppSpacing spacing = AppSpacing(
-      screenHeight: MediaQuery.of(context).size.height,
-      screenWidth: MediaQuery.of(context).size.width,
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+    // print("height is $height:, width is $width");
+    AppSpacing spacing = AppSpacing(screenHeight: height, screenWidth: width);
+    final AppTextStyles textStyles = AppTextStyles(
+      screenHeight: height,
+      screenWidth: width,
     );
-
     return Container(
       width: double.maxFinite,
       height: double.maxFinite,
@@ -122,7 +153,7 @@ class _HomePageState extends State<HomePage>
                                         'Universal Remote Control',
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 224, 224, 224),
-                                      fontSize: 20.0,
+                                      fontSize: textStyles.fontSizeXl(),
                                     ),
                                   ),
                                   Text(
@@ -131,7 +162,7 @@ class _HomePageState extends State<HomePage>
                                         : 'TV is not connected',
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 255, 255, 255),
-                                      fontSize: 16.0,
+                                      fontSize: textStyles.fontSizeLg(),
                                     ),
                                   ),
                                 ],
@@ -142,10 +173,10 @@ class _HomePageState extends State<HomePage>
                                         backgroundColor: AppColors.button,
                                         minimumSize: Size(40.0, 40.0),
                                         padding: EdgeInsets.fromLTRB(
-                                          25,
-                                          12,
-                                          25,
-                                          12,
+                                          textStyles.fontSize2xl(),
+                                          textStyles.fontSizeLg(),
+                                          textStyles.fontSize2xl(),
+                                          textStyles.fontSizeLg(),
                                         ),
                                       ),
                                       onPressed: () => Navigator.push(
@@ -158,7 +189,7 @@ class _HomePageState extends State<HomePage>
                                       ),
                                       child: Icon(
                                         Icons.public,
-                                        size: 30,
+                                        size: textStyles.fontSizeXl(),
                                         color: AppColors.text,
                                       ),
                                     )
@@ -178,35 +209,20 @@ class _HomePageState extends State<HomePage>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.button,
-                              minimumSize: Size(40.0, 40.0),
-                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            ),
-                            onPressed: () => _buttonHandler?.onShortPress(
-                              RemoteKeyInject_RemoteKeyCode.KEYCODE_POWER,
-                            ),
-                            child: Icon(
-                              Icons.power_settings_new,
-                              size: 30,
-                              color: const Color.fromARGB(255, 255, 31, 98),
-                            ),
+                          //  power button
+                          DefaultButtonWidget(
+                            buttonHandler: _buttonHandler,
+                            keyCode:
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_POWER,
+                            icon: Icons.power_settings_new,
+                            iconColor: Color.fromARGB(255, 255, 31, 98),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 18, 18, 18),
-                              minimumSize: Size(40, 40),
-                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            ),
-                            onPressed: () => _buttonHandler?.onShortPress(
-                              RemoteKeyInject_RemoteKeyCode.KEYCODE_TV_INPUT,
-                            ),
-                            child: Icon(
-                              Icons.input,
-                              size: 30,
-                              color: AppColors.text,
-                            ),
+                          DefaultButtonWidget(
+                            buttonHandler: _buttonHandler,
+                            keyCode:
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_TV_INPUT,
+                            icon: Icons.input,
+                            iconColor: null,
                           ),
                         ],
                       ),
@@ -227,17 +243,18 @@ class _HomePageState extends State<HomePage>
                             child: Column(
                               children: [
                                 Expanded(
-                                  child: controls(
-                                    _buttonHandler,
-                                    RemoteKeyInject_RemoteKeyCode
+                                  child: ControlsWidget(
+                                    buttonHandler: _buttonHandler,
+                                    keyCode: RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_CHANNEL_UP,
-                                    "top",
+                                    direction: "top",
+                                    icon: Icons.keyboard_arrow_up,
                                   ),
                                 ),
 
                                 Container(
                                   color: AppColors.button,
-                                  width: 75.0,
+                                  width: textStyles.fontSize2xl() * 2.7,
                                   child: Center(
                                     child: Text(
                                       "Ch",
@@ -245,118 +262,90 @@ class _HomePageState extends State<HomePage>
                                         backgroundColor: AppColors.button,
                                         color: Colors.grey,
                                         height: 1.0,
-                                        fontSize: 18,
+                                        fontSize: textStyles.fontSizeLg(),
                                       ),
                                     ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: controls(
-                                    _buttonHandler,
-                                    RemoteKeyInject_RemoteKeyCode
+                                  child: ControlsWidget(
+                                    buttonHandler: _buttonHandler,
+                                    keyCode: RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_CHANNEL_DOWN,
-                                    "bottom",
+                                    direction: "bottom",
+                                    icon: Icons.keyboard_arrow_down,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  spacing: 15.0,
-                                  children: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color.fromARGB(
-                                          255,
-                                          18,
-                                          18,
-                                          18,
-                                        ),
-                                        minimumSize: Size(40, 40),
-                                        padding: EdgeInsets.fromLTRB(
-                                          20,
-                                          12,
-                                          20,
-                                          12,
-                                        ),
-                                      ),
-                                      onPressed: () =>
-                                          _buttonHandler?.onShortPress(
-                                            RemoteKeyInject_RemoteKeyCode
-                                                .KEYCODE_SEARCH,
-                                          ),
-                                      child: Icon(
-                                        Icons.search,
-                                        size: 30,
-                                        color: AppColors.text,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color.fromARGB(
-                                          255,
-                                          18,
-                                          18,
-                                          18,
-                                        ),
-                                        minimumSize: Size(40, 40),
-                                        padding: EdgeInsets.fromLTRB(
-                                          20.0,
-                                          12,
-                                          20.0,
-                                          12,
-                                        ),
-                                      ),
-                                      onPressed: () async {
-                                        if (_isMuted) {
-                                          _buttonHandler?.onShortPress(
-                                            RemoteKeyInject_RemoteKeyCode
-                                                .KEYCODE_VOLUME_UP,
-                                          );
-                                          setState(() {
-                                            _isMuted = false;
-                                          });
-                                        } else {
-                                          _buttonHandler?.onShortPress(
-                                            RemoteKeyInject_RemoteKeyCode
-                                                .KEYCODE_MUTE,
-                                          );
-                                          setState(() {
-                                            _isMuted = true;
-                                          });
-                                        }
-                                      },
-                                      child: Icon(
-                                        !_isMuted
-                                            ? Icons.volume_up
-                                            : Icons.volume_off,
-                                        size: 30,
-                                        color: AppColors.text,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 14.0, 0, 0),
-                                  child: ElevatedButton(
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                spacing: spacing.smDivider(),
+                                children: [
+                                  DefaultButtonWidget(
+                                    buttonHandler: _buttonHandler,
+                                    keyCode: RemoteKeyInject_RemoteKeyCode
+                                        .KEYCODE_SEARCH,
+                                    icon: Icons.search,
+                                    iconColor: null,
+                                  ),
+
+                                  ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromARGB(
-                                        255,
-                                        18,
-                                        18,
-                                        18,
+                                      backgroundColor: AppColors.button,
+
+                                      padding: EdgeInsets.fromLTRB(
+                                        textStyles.fontSize2xl(),
+                                        textStyles.fontSizeLg(),
+                                        textStyles.fontSize2xl(),
+                                        textStyles.fontSizeLg(),
                                       ),
+                                    ),
+                                    onPressed: () async {
+                                      if (_isMuted) {
+                                        _buttonHandler?.onShortPress(
+                                          RemoteKeyInject_RemoteKeyCode
+                                              .KEYCODE_VOLUME_UP,
+                                        );
+                                        setState(() {
+                                          _isMuted = false;
+                                        });
+                                      } else {
+                                        _buttonHandler?.onShortPress(
+                                          RemoteKeyInject_RemoteKeyCode
+                                              .KEYCODE_MUTE,
+                                        );
+                                        setState(() {
+                                          _isMuted = true;
+                                        });
+                                      }
+                                    },
+                                    child: Icon(
+                                      !_isMuted
+                                          ? Icons.volume_up
+                                          : Icons.volume_off,
+                                      size: textStyles.fontSizeXl(),
+                                      color: AppColors.text,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: spacing.smDivider()),
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.button,
                                       minimumSize: Size(40, 40),
                                       padding: EdgeInsets.fromLTRB(
-                                        40.0,
-                                        12.0,
-                                        40.0,
-                                        12.0,
+                                        textStyles.fontSize2xl() * 1.8,
+                                        textStyles.fontSizeLg(),
+                                        textStyles.fontSize2xl() * 1.8,
+                                        textStyles.fontSizeLg(),
                                       ),
                                     ),
                                     onPressed: () => Navigator.push(
@@ -379,21 +368,22 @@ class _HomePageState extends State<HomePage>
                                       children: [
                                         Icon(
                                           Icons.apps,
-                                          size: 30,
+                                          size: textStyles.fontSizeXl(),
                                           color: AppColors.text,
                                         ),
                                         Text(
                                           "Apps",
                                           style: TextStyle(
+                                            fontSize: textStyles.fontSizeLg(),
                                             color: AppColors.text,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                            ],
                           ),
                           SizedBox(
                             height: spacing.lgDivider(),
@@ -401,17 +391,18 @@ class _HomePageState extends State<HomePage>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Expanded(
-                                  child: controls(
-                                    _buttonHandler,
-                                    RemoteKeyInject_RemoteKeyCode
+                                  child: ControlsWidget(
+                                    buttonHandler: _buttonHandler,
+                                    keyCode: RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_VOLUME_UP,
-                                    "top",
+                                    direction: "top",
+                                    icon: Icons.add,
                                   ),
                                 ),
 
                                 Container(
                                   color: AppColors.button,
-                                  width: 75.0,
+                                  width: textStyles.fontSize2xl() * 2.7,
                                   child: Center(
                                     child: Text(
                                       "Vol",
@@ -419,17 +410,18 @@ class _HomePageState extends State<HomePage>
                                         backgroundColor: AppColors.button,
                                         color: Colors.grey,
                                         height: 1.0,
-                                        fontSize: 18,
+                                        fontSize: textStyles.fontSizeLg(),
                                       ),
                                     ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: controls(
-                                    _buttonHandler,
-                                    RemoteKeyInject_RemoteKeyCode
+                                  child: ControlsWidget(
+                                    buttonHandler: _buttonHandler,
+                                    keyCode: RemoteKeyInject_RemoteKeyCode
                                         .KEYCODE_VOLUME_DOWN,
-                                    "bottom",
+                                    direction: "bottom",
+                                    icon: Icons.remove,
                                   ),
                                 ),
                               ],
@@ -449,20 +441,12 @@ class _HomePageState extends State<HomePage>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.button,
-                              minimumSize: Size(40.0, 40.0),
-                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            ),
-                            onPressed: () => _buttonHandler?.onShortPress(
-                              RemoteKeyInject_RemoteKeyCode.KEYCODE_SETTINGS,
-                            ),
-                            child: Icon(
-                              Icons.settings,
-                              size: 30,
-                              color: AppColors.text,
-                            ),
+                          DefaultButtonWidget(
+                            buttonHandler: _buttonHandler,
+                            keyCode:
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_SETTINGS,
+                            icon: Icons.settings,
+                            iconColor: null,
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(
@@ -471,29 +455,18 @@ class _HomePageState extends State<HomePage>
                               0,
                               0.0,
                             ),
-                            child: SizedBox(
-                              width: 80.0,
-                              child: dPad(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_UP,
-                                _buttonHandler,
-                                -pi / 2,
-                              ),
+                            child: DPadWidget(
+                              keyCode:
+                                  RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_UP,
+                              buttonHandler: _buttonHandler,
+                              angle: -pi / 2,
                             ),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 18, 18, 18),
-                              minimumSize: Size(40, 40),
-                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            ),
-                            onPressed: () => _buttonHandler?.onShortPress(
-                              RemoteKeyInject_RemoteKeyCode.KEYCODE_HOME,
-                            ),
-                            child: Icon(
-                              Icons.home,
-                              size: 30,
-                              color: AppColors.text,
-                            ),
+                          DefaultButtonWidget(
+                            buttonHandler: _buttonHandler,
+                            keyCode: RemoteKeyInject_RemoteKeyCode.KEYCODE_HOME,
+                            icon: Icons.home,
+                            iconColor: null,
                           ),
                         ],
                       ),
@@ -505,13 +478,11 @@ class _HomePageState extends State<HomePage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 10.0,
                         children: [
-                          SizedBox(
-                            width: 80.0,
-                            child: dPad(
-                              RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_LEFT,
-                              _buttonHandler,
-                              -pi / 1,
-                            ),
+                          DPadWidget(
+                            keyCode:
+                                RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_LEFT,
+                            buttonHandler: _buttonHandler,
+                            angle: -pi / 1,
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -522,46 +493,41 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                               // minimumSize: Size(30.0, 30.0),
-                              padding: EdgeInsets.all(25.5),
+                              padding: EdgeInsets.all(textStyles.fontSizeXl()),
                             ),
                             onPressed: () => _buttonHandler?.onShortPress(
                               RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_CENTER,
                             ),
-                            child: Text("OK", style: TextStyle(fontSize: 20.0)),
-                          ),
-                          SizedBox(
-                            width: 80.0,
-                            child: dPad(
-                              RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_RIGHT,
-                              _buttonHandler,
-                              null,
+                            child: Text(
+                              "OK",
+                              style: TextStyle(
+                                fontSize: textStyles.fontSizeLg(),
+                              ),
                             ),
+                          ),
+                          DPadWidget(
+                            keyCode: RemoteKeyInject_RemoteKeyCode
+                                .KEYCODE_DPAD_RIGHT,
+                            buttonHandler: _buttonHandler,
+                            angle: null,
                           ),
                         ],
                       ),
                     ),
 
-                    Padding(
+                    Container(
                       padding: EdgeInsets.fromLTRB(0, 10.0, 0, 0.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.button,
-                              minimumSize: Size(40.0, 40.0),
-                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            ),
-                            onPressed: () => _buttonHandler?.onShortPress(
-                              RemoteKeyInject_RemoteKeyCode.KEYCODE_MENU,
-                            ),
-                            child: Icon(
-                              Icons.menu,
-                              size: 30,
-                              color: AppColors.text,
-                            ),
+                          DefaultButtonWidget(
+                            buttonHandler: _buttonHandler,
+                            keyCode: RemoteKeyInject_RemoteKeyCode.KEYCODE_MENU,
+                            icon: Icons.menu,
+                            iconColor: null,
                           ),
+
                           Padding(
                             padding: EdgeInsets.fromLTRB(
                               0,
@@ -569,29 +535,18 @@ class _HomePageState extends State<HomePage>
                               0,
                               spacing.centerSpacing(),
                             ),
-                            child: SizedBox(
-                              width: 80.0,
-                              child: dPad(
-                                RemoteKeyInject_RemoteKeyCode.KEYCODE_DPAD_DOWN,
-                                _buttonHandler,
-                                pi / 2,
-                              ),
+                            child: DPadWidget(
+                              keyCode: RemoteKeyInject_RemoteKeyCode
+                                  .KEYCODE_DPAD_DOWN,
+                              buttonHandler: _buttonHandler,
+                              angle: pi / 2,
                             ),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 18, 18, 18),
-                              minimumSize: Size(40, 40),
-                              padding: EdgeInsets.fromLTRB(25, 12, 25, 12),
-                            ),
-                            onPressed: () => _buttonHandler?.onShortPress(
-                              RemoteKeyInject_RemoteKeyCode.KEYCODE_BACK,
-                            ),
-                            child: Icon(
-                              Icons.arrow_back,
-                              size: 30,
-                              color: AppColors.text,
-                            ),
+                          DefaultButtonWidget(
+                            buttonHandler: _buttonHandler,
+                            keyCode: RemoteKeyInject_RemoteKeyCode.KEYCODE_BACK,
+                            icon: Icons.arrow_back,
+                            iconColor: null,
                           ),
                         ],
                       ),
@@ -608,20 +563,32 @@ class _HomePageState extends State<HomePage>
                         // padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30.0),
-                          color: AppColors.button,
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.button,
-                                // minimumSize: Size(40, 40),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(60), // Large curve
+                                    topRight: Radius.circular(
+                                      0,
+                                    ), // Sharp corner
+                                    bottomLeft: Radius.circular(
+                                      60,
+                                    ), // Slight curve
+                                    bottomRight: Radius.circular(
+                                      0,
+                                    ), // Dramatic curve
+                                  ),
+                                ),
                                 padding: EdgeInsets.fromLTRB(
-                                  25.0,
-                                  12.0,
-                                  15.0,
-                                  12.0,
+                                  textStyles.fontSizeLg(),
+                                  textStyles.fontSizeLg() * 0.978,
+                                  textStyles.fontSizeLg(),
+                                  textStyles.fontSizeLg() * 0.978,
                                 ),
                               ),
                               onPressed: () {
@@ -630,7 +597,7 @@ class _HomePageState extends State<HomePage>
                               },
                               child: Icon(
                                 Icons.keyboard,
-                                size: 30,
+                                size: textStyles.fontSizeLg(),
                                 color: AppColors.text,
                               ),
                             ),
@@ -638,13 +605,27 @@ class _HomePageState extends State<HomePage>
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.button,
-                                // minimumSize: Size(40, 40),
                                 padding: EdgeInsets.fromLTRB(
-                                  10.0,
-                                  12.0,
-                                  10.0,
-                                  12.0,
+                                  textStyles.fontSizeLg(),
+                                  textStyles.fontSizeLg() * 0.91,
+                                  textStyles.fontSizeLg(),
+                                  textStyles.fontSizeLg() * 0.91,
                                 ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(0), // Large curve
+                                    topRight: Radius.circular(
+                                      0,
+                                    ), // Sharp corner
+                                    bottomLeft: Radius.circular(
+                                      0,
+                                    ), // Slight curve
+                                    bottomRight: Radius.circular(
+                                      0,
+                                    ), // Dramatic curve
+                                  ),
+                                ),
+                                // minimumSize: Size(40, 40),
                               ),
                               onPressed: () {
                                 HapticFeedback.lightImpact();
@@ -653,41 +634,103 @@ class _HomePageState extends State<HomePage>
                               child: Text(
                                 "123",
                                 style: TextStyle(
-                                  fontSize: 22.0,
+                                  fontSize: textStyles.fontSizeLg() * 0.8,
                                   color: AppColors.text,
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.button,
-                                minimumSize: Size(40, 40),
-                                padding: EdgeInsets.fromLTRB(
-                                  14.0,
-                                  12.0,
-                                  14.0,
-                                  12.0,
-                                ),
-                              ),
-                              onPressed: () async {
-                                HapticFeedback.lightImpact();
-                                await _commandProcessor?.launchApp(
-                                  "com.netflix.ninja",
-                                );
-                              },
-                              child: Text(
-                                "NETFLIX",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.red,
                                 ),
                               ),
                             ),
 
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.redAccent,
-                                minimumSize: Size(40.0, 40.0),
+                                backgroundColor: AppColors.button,
+                                padding: EdgeInsets.fromLTRB(
+                                  textStyles.fontSizeLg(),
+                                  textStyles.fontSizeLg() * 0.91,
+                                  textStyles.fontSizeLg(),
+                                  textStyles.fontSizeLg() * 0.91,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(0), // Large curve
+                                    topRight: Radius.circular(
+                                      0,
+                                    ), // Sharp corner
+                                    bottomLeft: Radius.circular(
+                                      0,
+                                    ), // Slight curve
+                                    bottomRight: Radius.circular(
+                                      0,
+                                    ), // Dramatic curve
+                                  ),
+                                ),
+                                // minimumSize: Size(40, 40),
+                              ),
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                _buttonHandler?.onShortPress(
+                                  RemoteKeyInject_RemoteKeyCode.KEYCODE_GUIDE,
+                                );
+                              },
+                              child: Text(
+                                "Guide",
+                                style: TextStyle(
+                                  fontSize: textStyles.fontSizeLg() * 0.8,
+                                  color: AppColors.text,
+                                ),
+                              ),
+                            ),
+
+                            width > 370
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.button,
+                                      padding: EdgeInsets.fromLTRB(
+                                        textStyles.fontSizeLg(),
+                                        textStyles.fontSizeLg() * 0.867,
+                                        textStyles.fontSizeLg(),
+                                        textStyles.fontSizeLg() * 0.867,
+                                      ),
+
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(
+                                            0,
+                                          ), // Large curve
+                                          topRight: Radius.circular(
+                                            0,
+                                          ), // Sharp corner
+                                          bottomLeft: Radius.circular(
+                                            0,
+                                          ), // Slight curve
+                                          bottomRight: Radius.circular(
+                                            0,
+                                          ), // Dramatic curve
+                                        ),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      HapticFeedback.lightImpact();
+                                      await _commandProcessor?.launchApp(
+                                        "com.netflix.ninja",
+                                      );
+                                    },
+                                    child: Image.asset(
+                                      "assets/icons/icons8-netflix.png",
+                                      width: textStyles.fontSizeXl(),
+                                      height: textStyles.fontSizeXl(),
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.button,
+                                padding: EdgeInsets.fromLTRB(
+                                  textStyles.fontSizeLg(),
+                                  textStyles.fontSizeLg() * 0.867,
+                                  textStyles.fontSizeLg(),
+                                  textStyles.fontSizeLg() * 0.867,
+                                ),
+
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(0), // Large curve
@@ -702,12 +745,6 @@ class _HomePageState extends State<HomePage>
                                     ), // Dramatic curve
                                   ),
                                 ),
-                                padding: EdgeInsets.fromLTRB(
-                                  15.0,
-                                  12.0,
-                                  15.0,
-                                  12.0,
-                                ),
                               ),
                               onPressed: () async {
                                 HapticFeedback.lightImpact();
@@ -715,12 +752,10 @@ class _HomePageState extends State<HomePage>
                                   "https://www.youtube.com",
                                 );
                               },
-                              child: Text(
-                                "YouTube",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  color: AppColors.text,
-                                ),
+                              child: Image.asset(
+                                "assets/icons/icons8-youtube.png",
+                                width: textStyles.fontSizeXl(),
+                                height: textStyles.fontSizeXl(),
                               ),
                             ),
                           ],
@@ -737,19 +772,19 @@ class _HomePageState extends State<HomePage>
                       child: Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 18, 18, 18),
-                            minimumSize: Size(40, 40),
+                            backgroundColor: AppColors.button,
+
                             padding: EdgeInsets.fromLTRB(
-                              25.0,
-                              12.0,
-                              25.0,
-                              12.0,
+                              textStyles.fontSize2xl(),
+                              textStyles.fontSizeLg(),
+                              textStyles.fontSize2xl(),
+                              textStyles.fontSizeLg(),
                             ),
                           ),
                           onPressed: () {},
                           child: Icon(
                             Icons.settings_remote,
-                            size: 30,
+                            size: textStyles.fontSizeLg(),
                             color: AppColors.text,
                           ),
                         ),

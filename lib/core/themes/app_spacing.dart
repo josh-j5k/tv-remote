@@ -4,11 +4,11 @@ class AppSpacing {
   const AppSpacing({required this.screenHeight, required this.screenWidth});
 
   double mdDivider() {
-    return screenHeight * 0.029;
+    return screenHeight * 0.03;
   }
 
   double lgDivider() {
-    return screenHeight * 0.035;
+    return screenHeight * 0.155;
   }
 
   double smDivider() {
@@ -20,6 +20,6 @@ class AppSpacing {
   }
 
   double centerSpacing() {
-    return 35.0;
+    return screenHeight * 0.035;
   }
 }

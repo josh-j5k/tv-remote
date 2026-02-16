@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:android_tv_remote/core/services/tv_certificate.dart';
 import 'package:android_tv_remote/core/services/tv_pairing_response_handler.dart';
 import 'package:android_tv_remote/src/generated/auth.pb.dart';
-import 'package:android_tv_remote/data/constants/constants.dart';
+import 'package:android_tv_remote/data/constants/tv_remote_client.dart';
 import 'package:pointycastle/export.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:android_tv_remote/core/utils/encode_varint.dart';

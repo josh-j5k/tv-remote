@@ -1,5 +1,6 @@
+import 'package:android_tv_remote/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import "../home/data/tv_apps.dart";
+import "data/tv_apps.dart";
 
 class TvAppsPage extends StatelessWidget {
   final Future<void> Function(String deepLink)? launchApp;
@@ -11,7 +12,7 @@ class TvAppsPage extends StatelessWidget {
     final double divider = height * 0.03;
     final double paddingInline = width * 0.07;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(249, 7, 7, 21),
+      backgroundColor: AppColors.accent,
       appBar: AppBar(
         title: Text(
           "My Apps",
@@ -29,7 +30,7 @@ class TvAppsPage extends StatelessWidget {
           },
           color: Colors.white,
         ),
-        backgroundColor: Color.fromARGB(249, 7, 7, 21),
+        backgroundColor: AppColors.accent,
       ), // Transparent dark overlay
       body: Padding(
         padding: EdgeInsets.all(paddingInline),
@@ -38,31 +39,33 @@ class TvAppsPage extends StatelessWidget {
             SearchBar(
               hintText: 'Search',
               leading: Icon(Icons.search, color: Colors.white),
-              backgroundColor: WidgetStateProperty.all(Colors.grey[900]),
+              backgroundColor: WidgetStateProperty.all(AppColors.box),
               padding: WidgetStateProperty.all(
                 EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               ),
             ),
             SizedBox(height: divider),
             Expanded(
-              child: Column(
-                children: tvApps.map((app) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: Image.asset(app.icon, width: 40, height: 40),
-                        title: Text(
-                          app.name,
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: tvApps.map((app) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          leading: Image.asset(app.icon, width: 40, height: 40),
+                          title: Text(
+                            app.name,
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                          onTap: () {
+                            launchApp?.call(app.deepLink);
+                          },
                         ),
-                        onTap: () {
-                          launchApp?.call(app.deepLink);
-                        },
-                      ),
-                      SizedBox(height: divider / 2),
-                    ],
-                  );
-                }).toList(),
+                        SizedBox(height: divider / 2),
+                      ],
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ],

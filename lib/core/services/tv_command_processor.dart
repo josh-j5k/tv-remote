@@ -3,7 +3,7 @@ import 'package:android_tv_remote/core/utils/encode_varint.dart';
 import 'package:android_tv_remote/src/generated/keycodes.pb.dart';
 
 class TvCommandProcessor {
-  final SecureSocket commandSocket;
+  final SecureSocket? commandSocket;
   final int imeCounter;
   final int imeFieldCounter;
   const TvCommandProcessor({
@@ -25,8 +25,8 @@ class TvCommandProcessor {
     final payload = message.writeToBuffer();
     final lenPrefix = encodeVarint(payload.length);
 
-    commandSocket.add([...lenPrefix, ...payload]);
-    await commandSocket.flush();
+    commandSocket?.add([...lenPrefix, ...payload]);
+    await commandSocket?.flush();
   }
 
   Future<void> sendKeyRelease(RemoteKeyInject_RemoteKeyCode keyCode) async {
@@ -38,12 +38,15 @@ class TvCommandProcessor {
     final payload = message.writeToBuffer();
     final lenPrefix = encodeVarint(payload.length);
 
-    commandSocket.add([...lenPrefix, ...payload]);
-    await commandSocket.flush();
+    commandSocket?.add([...lenPrefix, ...payload]);
+    await commandSocket?.flush();
   }
 
   /// Send key with SHORT_PRESS direction (complete press and release in one message)
   Future<void> sendKeyShortPress(RemoteKeyInject_RemoteKeyCode keyCode) async {
+    if (commandSocket == null) {
+      return;
+    }
     final message = RemoteMessage()
       ..remoteKeyInject = (RemoteKeyInject()
         ..keyCode = keyCode
@@ -52,8 +55,8 @@ class TvCommandProcessor {
     final payload = message.writeToBuffer();
     final lenPrefix = encodeVarint(payload.length);
 
-    commandSocket.add([...lenPrefix, ...payload]);
-    await commandSocket.flush();
+    commandSocket?.add([...lenPrefix, ...payload]);
+    await commandSocket?.flush();
   }
 
   Future<void> sendText(String text) async {
@@ -74,8 +77,8 @@ class TvCommandProcessor {
 
     final payload = message.writeToBuffer();
     final lenPrefix = encodeVarint(payload.length);
-    commandSocket.add([...lenPrefix, ...payload]);
-    await commandSocket.flush();
+    commandSocket?.add([...lenPrefix, ...payload]);
+    await commandSocket?.flush();
 
     print('✅ Text sent');
     // message.remoteImeBatchEdit.mergeFromMessage(batchEdit);
@@ -93,8 +96,8 @@ class TvCommandProcessor {
     final payload = appMessage.writeToBuffer();
     final lenPrefix = encodeVarint(payload.length);
 
-    commandSocket.add([...lenPrefix, ...payload]);
-    await commandSocket.flush();
+    commandSocket?.add([...lenPrefix, ...payload]);
+    await commandSocket?.flush();
 
     print('✅ Launched app: $deeplink');
   }

@@ -5,19 +5,22 @@ void onTapDown(
   RemoteKeyInject_RemoteKeyCode keyCode,
   RemoteButtonHandler? buttonHandler,
 ) async {
-  await buttonHandler?.onKeyButtonDown(keyCode, enableRepeat: true);
+  if (buttonHandler == null) return;
+  await buttonHandler.onKeyButtonDown(keyCode, enableRepeat: true);
 }
 
 void onTapUp(
   RemoteKeyInject_RemoteKeyCode keyCode,
   RemoteButtonHandler? buttonHandler,
 ) async {
-  await buttonHandler?.onButtonUp(keyCode);
+  if (buttonHandler == null) return;
+  await buttonHandler.onButtonUp(keyCode);
 }
 
 void onTapCancel(
   RemoteKeyInject_RemoteKeyCode keyCode,
   RemoteButtonHandler? buttonHandler,
 ) {
-  buttonHandler?.onButtonCancel(keyCode);
+  if (buttonHandler == null) return;
+  buttonHandler.onButtonCancel(keyCode);
 }

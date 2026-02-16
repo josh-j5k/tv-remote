@@ -21,16 +21,13 @@ Future<void> discoverAndroidTVs() async {
               )
               .timeout(Duration(seconds: 5))) {
         // Get TXT records (might contain important info)
-        await for (final TxtResourceRecord txt
+        await for (TxtResourceRecord txt
             in client
                 .lookup<TxtResourceRecord>(
                   ResourceRecordQuery.text(ptr.domainName),
                 )
                 .timeout(Duration(seconds: 5))) {
-          print('📝 TXT Records:');
-          // for (var entry in txt.texts) {
-          //   print('   $entry');
-          // }
+          print('📝 TXT Records: ${txt.text}');
         }
 
         // Get IPv4

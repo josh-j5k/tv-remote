@@ -1,4 +1,4 @@
-import './models/tv_apps.dart';
+import 'models/tv_apps.dart';
 
 List<TvApps> tvApps = [
   TvApps(

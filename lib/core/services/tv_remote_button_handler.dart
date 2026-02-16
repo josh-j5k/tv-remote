@@ -11,7 +11,7 @@ class RemoteButtonHandler {
   RemoteKeyInject_RemoteKeyCode? _currentKey;
   Duration longPressThreshold = Duration(milliseconds: 400);
   Duration repeatInterval = Duration(milliseconds: 10);
-  RemoteButtonHandler(this.commandProcessor);
+  RemoteButtonHandler({required this.commandProcessor});
 
   Future<void> onShortPress(RemoteKeyInject_RemoteKeyCode keyCode) async {
     if (commandProcessor == null) return;

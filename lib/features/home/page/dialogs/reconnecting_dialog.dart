@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void showReconnectingDialog(BuildContext context) {
+void showReconnectingDialog(dynamic context) {
   showDialog(
     context: context,
     barrierDismissible: false,
