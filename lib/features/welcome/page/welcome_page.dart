@@ -3,6 +3,7 @@ import 'package:android_tv_remote/core/services/tv_remote_client.dart';
 import 'package:android_tv_remote/core/themes/app_colors.dart';
 import 'package:android_tv_remote/core/themes/app_spacing.dart';
 import 'package:android_tv_remote/core/themes/app_text_styles.dart';
+import 'package:android_tv_remote/core/utils/discover_android_tvs.dart';
 import 'package:android_tv_remote/core/utils/discover_device.dart';
 import 'package:android_tv_remote/features/welcome/widget/expanding_bar_animation.dart';
 // import 'package:android_tv_remote/features/welcome/widget/expanding_bar_animation_simple.dart';
@@ -29,6 +30,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
   void initState() {
     super.initState();
     _loadPreferences();
+    // discoverAndroidTVs();
     _loadData();
   }
 
@@ -37,8 +39,10 @@ class _WelcomeModalState extends State<WelcomeModal> {
       _searching = true;
     });
     data.clear();
-    final discovered = await discoverDevice.init();
+    // final discovered = await discoverDevice.init();
     // print(discoverDevice.searching);
+    final discovered = await discoverAndroidTVs();
+    // print(discovered);
     if (!mounted) return;
     setState(() {
       data = discovered;
@@ -201,7 +205,7 @@ class _WelcomeModalState extends State<WelcomeModal> {
                                                 item.friendlyName!,
                                                 style: TextStyle(
                                                   fontSize: textStyles
-                                                      .fontSizeXl(),
+                                                      .fontSizeLg(),
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                 ),

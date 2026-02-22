@@ -5,6 +5,8 @@ import 'package:android_tv_remote/core/utils/gesture_event_handler.dart';
 import 'package:android_tv_remote/src/generated/keycodes.pb.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/themes/app_spacing.dart';
+
 class ControlsWidget extends StatelessWidget {
   final RemoteButtonHandler? buttonHandler;
   final RemoteKeyInject_RemoteKeyCode keyCode;
@@ -23,6 +25,10 @@ class ControlsWidget extends StatelessWidget {
       screenHeight: MediaQuery.of(context).size.height,
       screenWidth: MediaQuery.of(context).size.width,
     );
+    final AppSpacing spacing = AppSpacing(
+      screenHeight: MediaQuery.of(context).size.height,
+      screenWidth: MediaQuery.of(context).size.width,
+    );
     return GestureDetector(
       onTapDown: (_) async {
         onTapDown(keyCode, buttonHandler);
@@ -37,7 +43,7 @@ class ControlsWidget extends StatelessWidget {
         padding: EdgeInsets.all(0),
         child: Container(
           //  minimumSize: Size(75.0, 48.0),
-          width: textStyles.fontSize2xl() * 2.7,
+          width: spacing.paddingInline2xl() * 2.9,
           decoration: BoxDecoration(
             color: AppColors.button,
             borderRadius: direction == "top"

@@ -1,6 +1,7 @@
 import 'package:android_tv_remote/core/services/tv_remote_button_handler.dart';
 import 'package:android_tv_remote/core/themes/app_colors.dart';
 import 'package:android_tv_remote/core/themes/app_text_styles.dart';
+import 'package:android_tv_remote/core/themes/app_spacing.dart';
 import 'package:android_tv_remote/src/generated/keycodes.pb.dart';
 import 'package:flutter/material.dart';
 
@@ -23,15 +24,19 @@ class DefaultButtonWidget extends StatelessWidget {
       screenHeight: MediaQuery.of(context).size.height,
       screenWidth: MediaQuery.of(context).size.width,
     );
+    final AppSpacing spacing = AppSpacing(
+          screenHeight: MediaQuery.of(context).size.height,
+          screenWidth: MediaQuery.of(context).size.width,
+    );
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.button,
         minimumSize: Size(40.0, 40.0),
         padding: EdgeInsets.fromLTRB(
-          textStyles.fontSize2xl(),
-          textStyles.fontSizeLg(),
-          textStyles.fontSize2xl(),
-          textStyles.fontSizeLg(),
+           spacing.paddingInline2xl(),
+           spacing.paddingBlockMd(),
+           spacing.paddingInline2xl(),
+           spacing.paddingBlockMd(),
         ),
       ),
       onPressed: () => buttonHandler?.onShortPress(keyCode),

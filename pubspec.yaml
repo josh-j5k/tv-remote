@@ -105,12 +105,15 @@ flutter_launcher_icons:
   android: true
   iso: true
   image_path: "assets/icons/app_icon.png"
+
 flutter_native_splash:
-  color: "#05050e"
+    # Removed 'color' here so it doesn't conflict with your image on iOS/Android 11 and below
   background_image: "assets/splash/splash_background.png"
   image: "assets/icons/app_icon.png"
   android: true
   ios: true
+
   android_12:
-    background_image: "assets/splash/splash_background.png"
+    # Android 12+ demands a solid color. Background images are not supported by the OS.
+    color: "#05050e"
     image: "assets/icons/app_icon.png"

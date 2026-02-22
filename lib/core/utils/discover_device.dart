@@ -24,9 +24,7 @@ class DiscoverDevice {
       return await completer.future.timeout(
         timeout,
         onTimeout: () {
-          print(
-            '⏱️ Discovery timeout - returning ${data.length} devices found',
-          );
+
           searching = false;
           return data;
         },
@@ -42,15 +40,15 @@ class DiscoverDevice {
     Completer<List<DiscoveredTvList>> completer,
   ) async {
     final disc = DeviceDiscoverer();
-    data.add(
-      DiscoveredTvList(
-        friendlyName: "Star UHD TV",
-        host: "192.168.1.185",
-        isConnected: false,
-        port: 8008,
-        scheme: "http",
-      ),
-    );
+    // data.add(
+    //   DiscoveredTvList(
+    //     friendlyName: "Star UHD TV",
+    //     host: "192.168.1.185",
+    //     isConnected: false,
+    //     port: 8008,
+    //     scheme: "http",
+    //   ),
+    // );
 
     await disc.start(ipv6: false);
 

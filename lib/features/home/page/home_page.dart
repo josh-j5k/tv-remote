@@ -173,10 +173,10 @@ class _HomePageState extends State<HomePage>
                                         backgroundColor: AppColors.button,
                                         minimumSize: Size(40.0, 40.0),
                                         padding: EdgeInsets.fromLTRB(
-                                          textStyles.fontSize2xl(),
-                                          textStyles.fontSizeLg(),
-                                          textStyles.fontSize2xl(),
-                                          textStyles.fontSizeLg(),
+                                          spacing.paddingInlineXl(),
+                                          spacing.paddingBlockMd(),
+                                          spacing.paddingInlineXl(),
+                                          spacing.paddingBlockMd(),
                                         ),
                                       ),
                                       onPressed: () => Navigator.push(
@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage>
 
                                 Container(
                                   color: AppColors.button,
-                                  width: textStyles.fontSize2xl() * 2.7,
+                                  width: spacing.paddingInline2xl() * 2.9,
                                   child: Center(
                                     child: Text(
                                       "Ch",
@@ -299,10 +299,10 @@ class _HomePageState extends State<HomePage>
                                       backgroundColor: AppColors.button,
 
                                       padding: EdgeInsets.fromLTRB(
-                                        textStyles.fontSize2xl(),
-                                        textStyles.fontSizeLg(),
-                                        textStyles.fontSize2xl(),
-                                        textStyles.fontSizeLg(),
+                                        spacing.paddingInline2xl(),
+                                        spacing.paddingBlockMd(),
+                                        spacing.paddingInline2xl(),
+                                        spacing.paddingBlockMd(),
                                       ),
                                     ),
                                     onPressed: () async {
@@ -342,10 +342,10 @@ class _HomePageState extends State<HomePage>
                                       backgroundColor: AppColors.button,
                                       minimumSize: Size(40, 40),
                                       padding: EdgeInsets.fromLTRB(
-                                        textStyles.fontSize2xl() * 1.8,
-                                        textStyles.fontSizeLg(),
-                                        textStyles.fontSize2xl() * 1.8,
-                                        textStyles.fontSizeLg(),
+                                        spacing.paddingInline2xl() * 1.75,
+                                        spacing.paddingBlockMd(),
+                                        spacing.paddingInline2xl() * 1.75,
+                                        spacing.paddingBlockMd(),
                                       ),
                                     ),
                                     onPressed: () => Navigator.push(
@@ -402,7 +402,7 @@ class _HomePageState extends State<HomePage>
 
                                 Container(
                                   color: AppColors.button,
-                                  width: textStyles.fontSize2xl() * 2.7,
+                                  width: spacing.paddingInline2xl() * 2.9,
                                   child: Center(
                                     child: Text(
                                       "Vol",
@@ -585,10 +585,10 @@ class _HomePageState extends State<HomePage>
                                   ),
                                 ),
                                 padding: EdgeInsets.fromLTRB(
-                                  textStyles.fontSizeLg(),
-                                  textStyles.fontSizeLg() * 0.978,
-                                  textStyles.fontSizeLg(),
-                                  textStyles.fontSizeLg() * 0.978,
+                                  spacing.paddingInlineLg(),
+                                  spacing.paddingBlockMd(),
+                                  spacing.paddingInlineLg(),
+                                  spacing.paddingBlockMd(),
                                 ),
                               ),
                               onPressed: () {
@@ -606,10 +606,10 @@ class _HomePageState extends State<HomePage>
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.button,
                                 padding: EdgeInsets.fromLTRB(
-                                  textStyles.fontSizeLg(),
-                                  textStyles.fontSizeLg() * 0.91,
-                                  textStyles.fontSizeLg(),
-                                  textStyles.fontSizeLg() * 0.91,
+                                  spacing.paddingInlineLg(),
+                                  spacing.paddingBlockMd() * 0.93,
+                                  spacing.paddingInlineLg(),
+                                  spacing.paddingBlockMd() * 0.93,
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
@@ -644,10 +644,10 @@ class _HomePageState extends State<HomePage>
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.button,
                                 padding: EdgeInsets.fromLTRB(
-                                  textStyles.fontSizeLg(),
-                                  textStyles.fontSizeLg() * 0.91,
-                                  textStyles.fontSizeLg(),
-                                  textStyles.fontSizeLg() * 0.91,
+                                  spacing.paddingInlineLg(),
+                                  spacing.paddingBlockMd() * 0.93,
+                                  spacing.paddingInlineLg(),
+                                  spacing.paddingBlockMd() * 0.93,
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
@@ -685,10 +685,10 @@ class _HomePageState extends State<HomePage>
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.button,
                                       padding: EdgeInsets.fromLTRB(
-                                        textStyles.fontSizeLg(),
-                                        textStyles.fontSizeLg() * 0.867,
-                                        textStyles.fontSizeLg(),
-                                        textStyles.fontSizeLg() * 0.867,
+                                        spacing.paddingInlineLg(),
+                                        spacing.paddingBlockMd() * 0.88,
+                                        spacing.paddingInlineLg(),
+                                        spacing.paddingBlockMd() * 0.88,
                                       ),
 
                                       shape: RoundedRectangleBorder(
@@ -725,10 +725,10 @@ class _HomePageState extends State<HomePage>
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.button,
                                 padding: EdgeInsets.fromLTRB(
-                                  textStyles.fontSizeLg(),
-                                  textStyles.fontSizeLg() * 0.867,
-                                  textStyles.fontSizeLg(),
-                                  textStyles.fontSizeLg() * 0.867,
+                                  spacing.paddingInlineLg(),
+                                  spacing.paddingBlockMd() * 0.88,
+                                  spacing.paddingInlineLg(),
+                                  spacing.paddingBlockMd() * 0.88,
                                 ),
 
                                 shape: RoundedRectangleBorder(

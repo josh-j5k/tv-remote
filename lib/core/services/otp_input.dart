@@ -17,7 +17,7 @@ class OtpInput extends StatefulWidget {
   final Color? enabledBorderColor;
 
   const OtpInput({
-    Key? key,
+    super.key,
     this.length = 6,
     this.fieldWidth = 50,
     this.fieldHeight = 60,
@@ -31,7 +31,7 @@ class OtpInput extends StatefulWidget {
     this.fillColor,
     this.focusedBorderColor,
     this.enabledBorderColor,
-  }) : super(key: key);
+  });
 
   @override
   State<OtpInput> createState() => _OtpInputState();
